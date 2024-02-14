@@ -1,0 +1,58 @@
+.main-container {
+  background-color: white;
+  border: solid 2px black;
+  width: 800px;
+  height: 90vh;
+  display: flex;
+}
+.main-container .half1 {
+  width: 35%;
+  height: 100%;
+  border-right: solid 2px black;
+  display: flex;
+  flex-direction: column;
+}
+.main-container .half1 .element1 {
+  background-color: yellow;
+  width: 100%;
+  height: 55%;
+}
+.main-container .half1 .element2 {
+  width: 100%;
+  height: 30%;
+  border-top: solid 2px black;
+  border-bottom: solid 2px black;
+}
+.main-container .half1 .element3 {
+  background-color: blue;
+  width: 100%;
+  height: 15%;
+}
+.main-container .half2 {
+  width: 65%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.main-container .half2 .element4 {
+  width: 100%;
+  height: 85%;
+  background-color: red;
+  border-bottom: solid 2px black;
+}
+.main-container .half2 .kinda-half3 {
+  width: 100%;
+  height: 15%;
+  display: flex;
+}
+.main-container .half2 .kinda-half3 .element5 {
+  width: 80%;
+  height: 100%;
+}
+.main-container .half2 .kinda-half3 .element6 {
+  width: 20%;
+  height: 100%;
+  border-left: solid 2px black;
+}
+
+/*# sourceMappingURL=style.css.map */

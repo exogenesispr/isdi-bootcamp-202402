@@ -1,0 +1,44 @@
+@mixin size($width, $height)
+    width: $width
+    height: $height
+
+.main-container
+    background-color: white
+    border: solid 2px black
+    @include size(800px,90vh)
+    display: flex
+
+    .half1
+        @include size(35%,100%)
+        border-right: solid 2px black
+        display: flex
+        flex-direction: column
+        .element1
+            background-color: yellow
+            @include size(100%,55%)
+
+        .element2
+            @include size(100%, 30%)
+            border-top: solid 2px black
+            border-bottom: solid 2px black
+        .element3
+            background-color: blue
+            @include size(100%, 15%)
+
+    .half2
+        @include size(65%, 100%)
+        display: flex
+        flex-direction: column
+        .element4
+            @include size(100%, 85%)
+            background-color: red
+            border-bottom: solid 2px black
+        .kinda-half3
+            @include size(100%, 15%)
+            display: flex
+            .element5
+                @include size (80%, 100%)
+
+            .element6
+                @include size (20%, 100%)
+                border-left: solid 2px black
