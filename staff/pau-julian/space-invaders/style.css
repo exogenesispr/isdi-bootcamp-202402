@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+}
+
+#space {
+  background: radial-gradient(circle at center, #5D6D7E, black);
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+  min-height: 100px;
+}
+
+#ship {
+  height: 10vh;
+  position: absolute;
+  top: 90vh;
+  left: calc(50vw - 4.7227356747vh);
+}
+
+.bullet {
+  height: 3px;
+  width: 1.5px;
+  background-color: white;
+  overflow: visible;
+  position: absolute;
+  border-radius: 40% 40% 0% 0%;
+}
+.bullet .bullet-animation {
+  height: 5px;
+  width: 5px;
+  background-size: cover;
+  position: absolute;
+}
+
+#row {
+  display: flex;
+  background-color: transparent;
+  height: 10vh;
+  width: 75vw;
+  position: relative;
+  top: 5vh;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-content: flex-end;
+  flex-wrap: wrap;
+}
+#row #alien1 {
+  height: 5vh;
+}
+#row #alien2 {
+  height: 5vh;
+}
+#row #alien3 {
+  height: 7vh;
+}
+#row #alien4 {
+  height: 4vh;
+}
+
+/*# sourceMappingURL=style.css.map */
