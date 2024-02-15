@@ -3,47 +3,108 @@
 Command in line of typical commands in Bash.
 
 ## pwd
-```print working directory -> displays path to current directory (folder)```
+Print working directory 
+(displays path to current directory (folder))  
+```sh
+$ pwd
+
+/Users/pc
+```
 
 ## ls
-```list file folder -> prints a list of all files inside our directory```
+List file folder (prints a list of all files inside our directory)  
+```sh
+$ ls
+
+Desktop
+Documents
+workspace
+```
 
 ## ls -l
+List file folder with details (prints a list of all visible files with attributes such as drwx)  
+```sh
+$ ls -l
+
+drwxr-xr-x  4 pc staff  128  5 feb 16:42 helloworld
+drwxr-xr-x  4 pc  staff  128  5 feb 13:42 isdi-bootcamp-202402
 ```
-list file folder with details -> prints a list of all visible files with attributes such as drwx
-drwx:
--d: directory
--r: readable
--w: write
+drwx:  
+-d: directory  
+-r: readable  
+-w: write  
 -x: execute
-```
 
 ## ls -a
-```list of hidden files folder -> prints a list of HIDDEN files in the directory```
+List of hidden files folder (prints a list of HIDDEN files in the directory)
 
 ## mkdir
-```make directory -> creates a directory inside```
+Make directory (creates a directory inside)
+```sh
+$ mkdir "folder-name"
+```
 
 ## cd
-```change directory -> changes current working directory to the one provided```
+Change directory (changes current working directory to the one provided)
+```sh
+$ cd "directory-name"
+```
 
 # mv
-```move -> changes name of a directory (in bash: moves a name to another)```
+Move (changes name of a directory (in bash: moves a name to another))
+```sh
+$ mv document1.js files1/document1.js
+```
+Moves document1.js to files1 folder
 
 ## touch
-```creates an empty file inside working directory```
+Creates an empty file inside working directory
 
 ## code 
-```open VScode with that directory```
+Open VScode with that directory
+```sh
+$ code "file-name or folder-name"
+```
 
 ## cl
-```clears the terminal```
+Clears the terminal
+```sh
+$ cl
+```
 
 ## kill -9 <pid>    
-```kills a process by its id```
+Kills a process by its id
+```sh
+$ kill -9 "num-task"
+```
 
 ## tree 
-```show file folders structure in a tree mode```
+Show file folders structure in a tree mode
+```sh
+$ tree workspace
+
+```
+
+## rm
+Remove an empty folder
+```sh
+$ rm "folder-name"
+```
 
 ## rm -rf (route)
-```remove folder and all its content -> delete a whole directory```
+Remove folder and all its content (delete a whole directory)
+```sh
+$ rm -rf "folder-name"
+```
+
+## open
+Open finder
+```sh
+$ open .
+```
+
+## top
+Look at the processes that are working
+```sh
+$ top
+```
