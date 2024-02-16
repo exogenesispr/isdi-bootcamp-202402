@@ -1,6 +1,6 @@
 # COMMANDS IN BASH
 
-Command in line of typical commands in Bash.
+Typical inline commands in Bash.
 
 ## pwd
 Print working directory 
@@ -29,7 +29,7 @@ $ ls -l
 drwxr-xr-x  4 pc staff  128  5 feb 16:42 helloworld
 drwxr-xr-x  4 pc  staff  128  5 feb 13:42 isdi-bootcamp-202402
 ```
-drwx:  
+Explanation to `drwx`:  
 -d: directory  
 -r: readable  
 -w: write  
