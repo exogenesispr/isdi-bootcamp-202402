@@ -1,6 +1,5 @@
 delete Array.prototype.at
 function at(array, index) {
-    debugger
     return array[index > -1 ? index : index + array.length]
 }
 
