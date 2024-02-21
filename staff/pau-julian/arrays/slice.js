@@ -2,7 +2,7 @@ delete Array.prototype.slice
 
 function slice(array, start, end) {
     var sliced = []
-    if (end === undefined) {
+    if (arguments.length === 2) {
         if (start > -1) {
             for (var i = start; i < array.length; i++) {
                 sliced[sliced.length] = array[i]
