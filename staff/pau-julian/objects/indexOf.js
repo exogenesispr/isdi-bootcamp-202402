@@ -17,7 +17,7 @@ function indexOf(object, value) {
         }
 
         return -1
-    } else { TypeError(object + ' is not an object') }
+    } else { throw TypeError(object + ' is not an object') }
 }
 
 console.log('CASE 1: index of blue in colors')
@@ -43,3 +43,12 @@ console.log(colors)
     length: 3
 }
 */
+
+var casa = 'myhome'
+
+try {
+    indexOf(casa, 'blue')
+} catch (error) {
+    console.log(error)
+    //TypeError: myhome is not an object
+}
