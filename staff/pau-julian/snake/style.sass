@@ -1,0 +1,65 @@
+@mixin size($height, $width)
+    height: $height
+    width: $width
+
+$ship-height: 10vh
+$ship-size-ratio: calc(541/511)
+
+$gradient: radial-gradient(circle at center, #5D6D7E, black)
+
+body
+    margin: 0
+
+#space
+    background: $gradient
+    @include size(100vh,100vw)
+    display: flex
+    position: relative
+    flex-direction: column
+    align-items: center
+    min-width: 100px
+    min-height: 100px
+
+#ship
+    height: $ship-height
+    position: absolute
+    top: calc(100vh - $ship-height)
+    left: calc(50vw - .5 * $ship-height/$ship-size-ratio)
+
+.bullet
+    height: 3px
+    width: 1.5px
+    background-color: white
+    overflow: visible
+    position: absolute
+    border-radius: 40% 40% 0% 0%
+
+    .bullet-animation
+        height: 5px
+        width: 5px
+
+        background-size: cover
+        position: absolute
+
+#row
+    display: flex
+    background-color: transparent
+    @include size(10vh, 75vw)
+    position: relative
+    top: 5vh
+    flex-direction: row
+    justify-content: space-evenly
+    align-content: flex-end
+    flex-wrap: wrap
+
+    #alien1
+        height: 5vh
+
+    #alien2
+        height: 5vh
+
+    #alien3
+        height: 7vh
+
+    #alien4
+        height: 4vh
