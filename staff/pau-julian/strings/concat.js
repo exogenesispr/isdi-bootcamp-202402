@@ -12,5 +12,5 @@ var a = 'hola'
 var b = 'world'
 
 result = concat(a, ', ', b)
-console.log(result)
+console.assert(result = 'hola, world', 'hola, world')
 

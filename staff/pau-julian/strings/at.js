@@ -16,8 +16,7 @@ function at(string, index) {
 var s = 'hola mundo'
 
 var char = at(s, 6)
-
-console.log(char)
+console.assert(char === 'u', 'u')
 // 'u'
 
 // CASE 2
@@ -25,13 +24,13 @@ console.log(char)
 var s = 'hola mundo'
 
 var char = at(s, 20)
-console.log(char)
+console.assert(char === undefined, undefined)
 // undefined
 
 // CASE 3
 
 var s = 'hola mundo'
 
-var char = at(s, -5)
-console.log(char)
+var char = at(s, -4)
+console.assert(char === 'u', 'u')
 // 'u'

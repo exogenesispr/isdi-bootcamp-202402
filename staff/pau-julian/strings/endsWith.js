@@ -10,16 +10,13 @@ function endsWith(string, searchString) {
     return returnString == searchString;
 }
 
-
-
-
 // CASE 1
 
 var s = 'hola mundo'
 
 var result = endsWith(s, 'ndo')
 
-console.log(result)
+console.assert(result === true, true)
 // true
 
 // CASE 2
@@ -28,5 +25,5 @@ var s = 'hola mundo'
 
 var result = endsWith(s, 'dos')
 
-console.log(result)
+console.assert(result === false, false)
 // false

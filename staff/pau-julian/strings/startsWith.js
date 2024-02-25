@@ -17,7 +17,7 @@ var s = 'hola mundo'
 
 var result = startsWith(s, 'hol')
 
-console.log(result)
+console.assert(result === true, true)
 // true
 
 // CASE 2
@@ -26,5 +26,5 @@ var s = 'hola mundo'
 
 var result = startsWith(s, 'holo')
 
-console.log(result)
+console.assert(result === false, false)
 // false

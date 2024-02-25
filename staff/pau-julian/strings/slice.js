@@ -30,9 +30,10 @@ function slice(string, indexStart, indexEnd) {
 
 var s = 'hola mundo'
 
-var piece = slice(s, 5, 11)
+var piece = slice(s, 5, 8)
 
-console.log(piece)
+console.assert(piece === 'mun', 'mun')
+
 // 'mun'
 
 // CASE 2
@@ -41,5 +42,7 @@ var s = 'hola mundo'
 
 var piece = slice(s, -3, -1)
 
-console.log(piece)
+console.assert(piece === 'ndo', 'ndo')
+
 // 'ndo'
+

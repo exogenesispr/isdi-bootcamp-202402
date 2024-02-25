@@ -2,7 +2,6 @@ delete String.prototype.split
 
 function split(string, separator) {
     // TODO implement me
-    debugger
     var answerArray = [];
     var pushedItems = '';
     for (i = 0; i < string.length; i++) {
@@ -25,7 +24,8 @@ function split(string, separator) {
 
 var s = 'hola mundo'
 
-var words = split(s, ' ')
-
+var words = split(s, ',')
 console.log(words)
+
+console.assert(words === 'hola, mundo', 'hola, mundo')
 // ['hola', 'mundo']

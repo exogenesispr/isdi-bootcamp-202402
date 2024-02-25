@@ -24,7 +24,7 @@ var s = 'hola mundo'
 
 var index = lastIndexOf(s, 'o')
 
-console.log(index)
+console.assert(index === 9, 9)
 // 9
 
 // CASE 2
@@ -33,5 +33,5 @@ var s = 'hola mundo'
 
 var index = lastIndexOf(s, 'ol')
 
-console.log(index)
+console.assert(index === 1, 1)
 // 1

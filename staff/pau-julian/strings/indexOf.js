@@ -22,7 +22,7 @@ var s = 'hola mundo'
 
 var index = indexOf(s, 'ola')
 
-console.log(index)
+console.assert(index === 1, 1)
 // 1
 
 // CASE 2
@@ -31,5 +31,5 @@ var s = 'hola mundo'
 
 var index = indexOf(s, 'olaf')
 
-console.log(index)
+console.assert(index === -1, -1)
 // -1
