@@ -84,12 +84,8 @@ Car.prototype.changeSteering = function (degrees) {
             this.steering = degrees
             this.leftright = ''
         }
-
-
         this.direction = this.frontback + this.leftright
     }
 }
-
-
 
 module.exports = Car
