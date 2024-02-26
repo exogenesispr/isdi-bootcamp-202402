@@ -1,7 +1,6 @@
 delete String.prototype.trim
 
 function trim(string) {
-    debugger
     var indexStart;
     var indexEnd;
     var finalString = '';

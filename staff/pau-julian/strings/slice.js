@@ -2,7 +2,6 @@ delete String.prototype.slice
 
 function slice(string, indexStart, indexEnd) {
     // TODO implement me
-    debugger
     var returnString = '';
     if (indexStart >= 0) {
         for (i = indexStart; i < string.length; i++) {
