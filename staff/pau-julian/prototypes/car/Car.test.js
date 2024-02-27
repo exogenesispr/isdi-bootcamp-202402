@@ -1,4 +1,4 @@
-var Car = require('./Car')
+var car = require('./Car')
 
 console.log('TEST Car')
 console.log('CASE constructor')
