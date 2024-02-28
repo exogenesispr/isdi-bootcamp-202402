@@ -1,73 +1,41 @@
-function Person(name, age, weight, energy, hunger) {
+function Person(name, surname, birthdate, country, height, weight) {
     this.name = name
-    this.age = age
+    this.surname = surname
+    this.birthdate = birthdate
+    this.country = country
+    this.height = height
     this.weight = weight
-    this.energy = energy === undefined ? 50 : energy
-    this.hunger = hunger === undefined ? 10 : hunger
-    this.thirst = thirst === undefined ? 10 : thirst
-    this.moving = false
-    this.alive = true
-    this.awake = true
+    this.sleeping = false
+    this.eating = ''
+    this.legsSpeed = Person.NOT_WALK
 }
 
-Person.prototype.eat = function (food) {
-    if (this.awake && !this.moving) {
-        this.energy += food.energy
-        this.thirst -= food.energy * 0.2
-        this.weight += food.fat
-    } else {
-        throw new Error('You are either sleep or moving')
-    }
+Person.NOT_WALK = 0
+Person.WALK_VERY_SLOW = 1
+Person.WALK_SLOW = 2
+Person.WALK_NORMAL = 4
+Person.WALK_FAST = 5
+Person.RUN = 6
+
+Person.prototype.sleep = function () {
+    this.sleeping = true
 }
 
-Person.prototype.move = function (speed) {
-    if (awake) {
-        speed === undefined ? stop : speed
-        if (speed === walk) {
-            this.energy -= 10
-            this.thirst -= 10
-            this.hunger -= 5
-            this.weight -= .2
-            this.moving = true
-        } else if (speed === run) {
-            this.energy -= 20
-            this.thirst -= 20
-            this.hunger -= 10
-            this.weight -= .4
-            this.moving = true
-        } else if (speed === stop) {
-            this.moving = false
-        } else {
-            throw new TypeError(speed + ' is not a suitable argument')
-        }
-    }
+Person.prototype.awake = function () {
+    this.sleeping = false
 }
 
-Person.prototype.awake = function (awake) {
-    if (awake === awake || awake === undefined) {
-        this.awake = true
-    } else if (awake === sleep) {
-        this.awake = false
-    } else {
-        throw new TypeError(awake + ' is not awake or sleep')
-    }
+Person.prototype.eating = function (food) {
+    if (this.sleeping) throw new Error('try to eat while sleeping')
+    this.eating = food
 }
 
-Person.prototype.checkLife = function () {
-    if (this.energy < 1 && this.hunger < 1 && this.thirst < 1) {
-        this.alive = false
-    }
+Person.prototype.moveLegs = function (speed) {
+    this.legsSpeed = speed === undefined ? 4 : speed
 }
 
-if (this.energy < 1 || this.hunger < 1 || this.thirst < 1) {
-    this.checkLife()
+Person.prototype.talk = function () {
+    this.talking = true
 }
-
-if (!this.alive) {
-    delete Person
-}
-
-
-
 
 module.exports = Person

@@ -1,4 +1,4 @@
-var car = require('./Car')
+var Car = require('./Car')
 
 console.log('TEST Car')
 console.log('CASE constructor')
@@ -57,12 +57,15 @@ car.changeGear(2)
 
 console.assert(car.gear === 2, 'gear is 2')
 
+var errorThrown;
+
 try {
     car.changeGear(5)
 } catch (error) {
-    console.assert(error.name, 'RangeError')
-    console.assert(error.message, 'gear greater than 4')
+    errorThrown = error
 }
+console.assert(errorThrown.name, 'RangeError')
+console.assert(errorThrown.message, 'gear greater than 4')
 
 car.changeGear(-1)
 console.assert(car.gear === -1, 'gear is -1')
