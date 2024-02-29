@@ -25,6 +25,5 @@ Cat.prototype.throwGlass = function () {
     }
     this.glass = undefined
 }
-
-module.exports = Cat
 */
+module.exports = Cat
