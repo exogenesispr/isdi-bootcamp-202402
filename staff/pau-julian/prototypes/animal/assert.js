@@ -15,7 +15,7 @@ function equalsValue(value, target) {
 
 function error(error, type, message) {
     console.assert(error.name === type, error.name + ' should be ' + type)
-    console.assert(error.message === message, 'message')
+    console.assert(error.message === message, message + ' should be message')
 }
 
 function valuesPropertiesMatch(iterable, compare, callback) {
@@ -29,10 +29,15 @@ function valuesPropertiesMatch(iterable, compare, callback) {
     }
 }
 
+function instanceOf(value, type) {
+    console.assert(value instanceof type === true, value + ' is instance of ' + type)
+}
+
 
 module.exports = {
     hasValues: hasValues,
     equalsValue: equalsValue,
     error: error,
     valuesPropertiesMatch: valuesPropertiesMatch,
+    instanceOf: instanceOf
 }

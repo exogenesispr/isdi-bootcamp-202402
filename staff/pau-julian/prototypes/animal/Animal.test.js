@@ -1,16 +1,15 @@
 var assert = require('./assert')
 var Animal = require('./Animal')
 
-
 console.log('TEST animal')
 
 console.log('CASE constructor')
 
-var animal = new Animal('Sultan', 'Dog', 'Pau', new Date(2000, 5, 15), 'ES', 50, 25)
+var animal = new Animal('Sultan', 'Dog', new Date(2000, 5, 15), 'ES', 50, 25)
 
 assert.equalsValue(animal.name, 'Sultan')
 assert.equalsValue(animal.race, 'Dog')
-assert.equalsValue(animal.handler, 'Pau')
+assert.instanceOf(animal.birthdate, Date)
 assert.equalsValue(animal.birthdate.getFullYear(), 2000)
 assert.equalsValue(animal.birthdate.getMonth(), 5)
 assert.equalsValue(animal.birthdate.getDate(), 15)
@@ -20,6 +19,62 @@ assert.equalsValue(animal.weight, 25)
 assert.equalsValue(animal.awake, true)
 assert.equalsValue(animal.eating, '')
 assert.equalsValue(animal.legsSpeed, Animal.NOT_WALK)
+
+console.log('CASE constructors UNHAPPY')
+
+var errorThrown
+
+try {
+    new Animal(null, 'Dog', new Date(2000, 5, 15), 'ES', 50, 25)
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', 'null is not a string')
+
+var errorThrown
+
+try {
+    new Animal('Sultan', null, new Date(2000, 5, 15), 'ES', 50, 25)
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', 'null is not a string')
+
+var errorThrown
+
+try {
+    new Animal('Sultan', 'Dog', null, 'ES', 50, 25)
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', 'null is not a Date')
+
+var errorThrown
+
+try {
+    new Animal('Sultan', 'Dog', new Date(2000, 5, 15), null, 50, 25)
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', 'null is not a string')
+
+var errorThrown
+
+try {
+    new Animal('Sultan', 'Dog', new Date(2000, 5, 15), 'ES', '50', 25)
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', '50 is not a number')
+
+var errorThrown
+
+try {
+    new Animal('Sultan', 'Dog', new Date(2000, 5, 15), 'ES', 50, '25')
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', '25 is not a number')
 
 
 console.log('CASE Sleep')

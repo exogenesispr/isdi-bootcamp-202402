@@ -1,6 +1,6 @@
 var assert = require('./assert')
 var Cat = require('./Cat')
-
+var Person = require('./Person')
 
 console.log('TEST cat')
 
@@ -21,69 +21,15 @@ assert.equalsValue(cat.awake, true)
 assert.equalsValue(cat.eating, '')
 assert.equalsValue(cat.legsSpeed, Cat.NOT_WALK)
 
-
-console.log('CASE Sleep')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.sleep()
-
-assert.equalsValue(cat.awake, false)
-
-console.log('CASE Awake')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.wakeup()
-
-assert.equalsValue(cat.awake, true)
-
-console.log('CASE eat')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.eat('banana')
-
-assert.equalsValue(cat.eating, 'banana')
-
-console.log('CASE eat while sleeping (unhappy)')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.sleep()
-
+console.log('CASE handler not a string')
 var errorThrown
 
 try {
-    cat.eat('banana')
+    new Cat('Trolito', 'Manul', null, new Date(2000, 5, 15), 'FR', 20, 13)
 } catch (error) {
     errorThrown = error
 }
-assert.error(errorThrown, 'Error', 'try to eat while sleeping')
-
-console.log('CASE walk')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.moveLegs()
-
-assert.equalsValue(cat.legsSpeed, Cat.WALK_NORMAL)
-
-console.log('CASE run')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.moveLegs(Cat.RUN)
-
-assert.equalsValue(cat.legsSpeed, Cat.RUN)
-
-console.log('CASE walk slow')
-
-var cat = new Cat('Trolito', 'Manul', 'Estel', new Date(2000, 5, 15), 'FR', 20, 13)
-
-cat.moveLegs(Cat.WALK_SLOW)
-
-assert.equalsValue(cat.legsSpeed, Cat.WALK_SLOW)
+assert.error(errorThrown, 'TypeError', 'null is not a string')
 
 console.log('CASE jump')
 

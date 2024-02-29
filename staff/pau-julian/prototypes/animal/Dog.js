@@ -1,7 +1,9 @@
 var Animal = require('./Animal')
 
 function Dog(name, race, handler, birthdate, country, height, weight, skincolor, allergy) {
-    Animal.call(this, name, race, handler, birthdate, country, height, weight)
+    if (typeof handler !== 'string') { throw new TypeError(handler + ' is not a string') }
+    Animal.call(this, name, race, birthdate, country, height, weight)
+    this.handler = handler
     this.skincolor = skincolor
     this.location = 'ground'
     this.swimming = false

@@ -1,7 +1,13 @@
-function Animal(name, race, handler, birthdate, country, height, weight) {
+function Animal(name, race, birthdate, country, height, weight) {
+    if (typeof name !== 'string') { throw new TypeError(name + ' is not a string') }
+    if (typeof race !== 'string') { throw new TypeError(race + ' is not a string') }
+    if (!(birthdate instanceof Date)) { throw new TypeError(birthdate + ' is not a Date') }
+    if (typeof country !== 'string') { throw new TypeError(country + ' is not a string') }
+    if (typeof height !== 'number') { throw new TypeError(height + ' is not a number') }
+    if (typeof weight !== 'number') { throw new TypeError(weight + ' is not a number') }
+
     this.name = name
     this.race = race
-    this.handler = handler
     this.birthdate = birthdate
     this.country = country
     this.height = height
@@ -32,7 +38,7 @@ Animal.prototype.eat = function (food) {
 }
 
 Animal.prototype.moveLegs = function (speed) {
-    this.legsSpeed = speed === undefined ? Animal.WALK_NORMAL : speed
+    this.legsSpeed = speed === undefined ? 4 : speed
 }
 
 Animal.prototype.talk = function () {

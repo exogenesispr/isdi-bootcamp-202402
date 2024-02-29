@@ -1,7 +1,6 @@
 var assert = require('./assert')
 var Dog = require('./Dog')
 
-
 console.log('TEST Dog')
 
 console.log('CASE constructor')
@@ -25,46 +24,16 @@ assert.equalsValue(dog.location, 'ground')
 assert.equalsValue(dog.swimming, false)
 assert.hasValues(dog.allergies, 'banana', 'chocolate', 'cherry', 'human flesh')
 
+console.log('CASE handler not a string')
 
-console.log('CASE Sleep')
+var errorThrown
 
-var dog = new Dog('Maquina', 'Salchicha', 'Pau', new Date(2000, 5, 15), 'ES', 10, 7, 'brown', 'human flesh')
-
-dog.sleep()
-
-assert.equalsValue(dog.awake, false)
-
-console.log('CASE Awake')
-
-var dog = new Dog('Maquina', 'Salchicha', 'Pau', new Date(2000, 5, 15), 'ES', 10, 7, 'brown', 'human flesh')
-
-dog.wakeup()
-
-assert.equalsValue(dog.awake, true)
-
-console.log('CASE walk')
-
-var dog = new Dog('Maquina', 'Salchicha', 'Pau', new Date(2000, 5, 15), 'ES', 10, 7, 'brown', 'human flesh')
-
-dog.moveLegs()
-
-assert.equalsValue(dog.legsSpeed, Dog.WALK_NORMAL)
-
-console.log('CASE run')
-
-var dog = new Dog('Maquina', 'Salchicha', 'Pau', new Date(2000, 5, 15), 'ES', 10, 7, 'brown', 'human flesh')
-
-dog.moveLegs(Dog.RUN)
-
-assert.equalsValue(dog.legsSpeed, Dog.RUN)
-
-console.log('CASE walk slow')
-
-var dog = new Dog('Maquina', 'Salchicha', 'Pau', new Date(2000, 5, 15), 'ES', 10, 7, 'brown', 'human flesh')
-
-dog.moveLegs(Dog.WALK_SLOW)
-
-assert.equalsValue(dog.legsSpeed, Dog.WALK_SLOW)
+try {
+    new Dog('Maquina', 'Salchicha', null, new Date(2000, 5, 15), 'ES', 10, 7, 'brown', 'human flesh')
+} catch (error) {
+    errorThrown = error
+}
+assert.error(errorThrown, 'TypeError', 'null is not a string')
 
 console.log('CASE swim')
 
