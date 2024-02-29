@@ -17,6 +17,7 @@ assert.equalsValue(person.height, 170)
 assert.equalsValue(person.weight, 85)
 assert.equalsValue(person.awake, true)
 assert.equalsValue(person.eating, '')
+assert.equalsValue(person.speaking, '')
 assert.equalsValue(person.legsSpeed, Person.NOT_WALK)
 
 console.log('CASE Sleep')
