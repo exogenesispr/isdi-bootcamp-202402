@@ -121,5 +121,61 @@ Arroz.prototype.indexOf = function (value, index) {
     }
 }
 
+Arroz.prototype.lastIndexOf = function (value, index) {
+    if (arguments.length === 1) {
+        for (var i = this.length - 1; i > -1; i--) {
+            element = this[i]
+            if (value === element) {
+                return i
+            }
+        }
+    } else if (arguments.length === 2) {
+        index = index > -1 ? index : index + this.length
+        for (var i = index; i > -1; i--) {
+            element = this[i]
+            if (value === element) {
+                return i
+            }
+        }
+    }
+    return -1
+}
+
+Arroz.prototype.some = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        if (callback(i)) {
+            return true
+        }
+    }
+    return false
+}
+
+Arroz.prototype.shift = function () {
+    returnedElement = this[0]
+    for (var i = 0; i < this.length; i++) {
+        this[i] = this[i + 1]
+    }
+    delete this[this.length - 1]
+    this.length--
+    return returnedElement
+}
+
+Arroz.prototype.unshift = function () {
+    var elements = arguments.length
+    for (var i = this.length - 1; i > -1; i--) {
+        this[i + elements] = this[i]
+    }
+    for (var i = 0; i < elements; i++) {
+        this[i] = arguments[i]
+    }
+}
+
+Arroz.prototype.map = function (callback) {
+    var mappedArroz = new Arroz()
+    for (var i = 0; i < this.length; i++) {
+        mappedArroz[i] = callback(this[i], i, this)
+    }
+    return mappedArroz
+}
 
 module.exports = Arroz

@@ -274,4 +274,117 @@ matcha.describe('Arroz', function () {
             matcha.expect(result).toBe(-1)
         })
     })
+
+    matcha.describe('> lastIndexOf', function () {
+        matcha.it('should return index of item nearer to LAST index', function () {
+            var a = new Arroz(2, 5, 9, 2)
+            matcha.expect(!!a.lastIndexOf).toBe(true)
+
+            var result = a.lastIndexOf(2)
+
+            matcha.expect(result).toBe(3)
+
+            var a = new Arroz(2, 5, 9, 2)
+
+            var result = a.lastIndexOf(7)
+
+            matcha.expect(result).toBe(-1)
+        })
+        matcha.it('should return index of item nearer to LAST index from my input index', function () {
+            var a = new Arroz(2, 5, 9, 2)
+
+            var result = a.lastIndexOf(2, 3)
+
+            matcha.expect(result).toBe(3)
+
+            var a = new Arroz(2, 5, 9, 2)
+
+            var result = a.lastIndexOf(2, 2)
+
+            matcha.expect(result).toBe(0)
+
+            var a = new Arroz(2, 5, 9, 2)
+
+            var result = a.lastIndexOf(2, -2)
+
+            matcha.expect(result).toBe(0)
+
+            var a = new Arroz(2, 5, 9, 2)
+
+            var result = a.lastIndexOf(2, -1)
+
+            matcha.expect(result).toBe(3)
+        })
+    })
+
+    matcha.describe('> some', function () {
+        matcha.it('should return TRUE if value of array meets callback argument', function () {
+            var a = new Arroz(1, 2, 3, 4, 5)
+            matcha.expect(!!a.some).toBe(true)
+
+            var result = a.some(function (x) {
+                return x % 2 === 0
+            })
+
+            matcha.expect(result).toBe(true)
+
+            var result = a.some(function (x) {
+                return x % 7 === 0
+            })
+
+            matcha.expect(result).toBe(false)
+        })
+    })
+    matcha.describe('> shift', function () {
+        matcha.it('should return first element in the array and mutate original array', function () {
+            var a = new Arroz(10, 20, 30)
+            matcha.expect(!!a.shift).toBe(true)
+
+            var result = a.shift()
+
+            matcha.expect(result).toBe(10)
+            matcha.expect(a[0]).toBe(20)
+            matcha.expect(a[1]).toBe(30)
+            matcha.expect(a[2]).toBe(undefined)
+
+            var a = new Arroz()
+            var result = a.shift()
+
+            matcha.expect(result).toBe(undefined)
+        })
+    })
+    matcha.describe('> unshift', function () {
+        matcha.it('should return array with elements in constructor in first indexs of array', function () {
+            var a = new Arroz(30, 40, 50)
+            matcha.expect(!!a.unshift).toBe(true)
+
+            a.unshift(10, 20)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+            matcha.expect(a[3]).toBe(40)
+            matcha.expect(a[4]).toBe(50)
+        })
+    })
+    matcha.describe('> map', function () {
+        matcha.it('should return a new Arroz with results of calling callback into each element in calling Arroz', function () {
+            var a = new Arroz(10, 20, 30)
+
+            matcha.expect(!!a.map).toBe(true)
+
+            var result = a.map(function (x) {
+                return x * 10
+            })
+
+            matcha.expect(result[0]).toBe(100)
+            matcha.expect(result[1]).toBe(200)
+            matcha.expect(result[2]).toBe(300)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+
+        })
+    })
 })
