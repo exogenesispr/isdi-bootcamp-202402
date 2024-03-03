@@ -387,4 +387,185 @@ matcha.describe('Arroz', function () {
 
         })
     })
+    matcha.describe('> join', function () {
+        matcha.it('should return a string of concenation of all elements in array, separated by separator(if no separator, by ,)', function () {
+            var a = new Arroz('Fire', 'Air', 'Water')
+
+            matcha.expect(!!a.join).toBe(true)
+
+            result = a.join()
+
+            matcha.expect(result).toBe('Fire,Air,Water')
+
+            var a = new Arroz('Fire', 'Air', 'Water')
+
+            result = a.join('')
+
+            matcha.expect(result).toBe('FireAirWater')
+
+            var a = new Arroz('Fire', 'Air', 'Water')
+
+            result = a.join('-')
+
+            matcha.expect(result).toBe('Fire-Air-Water')
+        })
+    })
+
+    matcha.describe('> with', function () {
+        matcha.it('should return new Arroz with index item changed', function () {
+            var a = new Arroz(10, 20, 30)
+
+            matcha.expect(!!a.with).toBe(true)
+
+            var result = a.with(1, 40)
+
+            matcha.expect(result[0]).toBe(10)
+            matcha.expect(result[1]).toBe(40)
+            matcha.expect(result[2]).toBe(30)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+
+
+            var a = new Arroz(10, 20, 30)
+
+            var result = a.with(-2, 40)
+
+            matcha.expect(result[0]).toBe(10)
+            matcha.expect(result[1]).toBe(40)
+            matcha.expect(result[2]).toBe(30)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+        })
+    })
+
+    matcha.describe('> find', function () {
+        matcha.it('should return first element that meets callback function condition', function () {
+            var a = new Arroz(10, 20, 30)
+
+            matcha.expect(!!a.find).toBe(true)
+
+            var result = a.find(function (x) {
+                return x > 20
+            })
+
+            matcha.expect(result).toBe(30)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+
+            var a = new Arroz(10, 20, 30)
+
+            var result = a.find(function (x) {
+                return x > 30
+            })
+
+            matcha.expect(result).toBe(undefined)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+        })
+    })
+    matcha.describe('> findIndex', function () {
+        matcha.it('should return first INDEX that meets callback function condition', function () {
+            var a = new Arroz(10, 20, 30)
+
+            matcha.expect(!!a.findIndex).toBe(true)
+
+            var result = a.findIndex(function (x) {
+                return x > 20
+            })
+
+            matcha.expect(result).toBe(2)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+
+            var a = new Arroz(10, 20, 30)
+
+            var result = a.findIndex(function (x) {
+                return x > 30
+            })
+
+            matcha.expect(result).toBe(undefined)
+
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(20)
+            matcha.expect(a[2]).toBe(30)
+        })
+    })
+
+    matcha.describe('> filter', function () {
+        matcha.it('should return a new Arroz with elements that meet the callback function', function () {
+            var a = new Arroz(20, 30, 40, 30, 20)
+
+            matcha.expect(!!a.filter).toBe(true)
+
+            var result = a.filter(function (x) {
+                return x > 20
+            })
+
+            matcha.expect(result[0]).toBe(30)
+            matcha.expect(result[1]).toBe(40)
+            matcha.expect(result[2]).toBe(30)
+            matcha.expect(result.length).toBe(3)
+            matcha.expect(result[3]).toBe(undefined)
+
+            matcha.expect(a[0]).toBe(20)
+            matcha.expect(a[1]).toBe(30)
+            matcha.expect(a[2]).toBe(40)
+            matcha.expect(a[3]).toBe(30)
+            matcha.expect(a[4]).toBe(20)
+        })
+    })
+
+    matcha.describe('> reduce', function () {
+        matcha.it('should return a single value of all values operated across all elements', function () {
+            var a = new Arroz(10, 20, 30, 40)
+
+            matcha.expect(!!a.reduce).toBe(true)
+
+            var result = a.reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue
+            })
+
+            matcha.expect(result).toBe(100)
+        })
+    })
+
+    matcha.describe('> forEach', function () {
+        matcha.it('should execute callback function in all elements of Arroz', function () {
+            var a = new Arroz(10, 20, 30)
+
+            matcha.expect(!!a.forEach).toBe(true)
+
+            var result = a.forEach(function (x) {
+                return x + x
+            })
+
+            matcha.expect(result[0]).toBe(20)
+            matcha.expect(result[1]).toBe(40)
+            matcha.expect(result[2]).toBe(60)
+        })
+    })
+
+    matcha.expect('> slice', function () {
+        matcha.it('should return temporal Arroz of elements in indexed intervals', function () {
+            var a = new Arroz(10, 20, 30, 40)
+
+            matcha.expect(a.slice).toBe(true)
+
+            var result = a.slice(0, 1)
+
+            matcha.expect(result[0]).toBe(10)
+            matcha.expect(result[1]).toBe(20)
+            //TODO CASES
+        })
+    })
 })

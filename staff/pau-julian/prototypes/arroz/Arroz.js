@@ -178,4 +178,114 @@ Arroz.prototype.map = function (callback) {
     return mappedArroz
 }
 
+Arroz.prototype.join = function (separator) {
+    var returnedString = ''
+    separator = arguments.length < 1 ? ',' : separator
+
+    for (var i = 0; i < this.length; i++) {
+        if (i === this.length - 1) {
+            returnedString += this[i]
+            return returnedString
+
+        }
+        returnedString += this[i] + separator
+    }
+}
+
+Arroz.prototype.with = function (index, value) {
+    if (index > this.length - 1 || index < -this.length) {
+        throw new RangeError('index not in bounds')
+    }
+    index = index > -1 ? index : this.length + index
+    var returnedArroz = new Arroz()
+    for (var i = 0; i < this.length; i++) {
+        if (i === index) {
+            returnedArroz[i] = value
+        } else {
+            returnedArroz[i] = this[i]
+        }
+    }
+    return returnedArroz
+}
+
+Arroz.prototype.find = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        element = this[i]
+        if (callback(element)) {
+            return element
+        }
+    }
+    return undefined
+}
+
+Arroz.prototype.findIndex = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        element = this[i]
+        if (callback(element)) {
+            return i
+        }
+    }
+    return undefined
+}
+
+Arroz.prototype.filter = function (callback) {
+    var returnedArroz = new Arroz()
+    for (var i = 0; i < this.length; i++) {
+        element = this[i]
+        if (callback(element)) {
+            returnedArroz[returnedArroz.length] = element
+            returnedArroz.length++
+        }
+    }
+    return returnedArroz
+}
+
+Arroz.prototype.reduce = function (callback, accumulator) {
+    if (arguments.length === 1) {
+        accumulator = this[0]
+        for (var i = 1; i < this.length; i++) {
+            var element = this[i]
+            accumulator = callback(accumulator, element)
+        }
+    } else if (arguments.length === 2) {
+        for (var i = 0; i < this.length; i++) {
+            var element = this[i]
+            accumulator = callback(accumulator, element)
+        }
+    }
+    return accumulator
+}
+
+Arroz.prototype.forEach = function (callback) {
+    for (var i = 0; i < this.length; i++) {
+        var element = this[i]
+        callback(element, i)
+    }
+}
+
+Arroz.prototype.slice = function (start, end) {
+    if (arguments.length === 0) {
+        this.toString
+    }
+    start = !!start ? start > -1 ? start : start + this.length : 0
+    end = !!end ? end > -1 ? end : end + this.length : this.length - 1
+    if (start > end) {
+        throw new RangeError('input index not correct')
+    }
+    var returnedArroz = new Arroz()
+    for (var i = start; i < end; i++) {
+        returnedArroz[returnedArroz.length] = this[i]
+        returnedArroz.length++
+    }
+    return returnedArroz
+}
+
+Arroz.prototype.splice = function (start, deleteCount, item) {
+    start = start > -1 ? start : start + this.length
+    deleteCount = !!deleteCount ? deleteCount : 0
+    if (arguments.length === 2) {
+        //TO DO
+    }
+}
+
 module.exports = Arroz
