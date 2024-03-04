@@ -167,13 +167,15 @@ Arroz.prototype.unshift = function () {
     }
     for (var i = 0; i < elements; i++) {
         this[i] = arguments[i]
+        this.length++
     }
 }
 
 Arroz.prototype.map = function (callback) {
     var mappedArroz = new Arroz()
     for (var i = 0; i < this.length; i++) {
-        mappedArroz[i] = callback(this[i], i, this)
+        mappedArroz[mappedArroz.length++] = callback(this[i], i, this)
+
     }
     return mappedArroz
 }
@@ -186,7 +188,6 @@ Arroz.prototype.join = function (separator) {
         if (i === this.length - 1) {
             returnedString += this[i]
             return returnedString
-
         }
         returnedString += this[i] + separator
     }
@@ -210,8 +211,10 @@ Arroz.prototype.with = function (index, value) {
 
 Arroz.prototype.find = function (callback) {
     for (var i = 0; i < this.length; i++) {
-        element = this[i]
-        if (callback(element)) {
+        var element = this[i]
+
+        var matches = callback(element, i, this)
+        if (matches) {
             return element
         }
     }
@@ -220,7 +223,7 @@ Arroz.prototype.find = function (callback) {
 
 Arroz.prototype.findIndex = function (callback) {
     for (var i = 0; i < this.length; i++) {
-        element = this[i]
+        var element = this[i]
         if (callback(element)) {
             return i
         }
@@ -259,7 +262,7 @@ Arroz.prototype.reduce = function (callback, accumulator) {
 Arroz.prototype.forEach = function (callback) {
     for (var i = 0; i < this.length; i++) {
         var element = this[i]
-        callback(element, i)
+        callback(element, i, this)
     }
 }
 
@@ -280,12 +283,34 @@ Arroz.prototype.slice = function (start, end) {
     return returnedArroz
 }
 
-Arroz.prototype.splice = function (start, deleteCount, item) {
-    start = start > -1 ? start : start + this.length
+Arroz.prototype.splice = function (start, deleteCount, items) {
+    start = !!start ? start > -1 ? start : start + this.length : 0
     deleteCount = !!deleteCount ? deleteCount : 0
-    if (arguments.length === 2) {
-        //TO DO
+    for (var i = 0; i < this.length; i++) {
+        if (i === start) {
+            for (var j = i; j < this.length; j++) {
+                element = this[j]
+
+                this[j + deleteCount + arguments.length - 2] = element
+            }
+            for (var j = 0; j < arguments.length - 2; j++) {
+                this[i + j] = arguments[arguments.length - 2 + j]
+            }
+        }
     }
+    this.length += arguments.length - 2
+    this.length -= deleteCount
+}
+
+Arroz.from = function (arroz) {
+    var instance = new Arroz
+
+    for (var i = 0; i < arroz.length; i++) {
+        element = arroz[i]
+
+        instance[instance.length++] = element
+    }
+    return instance
 }
 
 module.exports = Arroz

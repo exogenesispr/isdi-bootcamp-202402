@@ -365,6 +365,7 @@ matcha.describe('Arroz', function () {
             matcha.expect(a[2]).toBe(30)
             matcha.expect(a[3]).toBe(40)
             matcha.expect(a[4]).toBe(50)
+            matcha.expect(a.length).toBe(5)
         })
     })
     matcha.describe('> map', function () {
@@ -380,6 +381,7 @@ matcha.describe('Arroz', function () {
             matcha.expect(result[0]).toBe(100)
             matcha.expect(result[1]).toBe(200)
             matcha.expect(result[2]).toBe(300)
+            matcha.expect(result.length).toBe(3)
 
             matcha.expect(a[0]).toBe(10)
             matcha.expect(a[1]).toBe(20)
@@ -469,6 +471,20 @@ matcha.describe('Arroz', function () {
             matcha.expect(a[0]).toBe(10)
             matcha.expect(a[1]).toBe(20)
             matcha.expect(a[2]).toBe(30)
+
+            var a = new Arroz({ brand: 'adidas', model: 'cool socks', price: 16 }, { brand: 'nike', model: 'air max', price: 120 }, { brand: 'puma', model: 'dangerous glasses', price: 30 })
+
+            var i = 0
+            var item = a.find(function (element, index, arroz) {
+                matcha.expect(index).toBe(i++)
+                matcha.expect(arroz).toBe(a)
+
+                return element.price === 120
+            })
+
+            matcha.expect(item.brand).toBe('nike')
+            matcha.expect(item.model).toBe('air max')
+            matcha.expect(item.price).toBe(120)
         })
     })
     matcha.describe('> findIndex', function () {
@@ -541,31 +557,67 @@ matcha.describe('Arroz', function () {
 
     matcha.describe('> forEach', function () {
         matcha.it('should execute callback function in all elements of Arroz', function () {
-            var a = new Arroz(10, 20, 30)
+            var a = new Arroz(10, 20, 30, 40, 50, 60)
+            var b = new Arroz
 
             matcha.expect(!!a.forEach).toBe(true)
 
-            var result = a.forEach(function (x) {
-                return x + x
+            a.forEach(function (element, index, arroz) {
+                b[index] = { item: element, iterable: arroz }
+                b.length++
             })
 
-            matcha.expect(result[0]).toBe(20)
-            matcha.expect(result[1]).toBe(40)
-            matcha.expect(result[2]).toBe(60)
+            matcha.expect(a.length).toBe(6)
+
+            for (var i = 0; i < a.length; i++) {
+                matcha.expect(a[i]).toBe(10 * (i + 1))
+            }
+
+            matcha.expect(b.length).toBe(a.length)
+
+            for (var i = 0; i < b.length; i++) {
+                var element = b[i]
+
+                matcha.expect(element.item).toBe(10 * (i + 1))
+                matcha.expect(element.iterable).toBe(a)
+            }
         })
     })
 
-    matcha.expect('> slice', function () {
+    matcha.describe('> slice', function () {
         matcha.it('should return temporal Arroz of elements in indexed intervals', function () {
             var a = new Arroz(10, 20, 30, 40)
 
-            matcha.expect(a.slice).toBe(true)
+            matcha.expect(!!a.slice).toBe(true)
 
             var result = a.slice(0, 1)
 
             matcha.expect(result[0]).toBe(10)
             matcha.expect(result[1]).toBe(20)
             //TODO CASES
+        })
+    })
+
+    matcha.describe('> from', function () {
+        matcha.it('should create and instance of Arroz from numbers', function () {
+            var a = Arroz(10, 20, 30)
+            var b = Arroz.from(a)
+
+            matcha.expect(a.length).toBe(3)
+
+            for (var i = 0; i < a.length; i++) {
+                matcha.expect(nums[i]).toBe(10 * (i + 1))
+            }
+
+            matcha.expect(a === b).toBe(false)
+
+
+            matcha.expect(b.length).toBe(a.length)
+
+            for (var i = 0; i < b.length; i++) {
+                matcha.expect(b[i]).toBe(10 * (i + 1))
+            }
+
         })
     })
 })
