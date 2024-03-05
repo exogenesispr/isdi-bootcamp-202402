@@ -143,7 +143,7 @@ Arroz.prototype.lastIndexOf = function (value, index) {
 
 Arroz.prototype.some = function (callback) {
     for (var i = 0; i < this.length; i++) {
-        if (callback(i)) {
+        if (callback(this[i])) {
             return true
         }
     }
@@ -276,31 +276,59 @@ Arroz.prototype.slice = function (start, end) {
         throw new RangeError('input index not correct')
     }
     var returnedArroz = new Arroz()
-    for (var i = start; i < end; i++) {
-        returnedArroz[returnedArroz.length] = this[i]
-        returnedArroz.length++
+    for (var i = start; i < end + 1; i++) {
+        returnedArroz[returnedArroz.length++] = this[i]
+
     }
     return returnedArroz
 }
 
 Arroz.prototype.splice = function (start, deleteCount, items) {
-    start = !!start ? start > -1 ? start : start + this.length : 0
+    start = !!start ? (start > -1 ? start : start + this.length) : 0
     deleteCount = !!deleteCount ? deleteCount : 0
-    for (var i = 0; i < this.length; i++) {
-        if (i === start) {
-            for (var j = i; j < this.length; j++) {
-                element = this[j]
-
-                this[j + deleteCount + arguments.length - 2] = element
+    var returnedArroz = new Arroz()
+    if (deleteCount < this.length) {
+        if (deleteCount === 0) {
+            this.length += arguments.length - 2
+            for (var i = this.length - 1; i > start - 1; i--) {
+                this[i] = this[i - (arguments.length - 2)]
             }
-            for (var j = 0; j < arguments.length - 2; j++) {
-                this[i + j] = arguments[arguments.length - 2 + j]
+            for (var i = 0; i < arguments.length - 2; i++) {
+                this[start + i] = arguments[2 + i]
             }
+            return returnedArroz
+        } else if (deleteCount === 1) {
+            for (var i = 0; i < deleteCount; i++) {
+                returnedArroz[returnedArroz.length] = this[start + i]
+                returnedArroz.length++
+            }
+            this.length += arguments.length - 2 - deleteCount
+            for (var i = this.length - 1; i > start - 1; i--) {
+                this[i] = this[i - (arguments.length - 2 - deleteCount)]
+            }
+            for (var i = 0; i < arguments.length - 2; i++) {
+                this[start + i] = arguments[2 + i]
+            }
+            return returnedArroz
+        } else if (deleteCount > 1) {
+            for (var i = 0; i < deleteCount; i++) {
+                returnedArroz[returnedArroz.length] = this[start + i]
+                returnedArroz.length++
+            }
+            for (var i = 0; i < this.length - (start + deleteCount - 1); i++) {
+                element = this[start + deleteCount + i]
+                this[start + 1 + i] = element
+            }
+            this.length -= deleteCount - 1
+            for (var i = 0; i < arguments.length - 2; i++) {
+                this[start + i] = arguments[2 + i]
+            }
+            return returnedArroz
         }
     }
-    this.length += arguments.length - 2
-    this.length -= deleteCount
+
 }
+
 
 Arroz.from = function (arroz) {
     var instance = new Arroz

@@ -586,27 +586,121 @@ matcha.describe('Arroz', function () {
 
     matcha.describe('> slice', function () {
         matcha.it('should return temporal Arroz of elements in indexed intervals', function () {
-            var a = new Arroz(10, 20, 30, 40)
+            var a = new Arroz(10, 20, 30, 40, 50)
 
             matcha.expect(!!a.slice).toBe(true)
 
-            var result = a.slice(0, 1)
+            var result = a.slice(2)
+
+            matcha.expect(result[0]).toBe(30)
+            matcha.expect(result[1]).toBe(40)
+            matcha.expect(result[2]).toBe(50)
+
+            var result = a.slice(2, 4)
+
+            matcha.expect(result[0]).toBe(30)
+            matcha.expect(result[1]).toBe(40)
+
+            var result = a.slice(1, 5)
+
+            matcha.expect(result[0]).toBe(20)
+            matcha.expect(result[1]).toBe(30)
+            matcha.expect(result[2]).toBe(40)
+            matcha.expect(result[3]).toBe(50)
+
+            var result = a.slice(-2)
+
+            matcha.expect(result[0]).toBe(40)
+            matcha.expect(result[1]).toBe(50)
+
+            var result = a.slice(2, -1)
+
+            matcha.expect(result[0]).toBe(30)
+            matcha.expect(result[1]).toBe(40)
+
+            var result = a.slice()
 
             matcha.expect(result[0]).toBe(10)
             matcha.expect(result[1]).toBe(20)
-            //TODO CASES
+            matcha.expect(result[2]).toBe(30)
+            matcha.expect(result[3]).toBe(40)
+            matcha.expect(result[4]).toBe(50)
+
+        })
+    })
+
+    matcha.describe('> splice', function () {
+        matcha.it('should modify array, augmenting length and insering (deletecount) new indexes', function () {
+            var a = new Arroz(10, 20, 30)
+
+            matcha.expect(!!a.splice).toBe(true)
+
+            var result = a.splice(1, 0, 200)
+
+            matcha.expect(result.length).toBe(0)
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(200)
+            matcha.expect(a[2]).toBe(20)
+            matcha.expect(a[3]).toBe(30)
+            matcha.expect(a.length).toBe(4)
+
+
+            var a = new Arroz(10, 20, 30)
+            var result = a.splice(1, 1, 200)
+
+            matcha.expect(result[0]).toBe(20)
+            matcha.expect(result.length).toBe(1)
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(200)
+            matcha.expect(a[2]).toBe(30)
+            matcha.expect(a.length).toBe(3)
+
+            var a = new Arroz(10, 20, 30)
+            var result = a.splice(1, 2, 200)
+
+            matcha.expect(result[0]).toBe(20)
+            matcha.expect(result[1]).toBe(30)
+            matcha.expect(result.length).toBe(2)
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(200)
+            matcha.expect(a.length).toBe(2)
+
+            var a = new Arroz(10, 20, 30)
+            var result = a.splice(1, 1, 200, 300)
+
+            matcha.expect(result[0]).toBe(20)
+            matcha.expect(result.length).toBe(1)
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(200)
+            matcha.expect(a[2]).toBe(300)
+            matcha.expect(a[3]).toBe(30)
+            matcha.expect(a.length).toBe(4)
+
+            var a = new Arroz(10, 20, 30)
+            var result = a.splice(1, 0, 200, 300, 400, 500)
+
+            matcha.expect(result.length).toBe(0)
+            matcha.expect(a[0]).toBe(10)
+            matcha.expect(a[1]).toBe(200)
+            matcha.expect(a[2]).toBe(300)
+            matcha.expect(a[3]).toBe(400)
+            matcha.expect(a[4]).toBe(500)
+            matcha.expect(a[5]).toBe(20)
+            matcha.expect(a[6]).toBe(30)
+            matcha.expect(a.length).toBe(7)
+
         })
     })
 
     matcha.describe('> from', function () {
         matcha.it('should create and instance of Arroz from numbers', function () {
-            var a = Arroz(10, 20, 30)
+            var a = new Arroz(10, 20, 30)
             var b = Arroz.from(a)
 
             matcha.expect(a.length).toBe(3)
 
             for (var i = 0; i < a.length; i++) {
-                matcha.expect(nums[i]).toBe(10 * (i + 1))
+                matcha.expect(a[i]).toBe(10 * (i + 1))
             }
 
             matcha.expect(a === b).toBe(false)
