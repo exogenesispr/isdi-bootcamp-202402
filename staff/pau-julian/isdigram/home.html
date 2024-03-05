@@ -5,36 +5,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
+<h1>Welcome</h1>
+<header>
+    <a href="lastlike" id="lastlike"></a>
+    <a href="message" id="messages"></a>
+    <div id="history">Histories
+    </div>
+</header>
 
 <body>
     <main>
-        <h1>Welcome</h1>
-        <header>
-            <a href="lastlike" id="lastlike"></a>
-            <a href="message" id="messages"></a>
-            <div id="history">Histories
 
+        <form action="" id="createpost-form">
+            <label for="link">Photo link</label>
+            <input type="link" id="createpost-link">
 
-            </div>
-        </header>
+            <label for="text">Text</label>
+            <input type="text" id="createpost-text">
 
-        <div id="post">
-            <img src="user19283949812.pfp" alt="">
-            <h3>user19283949812</h3>
-            <img src="user19283949812.photoX" alt="">
-            <button id="comment" src="commentbutton.png"></button>
-            <button id="like" src="likeimage.png"></button>
-        </div>
+            <button type="submit" id="createpost-button">Create post</button>
+        </form>
 
         <button id="logoutbutton">Logout</button>
     </main>
 
     <footer>
-        <a href="" id="home"></a>
-        <a href="" id="search"></a>
-        <a href="" id="addphoto"></a>
-        <a href="" id="profile"></a>
+        <a href="" id="home">home</a>
+        <a href="" id="search">search</a>
+        <button id="create-post">+</button>
+        <a href="" id="profile">profile</a>
     </footer>
 
     <script src="data.js"></script>

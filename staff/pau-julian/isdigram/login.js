@@ -1,27 +1,30 @@
 // presentation
 
-var form = document.querySelector('form')
-var registerLink = document.querySelector('a')
+(function () {
+    var form = document.querySelector('form')
+    var registerLink = document.querySelector('a')
 
-form.addEventListener('submit', function (event) {
-    console.log('form submit')
+    form.addEventListener('submit', function (event) {
+        console.log('form submit')
 
-    event.preventDefault()
+        event.preventDefault()
 
-    var usernameInput = document.getElementById('username')
-    var username = usernameInput.value
+        var usernameInput = document.getElementById('username')
+        var username = usernameInput.value
 
-    var passwordInput = document.getElementById('password')
-    var password = passwordInput.value
+        var passwordInput = document.getElementById('password')
+        var password = passwordInput.value
 
-    try {
-        loginUser(username, password)
+        try {
+            logic.loginUser(username, password)
 
-        form.reset()
+            form.reset()
 
-        var homeAdress = location.href.replace('login', 'home')
-        location.href = homeAdress
-    } catch (error) {
-        alert(error.message)
-    }
-})
+            var homeAdress = location.href.replace('login', 'home')
+            location.href = homeAdress
+        } catch (error) {
+            alert(error.message)
+        }
+    })
+})()
+
