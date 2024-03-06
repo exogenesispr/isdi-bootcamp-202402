@@ -1,36 +1,47 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
 main {
-    margin: 0 20vw;
-    display: flex;
-    flex-direction: column;
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0 5vw;
+  display: flex;
+  flex-direction: column;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 #registerDiv {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgb(154, 210, 224);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgb(154, 210, 224);
 }
 
 #loginDiv {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: rgb(154, 210, 224);
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgb(154, 210, 224);
 }
 
 footer {
-    margin: 5vh 20vw;
+  margin: 5vh 20vw;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
-#createpost-form {
-    margin: 2vh 0;
-    display: none;
+img {
+  max-width: 100%;
 }
+
+#create-post-section {
+  margin: 5vh 0;
+  display: none;
+}
+
+/*# sourceMappingURL=style.css.map */

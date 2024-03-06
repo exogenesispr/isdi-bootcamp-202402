@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<h1>Welcome</h1>
 <header>
     <a href="lastlike" id="lastlike"></a>
     <a href="message" id="messages"></a>
@@ -19,16 +18,23 @@
 
 <body>
     <main>
+        <h1>Welcome</h1>
 
-        <form action="" id="createpost-form">
-            <label for="link">Photo link</label>
-            <input type="link" id="createpost-link">
+        <section id="post-list-section"></section>
 
-            <label for="text">Text</label>
-            <input type="text" id="createpost-text">
+        <section id="create-post-section">
+            <h2>Create Post</h2>
 
-            <button type="submit" id="createpost-button">Create post</button>
-        </form>
+            <form action="" id="create-post-form">
+                <label for="link">Photo link</label>
+                <input type="link" id="createpost-link">
+
+                <label for="text">Text</label>
+                <input type="text" id="createpost-text">
+
+                <button type="submit" id="createpost-button">Create post</button>
+            </form>
+        </section>
 
         <button id="logoutbutton">Logout</button>
     </main>
@@ -36,7 +42,7 @@
     <footer>
         <a href="" id="home">home</a>
         <a href="" id="search">search</a>
-        <button id="create-post">+</button>
+        <button id="show-create-post-form-button">+</button>
         <a href="" id="profile">profile</a>
     </footer>
 

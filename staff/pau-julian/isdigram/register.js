@@ -26,7 +26,7 @@
 
         try {
 
-            registerUser(name, birthdate, email, username, password)
+            logic.registerUser(name, birthdate, email, username, password)
 
             loginLink.click()
         } catch (error) {

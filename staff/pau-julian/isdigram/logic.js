@@ -50,7 +50,7 @@ var logic = (function () {
 
     function createPost(image, text) {
         var post = {
-            username: sessionStorage.username,
+            author: sessionStorage.username,
             image: image,
             text: text,
             date: new Date().toLocaleDateString('en-CA')
@@ -61,11 +61,17 @@ var logic = (function () {
 
     function showForm(id) {
         var form = document.getElementById(id)
-        if (form.style.display === 'block' || form.style.display === '') {
-            form.style.display = 'none'
-        } else {
+        if (form.style.display === 'none') {
             form.style.display = 'block'
+        } else {
+            form.style.display = 'none'
         }
+    }
+
+    function retrievePosts() {
+        var posts = data.getAllPosts()
+
+        return posts
     }
 
     return {
@@ -75,5 +81,6 @@ var logic = (function () {
         logoutUser: logoutUser,
         createPost: createPost,
         showForm: showForm,
+        retrievePosts: retrievePosts,
     }
 })()
