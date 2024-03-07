@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link rel="stylesheet" href="index.css">
+</head>
+
+
+<body>
+    <header>
+        <a href="lastlike" id="lastlike"></a>
+        <a href="message" id="messages"></a>
+        <div id="history">Histories</div>
+    </header>
+
+    <main>
+        <h1>Welcome ISDIGRAM</h1>
+
+        <section id="post-list-section"></section>
+
+        <section id="create-post-section">
+            <h2>Create Post</h2>
+
+            <form action="" id="create-post-form">
+                <label for="link">Image</label>
+                <input type="link" id="createpost-image">
+
+                <label for="text">Text</label>
+                <input type="text" id="createpost-text">
+
+                <button type="submit" id="createpost-button">Create post</button>
+            </form>
+        </section>
+
+        <button id="logoutbutton">Logout</button>
+    </main>
+
+    <footer>
+        <a href="" id="home">home</a>
+        <a href="" id="search">search</a>
+        <button id="show-create-post-form-button">+</button>
+        <a href="" id="profile">profile</a>
+    </footer>
+
+    <script src="../data.js"></script>
+    <script src="../logic.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

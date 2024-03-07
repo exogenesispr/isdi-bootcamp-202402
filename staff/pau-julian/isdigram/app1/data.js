@@ -37,10 +37,15 @@ var data = (function () {
         return posts
     }
 
+    function updatePosts(posts) {
+        localStorage.posts = JSON.stringify(posts)
+    }
+
     return {
         findUser: findUser,
         insertUser: insertUser,
         insertPost: insertPost,
-        getAllPosts: getAllPosts
+        getAllPosts: getAllPosts,
+        updatePosts: updatePosts
     }
 })()
