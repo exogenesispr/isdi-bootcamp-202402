@@ -15,7 +15,7 @@
         <h1>Register</h1>
         <form action="">
             <label for="name">Name</label>
-            <input type="text" pattern="[0-9a-zA-Z]{6,}" id="name">
+            <input type="text" minlength="2" id="name">
 
             <label for="birthdate">Age</label>
             <input type="date" id="birthdate">
@@ -24,10 +24,10 @@
             <input type="email" id="email">
 
             <label for="username">Username</label>
-            <input type="text" id="username">
+            <input type="text" minlength="4" id="username">
 
             <label for="password">Password</label>
-            <input type="password" id="password">
+            <input type="password" minlength="6" id="password">
 
             <button type="submit">Register</button>
         </form>

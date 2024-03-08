@@ -13,6 +13,10 @@
     var createPostForm = document.querySelector('#create-post-form')
     var postListSection = document.querySelector('#post-list-section')
     var createPostSection = document.querySelector('#create-post-section')
+    var chatButton = document.querySelector('#chat-button')
+    var chatSection = document.querySelector('#chat-section')
+    var footer = document.querySelector('#footer')
+    var homeButton = document.querySelector('#home-button')
 
     try {
         var user = logic.retrieveUser()
@@ -20,6 +24,7 @@
         title.innerText = 'Welcome, ' + user.name + '!'
     } catch (error) {
         console.error(error)
+
         alert(error.message)
     }
 
@@ -81,15 +86,12 @@
 
                 article.append(authorHeading, image, paragraph, dateTime)
 
-                //var deleteButton
-
                 if (post.author.id === logic.getLoggedInUserId()) {
                     var deleteButton = document.createElement('button')
                     deleteButton.setAttribute('id', 'button-delete-post')
                     deleteButton.innerText = 'Delete🗑Post'
 
                     deleteButton.addEventListener('click', function () {
-                        //logic.removePost(post.id)
                         if (confirm('delete post?')) {
                             try {
                                 logic.removePost(post.id)
@@ -122,6 +124,49 @@
     }
 
     renderPosts()
+
+    chatButton.addEventListener('click', function () {
+        postListSection.style.display = 'none'
+        footer.style.display = 'none'
+        chatButton.style.display = 'none'
+
+        homeButton.style.display = 'block'
+        chatSection.style.display = 'block'
+
+        var userList = chatSection.querySelector('#user-list')
+
+        userList.innerHTML = ''
+
+        try {
+            var users = logic.retrieveUsers()
+
+            users.forEach(function (user) {
+                var item = document.createElement('li')
+
+                if (user.status === 'online')
+                    item.classList.add('user-list__item--online')
+                else if (user.status === 'offline')
+                    item.classList.add('user-list__item--offline')
+
+                item.innerText = user.username
+
+                userList.appendChild(item)
+            })
+
+        } catch (error) {
+            console.error(error)
+            alert(error.message)
+        }
+    })
+
+    homeButton.addEventListener('click', function () {
+        homeButton.style.display = 'none'
+        chatSection.style.display = 'none'
+
+        postListSection.style.display = ''
+        footer.style.display = ''
+        chatButton.style.display = ''
+    })
 
 })()
 

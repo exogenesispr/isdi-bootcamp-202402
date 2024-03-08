@@ -11,16 +11,19 @@
 
 
 <body>
-    <header>
-        <a href="lastlike" id="lastlike"></a>
-        <a href="message" id="messages"></a>
-        <div id="history">Histories</div>
-    </header>
-
     <main>
         <h1>Welcome ISDIGRAM</h1>
+        <nav id="menu-nav">
+            <button id="home-button">🏡</button>
+            <button id="chat-button">💬</button>
+            <button id="logoutbutton">🚪</button>
+        </nav>
 
         <section id="post-list-section"></section>
+
+        <section id="chat-section">
+            <ul id="user-list"></ul>
+        </section>
 
         <section id="create-post-section">
             <h2>Create Post</h2>
@@ -36,13 +39,13 @@
             </form>
         </section>
 
-        <button id="logoutbutton">Logout</button>
+
     </main>
 
-    <footer>
+    <footer id="footer">
         <a href="" id="home">home</a>
         <a href="" id="search">search</a>
-        <button id="show-create-post-form-button">+</button>
+        <button id="show-create-post-form-button">➕</button>
         <a href="" id="profile">profile</a>
     </footer>
 

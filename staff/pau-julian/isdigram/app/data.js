@@ -43,6 +43,32 @@ var data = (function () {
         saveUsers(users)
     }
 
+    function printUsers() {
+        var users = loadUsers()
+
+        console.table(users)
+    }
+
+    function updateUser(user) {
+        var users = loadUsers()
+
+        var index = users.findIndex(function (user2) {
+            return user2.id === user.id
+        })
+
+        if (index > -1) {
+            users.splice(index, 1, user)
+
+            saveUsers(users)
+        }
+    }
+
+    function getAllUsers() {
+        var users = loadUsers()
+
+        return users
+    }
+
     function insertPost(post) {
         var posts = loadPosts()
 
@@ -80,6 +106,9 @@ var data = (function () {
     return {
         findUser: findUser,
         insertUser: insertUser,
+        printUsers: printUsers,
+        updateUser: updateUser,
+        getAllUsers: getAllUsers,
         insertPost: insertPost,
         getAllPosts: getAllPosts,
         findPost: findPost,

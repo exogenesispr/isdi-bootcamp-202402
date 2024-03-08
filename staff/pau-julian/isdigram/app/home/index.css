@@ -20,6 +20,7 @@ footer {
   justify-content: center;
   padding: 10px;
   box-sizing: border-box;
+  background-color: white;
 }
 
 img {
@@ -29,10 +30,37 @@ img {
 #create-post-section {
   display: none;
   margin-bottom: 50px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  max-width: 100%;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 0 5vw;
 }
 
 #post-list-section {
   margin-bottom: 50px;
+}
+
+#chat-section {
+  display: none;
+}
+
+#home-button {
+  display: none;
+}
+
+#menu-nav {
+  display: flex;
+}
+
+.user-list__item--online::marker {
+  color: limegreen;
+}
+
+.user-list__item--offline::marker {
+  color: tomato;
 }
 
 /*# sourceMappingURL=index.css.map */
