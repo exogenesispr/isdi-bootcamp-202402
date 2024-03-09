@@ -11,7 +11,7 @@ var logic = (function () {
 
     function validateText(text, explain, checkEmptySpaceInside) {
         if (typeof text !== 'string') throw new Error(explain + ' ' + ' is not a string')
-        if (!text.trim().length) throw new Error(explain + ' >' + text + '< is empty or black')
+        if (!text.trim().length) throw new Error(explain + ' >' + text + '< is empty or blank')
 
         if (checkEmptySpaceInside) {
             if (text.includes(' ')) throw new Error(explain + ' ' + text + ' has empty spaces')
@@ -179,16 +179,32 @@ var logic = (function () {
 
         if (!post) throw new Error('post not found')
 
-        if (post.author.id !== data.getLoggedInUserId) throw new Error('post does not belong to user')
+        if (post.author.id !== getLoggedInUserId) throw new Error('post does not belong to user')
 
         data.deletePost(function (post) {
             return post.id === postId
         })
     }
 
+    function createMessage(userId, message2) {
+        validateText(message2, 'message')
+
+        var timestamp = Date.now()
+        var messageDate = new Date(timestamp).toISOString()
+
+        var message = {
+            from: getLoggedInUserId(),
+            to: userId,
+            text: message2,
+            date: messageDate,
+        }
+
+        data.insertMessage(message)
+    }
+
     function showForm(id) {
         var form = document.getElementById(id)
-        if (form.style.display === 'none') {
+        if (form.style.display === 'none' || form.style.display === '') {
             form.style.display = 'block'
         } else {
             form.style.display = 'none'
@@ -206,6 +222,7 @@ var logic = (function () {
         createPost: createPost,
         retrievePosts: retrievePosts,
         removePost: removePost,
+        createMessage: createMessage,
         showForm: showForm,
     }
 })()

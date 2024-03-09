@@ -1,10 +1,10 @@
-* {
+body {
   margin: 0;
-  box-sizing: border-box;
 }
 
 main {
-  margin: 0 5vw;
+  margin: 0;
+  padding: 0 5vw;
 }
 
 form {
@@ -33,10 +33,10 @@ img {
   position: fixed;
   bottom: 0;
   left: 0;
-  max-width: 100%;
   background-color: white;
+  width: 100%;
   box-sizing: border-box;
-  padding: 0 5vw;
+  padding: 5vw;
 }
 
 #post-list-section {
@@ -47,6 +47,14 @@ img {
   display: none;
 }
 
+.user-list__item--online::marker {
+  color: limegreen;
+}
+
+.user-list__item--offline::marker {
+  color: tomato;
+}
+
 #home-button {
   display: none;
 }
@@ -55,12 +63,14 @@ img {
   display: flex;
 }
 
-.user-list__item--online::marker {
-  color: limegreen;
-}
-
-.user-list__item--offline::marker {
-  color: tomato;
+#message-section {
+  display: none;
+  margin-bottom: 50px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  padding: 0 5vw;
 }
 
 /*# sourceMappingURL=index.css.map */

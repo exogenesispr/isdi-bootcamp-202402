@@ -17,6 +17,10 @@
     var chatSection = document.querySelector('#chat-section')
     var footer = document.querySelector('#footer')
     var homeButton = document.querySelector('#home-button')
+    var backButton = document.querySelector('#back-button')
+    var userList = document.querySelector('#user-list')
+    var messageSection = document.querySelector('#message-section')
+    var sendMessageForm = messageSection.querySelector('#send-message-form')
 
     try {
         var user = logic.retrieveUser()
@@ -133,31 +137,61 @@
         homeButton.style.display = 'block'
         chatSection.style.display = 'block'
 
-        var userList = chatSection.querySelector('#user-list')
-
-        userList.innerHTML = ''
-
         try {
-            var users = logic.retrieveUsers()
-
-            users.forEach(function (user) {
-                var item = document.createElement('li')
-
-                if (user.status === 'online')
-                    item.classList.add('user-list__item--online')
-                else if (user.status === 'offline')
-                    item.classList.add('user-list__item--offline')
-
-                item.innerText = user.username
-
-                userList.appendChild(item)
-            })
+            renderUsers()
 
         } catch (error) {
             console.error(error)
             alert(error.message)
         }
     })
+
+    function renderUsers() {
+        userList.innerHTML = ''
+
+        var users = logic.retrieveUsers()
+
+        users.forEach(function (user) {
+            var item = document.createElement('li')
+
+            if (user.status === 'online')
+                item.classList.add('user-list__item--online')
+            else if (user.status === 'offline')
+                item.classList.add('user-list__item--offline')
+
+            item.innerText = user.username
+
+            item.addEventListener('click', function () {
+                showMessageConversation(user.id)
+            })
+
+            userList.appendChild(item)
+        })
+    }
+
+    function showMessageConversation(userId) {
+        chatSection.style.display = 'none'
+        backButton.style.display = 'block'
+        homeButton.style.display = 'none'
+        messageSection.style.display = 'inline'
+
+        sendMessageForm.addEventListener('submit', function (event) {
+            event.preventDefault()
+
+            var messageInput = sendMessageForm.querySelector('#message')
+            var message = messageInput.value
+
+            try {
+                logic.createMessage(userId, message)
+
+                sendMessageForm.reset()
+
+            } catch (error) {
+                console.error(error)
+                alert(error.message)
+            }
+        })
+    }
 
     homeButton.addEventListener('click', function () {
         homeButton.style.display = 'none'
@@ -168,6 +202,19 @@
         chatButton.style.display = ''
     })
 
-})()
+    backButton.addEventListener('click', function () {
+        backButton.style.display = 'none'
 
-//'[{"author":"jambo","image":"https://images.mediotiempo.com/EB_bKN3nLnGgacxJ0oAVBuJYDCc=/958x596/uploads/media/2019/08/06/cristiano-ronaldo-revela-significado-grito.jpg","text":"asd","date":"2024-03-06, 8:22:59 p.m.","id":1709752979238},{"author":"jambo","image":"https://www.ole.com.ar/2022/12/09/l3UKqacEZ_1200x630__1.jpg","text":"anda pasha","date":"2024-03-06, 8:23:11 p.m.","id":1709752991949},{"author":"pepitogrillo","image":"https://www.ole.com.ar/2022/12/09/l3UKqacEZ_1200x630__1.jpg","text":"bobito","date":"2024-03-06, 8:24:09 p.m.","id":1709753049601},{"author":"pepitogrillo","image":"https://images.mediotiempo.com/EB_bKN3nLnGgacxJ0oAVBuJYDCc=/958x596/uploads/media/2019/08/06/cristiano-ronaldo-revela-significado-grito.jpg","text":"siu","date":"2024-03-06, 8:24:19 p.m.","id":1709753059465}]'
+        chatSection.style.display = 'block'
+        homeButton.style.display = 'block'
+        messageSection.style.display = ''
+        try {
+            renderUsers()
+
+        } catch (error) {
+            console.error(error)
+            alert(error.message)
+        }
+    })
+
+})()

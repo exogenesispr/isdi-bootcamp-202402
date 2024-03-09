@@ -23,6 +23,14 @@ var data = (function () {
         localStorage.posts = JSON.stringify(posts)
     }
 
+    function loadMessages() {
+        return JSON.parse(localStorage.messages || '[]')
+    }
+
+    function saveMessages(messages) {
+        localStorage.messages = JSON.stringify(messages)
+    }
+
     // DATA
 
     function findUser(callback) {
@@ -103,6 +111,23 @@ var data = (function () {
         savePosts(posts)
     }
 
+    function insertMessage(message) {
+        var messages = loadMessages()
+
+        message.id = generateId()
+
+        messages.push(message)
+
+        saveMessages(messages)
+    }
+
+    function getAllMessages() {
+        var messages = loadMessages()
+
+        return messages
+    }
+
+
     return {
         findUser: findUser,
         insertUser: insertUser,
@@ -113,5 +138,7 @@ var data = (function () {
         getAllPosts: getAllPosts,
         findPost: findPost,
         deletePost: deletePost,
+        insertMessage: insertMessage,
+        getAllMessages: getAllMessages,
     }
 })()

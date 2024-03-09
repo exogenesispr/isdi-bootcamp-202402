@@ -19,10 +19,10 @@ img
     position: fixed
     bottom: 0
     left: 0
-    max-width: 100%
     background-color: white
+    width: 100%
     box-sizing: border-box
-    padding: 0 5vw
+    padding: 5vw
 
 #post-list-section
     margin-bottom: 50px
@@ -30,14 +30,23 @@ img
 #chat-section
     display: none
 
+.user-list__item--online::marker
+    color: limegreen
+
+.user-list__item--offline::marker
+    color: tomato
+
 #home-button
     display: none
 
 #menu-nav
     display: flex
 
-.user-list__item--online::marker
-    color: limegreen
-
-.user-list__item--offline::marker
-    color: tomato
+#message-section
+    display: none
+    margin-bottom: 50px
+    position: fixed
+    bottom: 0
+    left: 0
+    background-color: white
+    padding: 0 5vw
