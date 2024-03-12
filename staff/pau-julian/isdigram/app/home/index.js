@@ -9,18 +9,23 @@
 
     var title = document.querySelector('h1')
     var logoutButton = document.querySelector('#logoutbutton')
-    var showCreatePostFormButton = document.querySelector('#show-create-post-form-button')
-    var createPostForm = document.querySelector('#create-post-form')
-    var postListSection = document.querySelector('#post-list-section')
     var createPostSection = document.querySelector('#create-post-section')
+    var createPostForm = document.querySelector('#create-post-form')
+    var createPostCancelButton = createPostSection.querySelector('#create-post-cancel-button')
+    var showCreatePostFormButton = document.querySelector('#show-create-post-form-button')
+    var postListSection = document.querySelector('#post-list-section')
+
     var chatButton = document.querySelector('#chat-button')
     var chatSection = document.querySelector('#chat-section')
+    var chatPanel = chatSection.querySelector('#chat-panel')
+    var chatForm = chatPanel.querySelector('form')
     var footer = document.querySelector('#footer')
     var homeButton = document.querySelector('#home-button')
     var backButton = document.querySelector('#back-button')
-    var userList = document.querySelector('#user-list')
+    var editPostSection = document.querySelector('#edit-post-section')
+    var editPostCancelButton = editPostSection.querySelector('#edit-post-cancel-button')
+    var editPostForm = editPostSection.querySelector('form')
     var messageSection = document.querySelector('#message-section')
-    var sendMessageForm = messageSection.querySelector('#send-message-form')
 
     try {
         var user = logic.retrieveUser()
@@ -30,6 +35,14 @@
         console.error(error)
 
         alert(error.message)
+
+        try {
+            logic.logoutUser()
+        } catch (error) {
+            logic.cleanUpLoggedInUserId()
+        }
+
+        location.href = '../login'
     }
 
     logoutButton.addEventListener('click', function () {
@@ -66,6 +79,14 @@
             alert(error.message)
         }
     })
+
+    showCreatePostFormButton.onclick = function () {
+        createPostSection.style.display = 'block'
+    }
+
+    createPostCancelButton.onclick = function () {
+        createPostSection.style.display = 'none'
+    }
 
     function renderPosts() {
         try {
@@ -108,14 +129,40 @@
                             }
                         }
                     })
+                    var editButton = document.createElement('button')
 
-                    article.appendChild(deleteButton)
+                    editButton.innerText = '🖊'
+
+                    editButton.onclick = function () {
+                        var textInput = editPostForm.querySelector('#text')
+
+                        textInput.value = post.text
+
+                        editPostForm.addEventListener('submit', function (event) {
+                            event.preventDefault()
+
+                            var text = textInput.value
+
+                            try {
+                                logic.modifyPost(post.id, text)
+
+                                editPostForm.reset()
+
+                                editPostSection.style.display = ''
+
+                                renderPosts()
+                            } catch (error) {
+                                console.error(error)
+
+                                alert(error.message)
+                            }
+                        })
+
+                        editPostSection.style.display = 'block'
+                    }
+
+                    article.append(deleteButton, editButton)
                 }
-
-
-                //if (deleteButton) {
-                //    article.appendChild(deleteButton)
-                //}
 
                 postListSection.appendChild(article)
             })
@@ -129,6 +176,8 @@
 
     renderPosts()
 
+    var renderMessagesIntervalId
+
     chatButton.addEventListener('click', function () {
         postListSection.style.display = 'none'
         footer.style.display = 'none'
@@ -137,61 +186,95 @@
         homeButton.style.display = 'block'
         chatSection.style.display = 'block'
 
+        var userList = chatSection.querySelector('#user-list')
+
+        userList.innerHTML = ''
+
         try {
-            renderUsers()
+            var users = logic.retrieveUsers()
+
+            users.forEach(function (user) {
+                var item = document.createElement('li')
+
+                item.classList.add('user-list__item')
+
+                if (user.status === 'online')
+                    item.classList.add('user-list__item--online')
+                else if (user.status === 'offline')
+                    item.classList.add('user-list__item--offline')
+
+                item.innerText = user.username
+
+                item.addEventListener('click', function () {
+                    var usernameTitle = chatPanel.querySelector('#chat-panel__username')
+
+                    usernameTitle.innerText = user.username
+
+                    function renderMessages() {
+                        try {
+                            var messages = logic.retrieveMessagesWithUser(user.id)
+
+                            var messageList = chatPanel.querySelector('#message-list')
+
+                            messageList.innerHTML = ''
+
+                            messages.forEach(function (message) {
+                                var messageParagraph = document.createElement('p')
+
+                                messageParagraph.innerText = message.text
+
+                                if (message.from === logic.getLoggedInUserId()) {
+                                    messageParagraph.classList.add('message-list__item--right')
+                                } else {
+                                    messageParagraph.classList.add('message-list__item--left')
+                                }
+                                messageList.appendChild(messageParagraph)
+                            })
+                        } catch (error) {
+                            console.error(error)
+
+                            alert(error.message)
+
+                        }
+                    }
+                    renderMessages()
+
+                    clearInterval(renderMessagesIntervalId)
+
+                    renderMessagesIntervalId = setInterval(renderMessages, 1000)
+
+                    chatForm.onsubmit = function (event) {
+                        event.preventDefault()
+
+
+                        var textInput = chatForm.querySelector('#text')
+                        var text = textInput.value
+
+                        try {
+                            logic.sendMessageToUser(user.id, text)
+
+                            chatForm.reset()
+
+                            renderMessages()
+                        } catch (error) {
+                            console.error(error)
+
+                            alert(error.message)
+
+                        }
+                    }
+
+                    chatPanel.style.display = 'block'
+                })
+
+                userList.appendChild(item)
+            })
 
         } catch (error) {
             console.error(error)
             alert(error.message)
         }
     })
-
-    function renderUsers() {
-        userList.innerHTML = ''
-
-        var users = logic.retrieveUsers()
-
-        users.forEach(function (user) {
-            var item = document.createElement('li')
-
-            if (user.status === 'online')
-                item.classList.add('user-list__item--online')
-            else if (user.status === 'offline')
-                item.classList.add('user-list__item--offline')
-
-            item.innerText = user.username
-
-            item.addEventListener('click', function () {
-                showMessageConversation(user.id)
-            })
-
-            userList.appendChild(item)
-        })
-    }
-
-    function showMessageConversation(userId) {
-        chatSection.style.display = 'none'
-        backButton.style.display = 'block'
-        homeButton.style.display = 'none'
-        messageSection.style.display = 'inline'
-
-        sendMessageForm.addEventListener('submit', function (event) {
-            event.preventDefault()
-
-            var messageInput = sendMessageForm.querySelector('#message')
-            var message = messageInput.value
-
-            try {
-                logic.createMessage(userId, message)
-
-                sendMessageForm.reset()
-
-            } catch (error) {
-                console.error(error)
-                alert(error.message)
-            }
-        })
-    }
 
     homeButton.addEventListener('click', function () {
         homeButton.style.display = 'none'
@@ -215,6 +298,10 @@
             console.error(error)
             alert(error.message)
         }
+    })
+
+    editPostCancelButton.addEventListener('onclick', function () {
+        editPostSection.style.display = ''
     })
 
 })()

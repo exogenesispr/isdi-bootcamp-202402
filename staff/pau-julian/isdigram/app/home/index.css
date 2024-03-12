@@ -39,12 +39,45 @@ img {
   padding: 5vw;
 }
 
+#edit-post-section {
+  display: none;
+  margin-bottom: 50px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: white;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5vw;
+}
+
 #post-list-section {
   margin-bottom: 50px;
 }
 
 #chat-section {
   display: none;
+}
+
+#chat-panel {
+  display: none;
+}
+
+.message-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-list__item--left {
+  align-self: flex-start;
+}
+
+.message-list__item--right {
+  align-self: flex-end;
+}
+
+.user-list__item {
+  cursor: pointer;
 }
 
 .user-list__item--online::marker {
@@ -59,18 +92,12 @@ img {
   display: none;
 }
 
-#menu-nav {
-  display: flex;
+#back-button {
+  display: none;
 }
 
-#message-section {
-  display: none;
-  margin-bottom: 50px;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  background-color: white;
-  padding: 0 5vw;
+#menu-nav {
+  display: flex;
 }
 
 /*# sourceMappingURL=index.css.map */
