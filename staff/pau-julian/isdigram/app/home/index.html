@@ -11,77 +11,26 @@
 
 
 <body>
-    <main>
-        <h1>Welcome ISDIGRAM</h1>
-        <nav id="menu-nav">
-            <button id="home-button">🏡</button>
-            <button id="chat-button">💬</button>
-            <button id="back-button">🔙</button>
-            <button id="logoutbutton">🚪</button>
-        </nav>
-
-        <section id="post-list-section"></section>
-
-        <section id="chat-section">
-            <ul id="user-list"></ul>
-
-            <div id="chat-panel">
-                <h3 id="chat-panel__username">username</h3>
-
-                <div class="message-list" id="message-list"></div>
-
-                <form action="" id="send-message-form">
-                    <label for="text"></label>
-                    <input type="text" name="" id="text">
-
-                    <button type="submit">Send message</button>
-                </form>
-            </div>
-        </section>
-
-        <section id="create-post-section">
-            <h2>Create Post</h2>
-
-            <form action="" id="create-post-form">
-                <label for="link">Image</label>
-                <input type="link" id="createpost-image">
-
-                <label for="text">Text</label>
-                <input type="text" id="createpost-text">
-
-                <button type="submit" id="createpost-button">Create post</button>
-            </form>
-
-            <button id="create-post-cancel-button">Back</button>
-        </section>
-
-        <section id="edit-post-section">
-            <h2>Edit Post</h2>
-
-            <form action="" id="edit-post-form">
-                <label for="text">Text</label>
-                <input type="text" id="text">
-
-                <button type="submit">Save</button>
-            </form>
-            <button id="edit-post-cancel-button">Cancel</button>
-        </section>
-
-    </main>
-
-    <footer id="footer">
-        <a href="" id="home">home</a>
-        <a href="" id="search">search</a>
-        <button id="show-create-post-form-button">➕</button>
-        <a href="" id="profile">profile</a>
-    </footer>
-
+    <script src="../utils.js"></script>
+    <!--DATA-->
     <script src="../data/Collection.js"></script>
     <script src="../data/index.js"></script>
-
+    <!-- logic(business) -->
     <script src="../logic.js"></script>
-
+    <!-- main COMPONENT -->
+    <script src="../Component.js"></script>
+    <!-- atomic components -->
+    <script src="components/Image.js"></script>
+    <script src="components/Label.js"></script>
+    <script src="components/Input.js"></script>
+    <script src="components/Button.js"></script>
+    <!-- molecular components -->
+    <script src="components/Menu.js"></script>
+    <script src="components/Post.js"></script>
+    <script src="components/Posts.js"></script>
+    <script src="components/CreatePost.js"></script>
     <script src="index.js"></script>
+
 </body>
 
 </html>
