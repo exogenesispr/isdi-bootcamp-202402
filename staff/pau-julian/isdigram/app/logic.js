@@ -19,11 +19,12 @@ var logic = (function () {
     }
 
     function validateDate(date, explain) {
-        if (typeof date !== 'string') throw new TypeError(expalin + '' + date + ' is not a string')
+        if (typeof date !== 'string') throw new TypeError(explain + '' + date + ' is not a string')
         if (!DATE_REGEX.test(date)) throw new Error(explain + ' ' + date + ' is not a date')
     }
 
     function validateEmail(email, explain) {
+        if (typeof email !== 'string') throw new TypeError(explain + '' + email + ' is not a string')
         if (!EMAIL_REGEX.test(email)) throw new Error(explain + ' ' + email + ' is not an email')
     }
 
@@ -226,7 +227,7 @@ var logic = (function () {
 
         if (!post) throw new Error('post not found')
 
-        if (post.author.id !== sessionStorage.userId) throw new Error('post does not belong to user')
+        if (post.author !== sessionStorage.userId) throw new Error('post does not belong to user')
 
         db.posts.deleteOne(function (post) {
             return post.id === postId

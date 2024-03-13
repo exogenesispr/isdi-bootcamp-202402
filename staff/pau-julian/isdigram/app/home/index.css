@@ -70,10 +70,12 @@ img {
 
 .message-list__item--left {
   align-self: flex-start;
+  background-color: lightblue;
 }
 
 .message-list__item--right {
   align-self: flex-end;
+  background-color: lightgreen;
 }
 
 .user-list__item {
