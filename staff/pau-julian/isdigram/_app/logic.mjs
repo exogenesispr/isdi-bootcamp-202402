@@ -179,7 +179,7 @@ function sendMessageToUser(userId, text) {
 function retrieveMessagesWithUser(userId) {
     validateText(userId, 'userId', true)
 
-    const chat = db.chats.findOne(function (chat) {
+    let chat = db.chats.findOne(function (chat) {
         return chat.users.includes(userId) && chat.users.includes(sessionStorage.userId)
     })
 

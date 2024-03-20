@@ -1,5 +1,5 @@
 class Component {
-    constructor(tagName) {
+    constructor(tagName = 'div') {
         this._container = document.createElement(tagName)
     }
 
@@ -27,7 +27,7 @@ class Component {
     }
 
     remove(child) {
-        if (!(child instanceof Component)) throw new TypeError('child is not a component')
+        if (!(child instanceof Component)) throw new TypeError('child is not a Component')
 
         this._container.removeChild(child._container)
     }

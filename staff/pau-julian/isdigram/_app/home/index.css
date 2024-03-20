@@ -42,8 +42,7 @@ img {
   padding: 5vw;
 }
 
-#edit-post-section {
-  display: none;
+.edit-post {
   margin-bottom: 50px;
   position: fixed;
   bottom: 0;
