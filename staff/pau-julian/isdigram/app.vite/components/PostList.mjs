@@ -11,7 +11,7 @@ class PostList extends Component {
 
         this.refresh()
 
-        setInterval(() => PostList.active && this.refresh(), 5000)
+        //setInterval(() => PostList.active && this.refresh(), 5000)
 
         PostList.active = true
 

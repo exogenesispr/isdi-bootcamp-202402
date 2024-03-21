@@ -1,4 +1,4 @@
-import Input from "./Input.mjs";
+import Input from './Input.mjs'
 
 class PasswordInput extends Input {
     constructor() {
