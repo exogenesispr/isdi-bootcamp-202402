@@ -30,8 +30,6 @@ class Chat extends Component {
 
                 this.add(this._messageList, sendMessageForm)
             } else {
-                this._messageList.stopAutoRefresh()
-
                 const oldMessageList = this._messageList
                 const oldSendMessageForm = sendMessageForm
 
@@ -47,10 +45,11 @@ class Chat extends Component {
 
         this.add(userList)
 
+        Chat.active = true
     }
 
-    stopAutoRefresh() {
-        this._messageList.stopAutoRefresh()
+    static set active(status) {
+        MessageList.active = status
     }
 }
 

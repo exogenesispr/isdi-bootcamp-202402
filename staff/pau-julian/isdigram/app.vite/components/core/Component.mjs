@@ -3,7 +3,7 @@ class Component {
         if (tagNameOrContainer instanceof HTMLElement) {
             this._container = tagNameOrContainer
         } else {
-            this._container = document.createElement(tagName)
+            this._container = document.createElement(tagNameOrContainer)
         }
     }
 

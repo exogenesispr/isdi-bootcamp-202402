@@ -23,21 +23,21 @@ class Register extends Component {
         const form = new Form
 
         const nameLabel = new Label
-        nameLabel.setText('name')
+        nameLabel.setText('Name')
         nameLabel.setFor('name')
 
         const nameInput = new Input
         nameInput.setId('name')
 
         const birthdateLabel = new Label
-        birthdateLabel.setText('birthdate')
+        birthdateLabel.setText('Birthdate')
         birthdateLabel.setFor('birthdate')
 
         const birthdateInput = new DateInput
         birthdateInput.setId('birthdate')
 
         const emailLabel = new Label
-        emailLabel.setText('email')
+        emailLabel.setText('Email')
         emailLabel.setFor('email')
 
         const emailInput = new EmailInput
@@ -51,7 +51,7 @@ class Register extends Component {
         usernameInput.setId('username')
 
         const passwordLabel = new Label
-        passwordLabel.setText('password')
+        passwordLabel.setText('Password')
         passwordLabel.setFor('password')
 
         const passwordInput = new PasswordInput

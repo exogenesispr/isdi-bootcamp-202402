@@ -11,8 +11,14 @@ class PostList extends Component {
 
         this.refresh()
 
-        this._refreshIntervalId = setInterval(() => this.refresh(), 5000)
+        setInterval(() => PostList.active && this.refresh(), 5000)
+
+        PostList.active = true
+
+        this._onEditPostClickCallback = null
     }
+
+    static active = false
 
     refresh() {
         try {
@@ -23,9 +29,11 @@ class PostList extends Component {
             postList.forEach((post) => {
                 const post2 = new Post(post)
 
-                post2.onDeleted(() => { this.refresh() })
-
                 post2.onEdited(() => { this.refresh() })
+
+                post2.onEditClick((post) => this._onEditPostClickCallback(post))
+
+                post2.onDeleted(() => { this.refresh() })
 
                 this.add(post2)
             })
@@ -34,8 +42,10 @@ class PostList extends Component {
         }
     }
 
-    stopAutoRefresh() {
-        clearInterval(this._refreshIntervalId)
+    onEditPostClick(callback) {
+        if (typeof callback !== 'function') throw new TypeError('callback is not a function')
+
+        this._onEditPostClickCallback = callback
     }
 }
 
