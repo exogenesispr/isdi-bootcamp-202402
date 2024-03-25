@@ -6,7 +6,6 @@
  */
 
 function indexOf(object, value) {
-    // TODO
     if (object instanceof Object) {
         for (var i = 0; i < object.length; i++) {
             var elem = object[i]

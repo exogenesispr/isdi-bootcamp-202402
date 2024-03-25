@@ -8,7 +8,6 @@
  * @throws {TypeError} When object is not an object, or when index is not a number.
  */
 function insertMany(object, index, value) {
-    // TODO
     if (object instanceof Object) {
         if (typeof index === 'number') {
             if (arguments.length === 3) {

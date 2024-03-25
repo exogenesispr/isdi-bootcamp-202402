@@ -24,7 +24,6 @@ function extract(object, callback) {
         throw TypeError(object + ' is not an object')
     }
 }
-// TODO
 
 
 console.log('CASE 1: extract user pepito form users')
