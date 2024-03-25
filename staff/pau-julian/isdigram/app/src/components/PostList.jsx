@@ -11,7 +11,9 @@ class PostList extends Component {
         try {
             const posts = logic.retrievePosts()
 
-            this.state = { posts }
+            this.state = {
+                posts,
+            }
         } catch (error) {
             utils.showFeedback(error)
         }
@@ -42,6 +44,12 @@ class PostList extends Component {
                     <p>{post.text}</p>
 
                     <time>{post.date}</time>
+
+                    {post.author.id === logic.getLoggedInUserId() ? <button>🚮</button> : null}
+
+                    {post.author.id === logic.getLoggedInUserId() ? <button onClick={(post) => {
+                        this.props.onEditPostClick(post)
+                    }}>📋</button> : null}
                 </article>)}
             </section>
         )

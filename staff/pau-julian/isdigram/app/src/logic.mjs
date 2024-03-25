@@ -222,7 +222,6 @@ function retrievePosts() {
 
 function removePost(postId) {
     validateText(postId, 'postId')
-    //TO DO INPUT VALIDATION
 
     const post = db.posts.findOne(function (post) {
         return post.id === postId
