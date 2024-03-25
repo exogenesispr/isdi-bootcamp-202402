@@ -1,5 +1,4 @@
 var Animal = require('./Animal')
-var Person = require('./Person')
 
 function Cat(name, race, handler, birthdate, country, height, weight, skincolor) {
     if (typeof handler !== 'string') { throw new TypeError(handler + ' is not a string') }
@@ -21,12 +20,4 @@ Cat.prototype.jump = function (location) {
     this.location = location
 }
 
-/*
-Cat.prototype.throwGlass = function () {
-    if (this.location !== 'table') {
-        throw new Error(`There's no glass in this ` + location)
-    }
-    this.glass = undefined
-}
-*/
 module.exports = Cat

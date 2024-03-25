@@ -53,15 +53,4 @@ try {
 
 assert.error(errorThrown, 'TypeError', null + ' is not a suitable location to jump')
 
-/*
-console.log('CASE throw glass')
-
-var glass = 'glass';
-
-cat.jump('table')
-cat.throwGlass()
-
-assert.equalsValue(glass, undefined)
-*/
-
 
