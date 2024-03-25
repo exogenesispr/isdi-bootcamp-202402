@@ -1,4 +1,6 @@
-class Chat extends React.Component {
+import { Component } from 'react'
+
+class Chat extends Component {
     constructor() {
         super()
 
@@ -8,8 +10,16 @@ class Chat extends React.Component {
         return <main className="main">
             <h1>Hello, jambo!</h1>
             <nav>
-                <button>🏡</button>
-                <button>🚪</button>
+                <button onClick={(event) => {
+                    event.preventDefault()
+
+                    this.props.onNavHomeClick()
+                }}>🏡</button>
+                <button onClick={(event) => {
+                    event.preventDefault()
+
+                    this.props.onNavLogoutClick()
+                }}>🚪</button>
             </nav>
             <section>
                 <ul>
@@ -28,8 +38,8 @@ class Chat extends React.Component {
                     <li className="message-list__item--right">como andas man</li>
                     <li className="message-list__item--left">bien y vos?</li>
                 </ul>
-                <form action="">
-                    <label htmlFor="">Text</label>
+                <form >
+                    <label htmlFor="text">Text</label>
                     <input type="text" id="text" />
                     <button className="round-button submit-button" type="submit">Send</button>
                 </form>
@@ -37,3 +47,5 @@ class Chat extends React.Component {
         </main>
     }
 }
+
+export default Chat

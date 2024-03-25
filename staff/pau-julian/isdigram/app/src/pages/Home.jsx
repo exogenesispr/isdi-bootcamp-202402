@@ -1,4 +1,6 @@
-class Home extends React.Component {
+import { Component } from 'react'
+
+class Home extends Component {
     constructor() {
         super()
     }
@@ -8,7 +10,11 @@ class Home extends React.Component {
         return <main className="main">
             <h1>Hello, jambo!</h1>
             <nav>
-                <button>💬</button>
+                <button onClick={(event) => {
+                    event.preventDefault()
+
+                    this.props.onNavChatClick()
+                }}>💬</button>
                 <button>🚪</button>
             </nav>
             <section>
@@ -49,3 +55,5 @@ class Home extends React.Component {
         </main>
     }
 }
+
+export default Home
