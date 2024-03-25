@@ -1,3 +1,5 @@
+import logic from './logic.mjs'
+
 import { Component } from 'react'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
@@ -10,7 +12,7 @@ class App extends Component {
   constructor() {
     super()
 
-    this.state = { view: 'landing' }
+    this.state = { view: logic.isUserLoggedIn() ? 'home' : 'landing' }
   }
   render() {
     if (this.state.view === 'landing') {
@@ -23,12 +25,11 @@ class App extends Component {
       return <Home onNavChatClick={() => this.setState({ view: 'chat' })} />
     } else if (this.state.view === 'chat') {
       return <Chat onNavHomeClick={() => this.setState({ view: 'home' })} />
-    }
+    } else
+      return <h1>🤨</h1>
   }
 
-  handleViewState(callback) {
 
-  }
 }
 
 export default App
