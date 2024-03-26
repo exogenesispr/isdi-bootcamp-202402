@@ -34,5 +34,14 @@
         "password": "cerdito123",
         "status": "online",
         "id": "f8ye3pb6uio"
+    },
+    {
+        "name": "Cal Vo",
+        "birthdate": "2004-01-01",
+        "email": "cal@vo.com",
+        "username": "calvo",
+        "password": "calvo123",
+        "status": "online",
+        "id": "8cweandh7u"
     }
 ]
