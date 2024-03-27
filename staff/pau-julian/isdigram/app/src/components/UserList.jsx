@@ -6,6 +6,7 @@ import { Component } from 'react'
 
 class UserList extends Component {
     constructor() {
+        logger.debug('UserList')
         super()
 
         try {
@@ -15,7 +16,7 @@ class UserList extends Component {
                 users,
             }
         } catch (error) {
-            utils.showFeedback(error)
+            showFeedback(error)
         }
 
     }
@@ -23,7 +24,7 @@ class UserList extends Component {
     render() {
         return (
             <ul>
-                {this.state.users.map((user) => <li key={user.id} className='user-list__item'>{user.username}</li>)}
+                {this.state.users.map((user) => <li user={user} key={user.id} className={user.status === 'online' ? 'user-list__item user-list__item--online' : 'user-list__item user-list__item--offline'} >{user.username}</li>)}
 
 
             </ul>

@@ -8,6 +8,7 @@ import UserList from '../components/UserList'
 
 class Chat extends Component {
     constructor() {
+        logger.debug('Chat')
         super()
 
         try {
@@ -15,13 +16,14 @@ class Chat extends Component {
 
             this.user = user
         } catch (error) {
-            utils.showFeedback(error)
+            showFeedback(error)
         }
     }
 
     handleLogoutClick = () => this.props.onUserLoggedOut()
 
     render() {
+        logger.debug('Chat -> render')
         const navStatus = 'chat'
         return (
             <main className="main">
