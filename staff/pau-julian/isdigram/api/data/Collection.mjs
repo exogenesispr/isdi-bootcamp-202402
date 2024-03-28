@@ -63,56 +63,111 @@ class Collection {
 
             const document = documents.find(condition)
 
-            callback(null, document)
+            callback(null, document || null)
         })
     }
 
-    insertOne(document) {
-        const documents = this._loadDocuments()
+    insertOne(document, callback) {
+        if (!(document instanceof Object)) throw new TypeError('document is not an object')
+        if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
-        document.id = this._generateId()
+        this._loadDocuments((error, documents) => {
+            if (error) {
+                callback(error)
 
-        documents.push(document)
+                return
+            }
 
-        this._saveDocuments(documents)
-    }
+            document.id = this._generateId()
 
-    updateOne(document) {
-        const documents = this._loadDocuments()
+            documents.push(document)
 
-        const index = documents.findIndex(function (document2) {
-            return document2.id === document.id
+            this._saveDocuments(documents, (error) => {
+                if (error) {
+                    callback(error)
+
+                    return
+                }
+                callback(null, document.id)
+            })
         })
-
-        if (index > -1) {
-            documents.splice(index, 1, document)
-
-            this._saveDocuments(documents)
-        }
     }
 
-    deleteOne(callback) {
-        const documents = this._loadDocuments()
+    updateOne(condition, document, callback) {
+        if (typeof condition !== 'function') throw new TypeError('condition callback is not a function')
+        if (typeof document !== 'object') throw new TypeError('document is not an object')
+        if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
-        const index = documents.findIndex(callback)
+        this._loadDocuments((error, documents) => {
+            if (error) {
+                callback(error)
 
-        if (index > -1) {
-            documents.splice(index, 1)
+                return
+            }
 
-            this._saveDocuments(documents)
-        }
+            const index = documents.findIndex(condition)
+
+            if (index > -1) {
+                documents.splice(index, 1, document)
+
+                this._saveDocuments(documents, (error) => {
+                    if (error) {
+                        callback(error)
+
+                        return
+                    }
+                    callback(null, true)
+                })
+
+                return
+            }
+
+            callback(null, false)
+        })
     }
 
-    getAll() {
-        const documents = this._loadDocuments()
+    deleteOne(condition, callback) {
+        if (typeof condition !== 'function') throw new TypeError('condition callback is not a function')
+        if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
-        return documents
+        this._loadDocuments((error, documents) => {
+            if (error) {
+                callback(error)
+
+                return
+            }
+
+            const index = documents.findIndex(condition)
+
+            if (index > -1) {
+                documents.splice(index, 1)
+
+                this._saveDocuments(documents, (error) => {
+                    if (error) {
+                        callback(error)
+
+                        return
+                    }
+
+                    callback(null, true)
+                })
+                return
+            }
+            callback(null, false)
+        })
     }
 
-    printAll() {
-        const document = this._loadDocuments()
+    getAll(callback) {
+        if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
-        console.table(document)
+        this._loadDocuments((error, documents) => {
+            if (error) {
+                callback(error)
+
+                return
+            }
+            callback(null, documents)
+        })
     }
 }
 
