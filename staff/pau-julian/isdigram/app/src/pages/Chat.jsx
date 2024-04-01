@@ -13,14 +13,26 @@ class Chat extends Component {
 
         try {
             const user = logic.retrieveUser()
-
             this.user = user
+
+            this.state = {
+                view: null,
+                userTo: null,
+                stamp: null,
+            }
         } catch (error) {
             showFeedback(error)
         }
     }
 
     handleLogoutClick = () => this.props.onUserLoggedOut()
+
+    handleOnUserClick = (user) => {
+        this.setState({
+            view: 'message-list',
+            userTo: user,
+        })
+    }
 
     render() {
         logger.debug('Chat -> render')
@@ -31,7 +43,11 @@ class Chat extends Component {
 
                 <Nav onNavHomeClick={() => this.props.onNavHomeClick()} onNavLogoutClick={this.handleLogoutClick} navStatus={navStatus} />
 
-                <UserList />
+                <UserList stamp={this.state.stamp} onUserClick={this.handleOnUserClick} />
+
+                {this.state.view === 'message-list' && <MessageList userTo={this.state.userTo} />}
+
+                {this.state.view === 'message-list' && <SendMessageForm userTo={this.state.userTo} />}
             </main>
         )
     }
