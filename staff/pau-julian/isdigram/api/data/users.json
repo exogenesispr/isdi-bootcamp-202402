@@ -1,14 +1,5 @@
 [
     {
-        "name": "pepito",
-        "birthdate": "2020-01-01",
-        "email": "pepito@grillo.com",
-        "username": "pepitogrillo",
-        "password": "123qwe",
-        "id": "i2hitalzfqw",
-        "status": "offline"
-    },
-    {
         "name": "jambo",
         "birthdate": "2020-08-08",
         "email": "jambo@jambo.com",
@@ -34,5 +25,14 @@
         "password": "cerdito123",
         "status": "online",
         "id": "f8ye3pb6uio"
+    },
+    {
+        "name": "Pepito Grillo",
+        "birthdate": "2000-01-01",
+        "email": "pepito@grillo.com",
+        "username": "pepitogrillo",
+        "password": "123qwe123",
+        "status": "online",
+        "id": "l1vfzcokmr"
     }
 ]

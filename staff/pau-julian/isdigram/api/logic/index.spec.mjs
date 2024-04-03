@@ -1,6 +1,6 @@
 import { describe } from "node:test"
 import db from "../data/index.mjs"
-import logic from "./logic.mjs"
+import logic from "./index.mjs"
 
 import { expect } from 'chai'
 

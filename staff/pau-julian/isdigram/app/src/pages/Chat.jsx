@@ -45,7 +45,7 @@ class Chat extends Component {
 
                 <UserList stamp={this.state.stamp} onUserClick={this.handleOnUserClick} />
 
-                {this.state.view === 'message-list' && <MessageList userTo={this.state.userTo} />}
+                {this.state.view === 'message-list' && <MessageList userTo={this.state.userTo} stamp={this.state.stamp} />}
 
                 {this.state.view === 'message-list' && <SendMessageForm userTo={this.state.userTo} />}
             </main>

@@ -14,15 +14,23 @@ class MessageList extends Component {
 
             this.state = {
                 messages,
-                userTo: this.props.userTo
+                userTo: this.props.userTo,
+                stamp: this.props.stamp,
             }
         } catch (error) {
-
+            showFeedback(error)
         }
     }
 
     render() {
-        const { userTo } = this.state
+
+        return (
+            <ul>
+                {this.state.messages.map((message) => <p key={message.id} className={message.from === logic.getLoggedInUserId() ? 'message-list__item--right' : 'message-list__item--left'}>{message.text}</p>)}
+            </ul>
+        )
 
     }
 }
+
+export default MessageList
