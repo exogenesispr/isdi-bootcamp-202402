@@ -1,21 +1,54 @@
-import fs from 'fs'
+import { readFile, writeFile } from 'fs'
+
+type User = {
+    name: string
+    birthdate: string
+    email: string
+    username: string
+    password: string
+    status: string
+    id?: string
+}
+
+type Post = {
+    author: string
+    image: string
+    text: string
+    date: string
+    id?: string
+}
+
+type Chat = {
+    users: [string, string]
+    messages: string[]
+    id?: string
+}
+
+type Car = {
+    brand: string
+    model: string
+    id?: string
+}
+
+type Document = User | Post | Chat | Car
 
 class Collection {
-    constructor(name) {
+    name: string
+    constructor(name: string) {
         this.name = name
     }
-
 
     // HELPERS
 
     _generateId() {
+        // @ts-ignore
         return (+((parseInt(Math.random() * 10 ** 17)).toString())).toString(36)
     }
 
     _loadDocuments(callback) {
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
-        fs.readFile(`./data/${this.name}.json`, 'utf8', (error, documentsJSON) => {
+        readFile(`./data/${this.name}.json`, 'utf8', (error, documentsJSON) => {
             if (error) {
                 callback(error)
                 return
@@ -36,7 +69,7 @@ class Collection {
 
         const documentsJSON = JSON.stringify(documents)
 
-        fs.writeFile(`./data/${this.name}.json`, documentsJSON, (error) => {
+        writeFile(`./data/${this.name}.json`, documentsJSON, (error) => {
 
             if (error) {
                 callback(error)
@@ -67,7 +100,7 @@ class Collection {
         })
     }
 
-    insertOne(document, callback) {
+    insertOne(document: Document, callback) {
         if (!(document instanceof Object)) throw new TypeError('document is not an object')
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
@@ -93,7 +126,7 @@ class Collection {
         })
     }
 
-    updateOne(condition, document, callback) {
+    updateOne(condition, document: Document, callback) {
         if (typeof condition !== 'function') throw new TypeError('condition callback is not a function')
         if (typeof document !== 'object') throw new TypeError('document is not an object')
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
