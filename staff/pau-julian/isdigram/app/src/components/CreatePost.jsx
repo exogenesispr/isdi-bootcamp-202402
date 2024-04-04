@@ -1,25 +1,15 @@
 import { logger, showFeedback } from '../utils'
 
 import logic from '../logic'
+import CancelButton from './library/CancelButton'
+import SubmitButton from './library/SubmitButton'
 
-import { Component } from 'react'
+import './CreatePost.sass'
 
-class CreatePost extends Component {
-    constructor() {
-        logger.debug('CreatePost')
+function CreatePost(props) {
+    logger.debug('CreatePost')
 
-        super()
-    }
-
-    componentDidMount() {
-        logger.debug('CreatePost -> componentDidMount')
-    }
-
-    componentWillUnmount() {
-        logger.debug('CreatePost -> componentWillUnmount')
-    }
-
-    handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
 
         const form = event.target
@@ -32,32 +22,31 @@ class CreatePost extends Component {
 
             form.reset()
 
-            this.props.onPostCreated()
+            props.onPostCreated()
         } catch (error) {
             showFeedback(error)
         }
     }
 
-    handleCancelClick = () => this.props.onCancelClick()
+    const handleCancelClick = () => props.onCancelClick()
 
-    render() {
-        logger.debug('CreatePost -> render')
-        return (
-            <section className='create-post'>
-                <form onSubmit={this.handleSubmit}>
-                    <label htmlFor="text">Image</label>
-                    <input type="text" id="image" />
 
-                    <label htmlFor="text">Image</label>
-                    <input type="text" id="text" />
+    logger.debug('CreatePost -> render')
+    return (
+        <section className='create-post'>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="text">Image</label>
+                <input type="text" id="image" />
 
-                    <button className='round-button submit-button'>Create</button>
-                </form>
+                <label htmlFor="text">Image</label>
+                <input type="text" id="text" />
 
-                <button className='round-button cancel-button' onClick={this.handleCancelClick}>Cancel</button>
-            </section>
-        )
-    }
+                <SubmitButton>Create</SubmitButton>
+            </form>
+
+            <CancelButton onClick={handleCancelClick}>Cancel</CancelButton>
+        </section>
+    )
 }
 
 export default CreatePost

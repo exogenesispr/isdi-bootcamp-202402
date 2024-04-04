@@ -16,7 +16,6 @@ class UserList extends Component {
                 users,
                 messageListWithUser: null,
                 userTo: null,
-                stamp: null,
             }
         } catch (error) {
             showFeedback(error)
@@ -24,12 +23,17 @@ class UserList extends Component {
 
     }
 
-    handleUserClick = (user) => this.props.onUserClick(user)
+    handleUserClick = (user) => {
+        // this.props.onUserClick(user)
+        this.setState({
+            userTo: user
+        })
+    }
 
     render() {
         return (
             <ul>
-                {this.state.users.map((user) => <li key={user.id} user={user} onClick={this.handleUserClick} className={user.status === 'online' ? 'user-list__item user-list__item--online' : 'user-list__item user-list__item--offline'} >{user.username}</li>)}
+                {this.state.users.map((user) => <li key={user.id} onClick={this.handleUserClick} className={user.status === 'online' ? 'user-list__item user-list__item--online' : 'user-list__item user-list__item--offline'} >{user.username}</li>)}
             </ul>
         )
     }

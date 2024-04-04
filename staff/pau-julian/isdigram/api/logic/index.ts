@@ -1,4 +1,6 @@
-import db from '../data/index.mjs'
+//@ts-nocheck
+
+import db from '../data/index.ts'
 
 // Constants
 const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
@@ -8,7 +10,7 @@ const URL_REGEX = /^(http|https):\/\//
 
 // Helpers
 
-function validateText(text, explain, checkEmptySpaceInside) {
+function validateText(text, explain, checkEmptySpaceInside?) {
     if (typeof text !== 'string') throw new Error(explain + ' ' + ' is not a string')
     if (!text.trim().length) throw new Error(explain + ' >' + text + '< is empty or blank')
 

@@ -1,4 +1,4 @@
-import Collection from './Collection.mjs'
+import Collection from './Collection.ts'
 
 const db = {
     users: new Collection('users'),

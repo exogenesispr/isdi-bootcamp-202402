@@ -4,47 +4,43 @@ import logic from '../logic'
 
 import { Component } from 'react'
 
-class Nav extends Component {
-    constructor() {
-        logger.debug('Nav')
+function Nav(props) {
+    logger.debug('Nav')
 
-        super()
-    }
-
-    handleHomeClick = (event) => {
+    const handleHomeClick = (event) => {
         event.preventDefault()
 
-        this.props.onNavHomeClick()
+        props.onNavHomeClick()
     }
 
-    handleChatClick = (event) => {
+    const handleChatClick = (event) => {
         event.preventDefault()
 
-        this.props.onNavChatClick()
+        props.onNavChatClick()
     }
 
-    handleLogoutClick = () => {
+    const handleLogoutClick = () => {
         try {
             logic.logoutUser()
         } catch (error) {
             logic.cleanUpLoggedInUser()
         } finally {
-            this.props.onNavLogoutClick()
+            props.onNavLogoutClick()
         }
     }
 
-    render() {
-        logger.debug('Nav -> render')
-        const { navStatus } = this.props
-        return (
-            <nav>
-                {navStatus === 'chat' && <button onClick={this.handleHomeClick}>🏡</button>}
-                {navStatus === 'home' && <button onClick={this.handleChatClick}>💬</button>}
+    logger.debug('Nav -> render')
 
-                <button onClick={this.handleLogoutClick}>🚪</button>
-            </nav>
-        )
-    }
+    const { navStatus } = props
+
+    return (
+        <nav>
+            {navStatus === 'chat' && <button onClick={handleHomeClick}>🏡</button>}
+            {navStatus === 'home' && <button onClick={handleChatClick}>💬</button>}
+
+            <button onClick={handleLogoutClick}>🚪</button>
+        </nav>
+    )
 }
 
 export default Nav

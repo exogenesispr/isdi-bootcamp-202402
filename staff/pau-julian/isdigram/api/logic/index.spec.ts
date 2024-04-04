@@ -1,6 +1,7 @@
-import { describe } from "node:test"
-import db from "../data/index.mjs"
-import logic from "./index.mjs"
+//@ts-nocheck
+
+import db from "../data/index.ts"
+import logic from "./index.ts"
 
 import { expect } from 'chai'
 

@@ -5,6 +5,8 @@ import logic from '../logic.mjs'
 import { Component } from 'react'
 import Nav from '../components/Nav'
 import UserList from '../components/UserList'
+import MessageList from '../components/MessageList'
+import SendMessageForm from '../components/SendMessageForm'
 
 class Chat extends Component {
     constructor() {
@@ -27,6 +29,17 @@ class Chat extends Component {
 
     handleLogoutClick = () => this.props.onUserLoggedOut()
 
+    // handleOnUserClick = (event) => {
+    //     event.preventDefault()
+
+    //     user = event.target
+    //     this.setState({
+    //         view: 'message-list',
+    //         userTo: user,
+    //     })
+
+    // }
+
     handleOnUserClick = (user) => {
         this.setState({
             view: 'message-list',
@@ -43,7 +56,7 @@ class Chat extends Component {
 
                 <Nav onNavHomeClick={() => this.props.onNavHomeClick()} onNavLogoutClick={this.handleLogoutClick} navStatus={navStatus} />
 
-                <UserList stamp={this.state.stamp} onUserClick={this.handleOnUserClick} />
+                <UserList onUserClick={this.handleOnUserClick} />
 
                 {this.state.view === 'message-list' && <MessageList userTo={this.state.userTo} stamp={this.state.stamp} />}
 

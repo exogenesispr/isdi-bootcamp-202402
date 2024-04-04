@@ -5,7 +5,7 @@ import logic from '../logic.mjs'
 import { Component } from 'react'
 
 class MessageList extends Component {
-    constructor() {
+    constructor(props) {
         logger.debug('MessageList')
         super()
 

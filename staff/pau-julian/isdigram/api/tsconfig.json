@@ -3,12 +3,10 @@
         "target": "ESNext",
         "module": "ESNext",
         "moduleResolution": "node",
-        // "esModuleInterop": true,
-        // "strict": true, 
-        // "sourceMap": true,
-        // "strictNullChecks": true,
-        // "noEmitOnError": true
-        // "outDir": "./dist"
+        "composite": true,
+        "emitDeclarationOnly": true,
+        "allowImportingTsExtensions": true,
+        "esModuleInterop": true,
     },
     "exclude": [
         "node_modules"

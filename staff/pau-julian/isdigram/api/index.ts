@@ -1,5 +1,7 @@
 import express from 'express'
-import logic from './logic/index.mjs'
+import logic from './logic/index.ts'
+
+// @ts-ignore
 import fs from 'fs'
 
 const api = express()
@@ -92,7 +94,7 @@ api.get('/users', (req, res) => {
 })
 
 
-// retrieve posts -> GET /posts
+// retrieve posts -> GET /posts WITH FS!!
 
 api.get('/posts', (req, res) => {
     fs.readFile('./data/posts.json', 'utf-8', (error, json) => {
@@ -106,6 +108,33 @@ api.get('/posts', (req, res) => {
 
         res.status(200).send(posts)
     })
+})
+
+// create post -> POST /posts
+
+api.post('/posts', jsonBodyParser, (req, res) => {
+    try {
+        const { image, text } = req.body
+
+        logic.createPost(image, text, (error) => {
+            if (error) {
+                res.status(400).json({ error: error.constructor.name, message: error.message })
+
+                return
+            }
+
+            res.status(201).send()
+        })
+
+    } catch (error) {
+        res.status(400).json({ error: error.constructor.name, message: error.message })
+    }
+})
+
+// delete post -> DELETE /posts
+
+api.delete('/posts', jsonBodyParser, (req, res) => {
+
 })
 
 api.listen(8080, () => console.log('API listening on port 8080'))

@@ -1,17 +1,13 @@
 import { logger, showFeedback } from '../utils/'
 
 import logic from '../logic.mjs'
+import SubmitButton from '../components/library/SubmitButton'
 
-import { Component } from 'react'
+function Login(props) {
+    logger.debug('Login')
 
-class Login extends Component {
-    constructor() {
-        logger.debug('Login')
 
-        super()
-    }
-
-    handleSubmit = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
 
         const form = event.target
@@ -26,37 +22,36 @@ class Login extends Component {
 
             form.reset()
 
-            this.props.onUserLoggedIn()
+            props.onUserLoggedIn()
         } catch (error) {
             utils.showFeedback(error)
         }
     }
 
-    onRegisterClick = (event) => {
+    const onRegisterClick = (event) => {
         event.preventDefault()
 
-        this.props.onRegisterClick()
+        props.onRegisterClick()
     }
 
-    render() {
-        logger.debug('Login -> render')
+    logger.debug('Login -> render')
 
-        return <main>
-            <h1>Log in</h1>
+    return <main>
+        <h1>Log in</h1>
 
-            <form onSubmit={this.handleSubmit}>
-                <label htmlFor="username">Username</label>
-                <input id="username" />
+        <form onSubmit={handleSubmit}>
+            <label htmlFor="username">Username</label>
+            <input id="username" />
 
-                <label htmlFor="password">Password</label>
-                <input type="password" id="password" />
+            <label htmlFor="password">Password</label>
+            <input type="password" id="password" />
 
-                <button className="round-button submit-button" type="submit">Log in</button>
-            </form>
+            <SubmitButton>Log in</SubmitButton>
+        </form>
 
-            <a href="" onClick={this.onRegisterClick}>Register</a>
-        </main>
-    }
+        <a href="" onClick={onRegisterClick}>Register</a>
+    </main>
 }
+
 
 export default Login

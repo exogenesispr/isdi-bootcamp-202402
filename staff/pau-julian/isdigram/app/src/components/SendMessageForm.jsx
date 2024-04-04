@@ -3,6 +3,7 @@ import { logger, showFeedback } from '../utils/index.mjs'
 import logic from '../logic.mjs'
 
 import { Component } from 'react'
+import SubmitButton from './library/SubmitButton'
 
 class SendMessageForm extends Component {
     constructor() {
@@ -10,13 +11,31 @@ class SendMessageForm extends Component {
 
         this.state = {
             stamp: null,
-
+            userTo: this.props.userTo
         }
         super()
 
     }
 
-    handleSubmit = () => { }
+    handleSubmit = (event) => {
+        event.preventDefault()
+
+        const form = event.target
+
+        const text = form.text.value
+
+        logger.debug('SendMessageForm -> handleSubmit', text)
+
+        try {
+            logic.sendMessageToUser(this.state.userTo.id, text)
+
+            form.reset()
+
+            // props.onUserLoggedIn()
+        } catch (error) {
+            utils.showFeedback(error)
+        }
+    }
 
     render() {
 
@@ -24,7 +43,8 @@ class SendMessageForm extends Component {
             <form onSubmit={this.handleSubmit}>
                 <label htmlFor="text">Text</label>
                 <input type="text" id='text' />
-                <button className='round-button submit-button' type='submit'>Send</button>
+
+                <SubmitButton>Send</SubmitButton>
             </form>
         )
     }

@@ -2,47 +2,39 @@ import { logger, showFeedback } from '../utils'
 
 import logic from '../logic.mjs'
 
-import { Component } from 'react'
+function Post(props) {
+    logger.debug('Post')
 
-class Post extends Component {
-    constructor() {
-        logger.debug('Post')
-
-        super()
-    }
-
-    handleDeleteClick = (postId) => {
+    const handleDeleteClick = (postId) => {
         if (confirm('delete post?'))
             try {
                 logic.removePost(postId)
 
-                this.props.onDeleted()
+                props.onDeleted()
             } catch (error) {
                 showFeedback(error)
             }
     }
 
-    handleEditClick = (post) => this.props.onEditClick(post)
+    const handleEditClick = (post) => props.onEditClick(post)
 
-    render() {
-        logger.debug('Post -> render')
-        const { item: post } = this.props
+    logger.debug('Post -> render')
+    const { item: post } = props
 
-        return <article>
-            <h3>{post.author.username}</h3>
+    return <article>
+        <h3>{post.author.username}</h3>
 
-            <img src={post.image} />
+        <img src={post.image} />
 
-            <p>{post.text}</p>
+        <p>{post.text}</p>
 
-            <time>{post.date}</time>
+        <time>{post.date}</time>
 
-            {post.author.id === logic.getLoggedInUserId() && <>
-                <button onClick={() => this.handleDeleteClick(post.id)}>🚮</button>
-                <button onClick={() => this.handleEditClick(post)}>📝</button>
-            </>}
-        </article>
-    }
+        {post.author.id === logic.getLoggedInUserId() && <>
+            <button onClick={() => handleDeleteClick(post.id)}>🚮</button>
+            <button onClick={() => handleEditClick(post)}>📝</button>
+        </>}
+    </article>
 }
 
 export default Post

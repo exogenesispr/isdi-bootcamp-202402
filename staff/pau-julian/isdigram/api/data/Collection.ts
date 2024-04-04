@@ -1,4 +1,5 @@
-import { readFile, writeFile } from 'fs'
+//@ts-ignore cannot find module 'fs' or its corresponding type declarations
+import { readFile, writeFile } from "fs"
 
 type User = {
     name: string
@@ -59,7 +60,7 @@ class Collection {
         })
     }
 
-    _saveDocuments(documents, callback) {
+    _saveDocuments(documents: Document, callback) {
         if (!(documents instanceof Array)) throw new TypeError(documents + ' is not an array')
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
@@ -100,7 +101,7 @@ class Collection {
         })
     }
 
-    insertOne(document: Document, callback) {
+    insertOne(document: Document, callback): void {
         if (!(document instanceof Object)) throw new TypeError('document is not an object')
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
@@ -126,7 +127,7 @@ class Collection {
         })
     }
 
-    updateOne(condition, document: Document, callback) {
+    updateOne(condition, document: Document, callback): void {
         if (typeof condition !== 'function') throw new TypeError('condition callback is not a function')
         if (typeof document !== 'object') throw new TypeError('document is not an object')
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
@@ -159,7 +160,7 @@ class Collection {
         })
     }
 
-    deleteOne(condition, callback) {
+    deleteOne(condition, callback): void {
         if (typeof condition !== 'function') throw new TypeError('condition callback is not a function')
         if (typeof callback !== 'function') throw new TypeError('callback is not a function')
 
