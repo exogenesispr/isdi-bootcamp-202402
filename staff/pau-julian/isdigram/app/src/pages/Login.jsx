@@ -18,17 +18,24 @@ function Login(props) {
         logger.debug('Login -> handleSubmit', username, password)
 
         try {
-            logic.loginUser(username, password)
+            logic.loginUser(username, password, (error) => {
+                if (error) {
+                    showFeedback(error)
 
-            form.reset()
+                    return
+                }
 
-            props.onUserLoggedIn()
+                form.reset()
+
+                props.onUserLoggedIn()
+            })
+
         } catch (error) {
             utils.showFeedback(error)
         }
     }
 
-    const onRegisterClick = (event) => {
+    const handleRegisterClick = (event) => {
         event.preventDefault()
 
         props.onRegisterClick()
@@ -49,7 +56,7 @@ function Login(props) {
             <SubmitButton>Log in</SubmitButton>
         </form>
 
-        <a href="" onClick={onRegisterClick}>Register</a>
+        <a href="" onClick={handleRegisterClick}>Register</a>
     </main>
 }
 

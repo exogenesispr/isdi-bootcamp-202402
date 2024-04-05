@@ -11,20 +11,30 @@ import Nav from '../components/Nav'
 class Home extends Component {
     constructor() {
         logger.debug('Home')
+
         super()
 
-        try {
-            const user = logic.retrieveUser()
-
-            this.user = user
-        } catch (error) {
-            showFeedback(error)
-        }
-
         this.state = {
+            user: null,
             view: null,
             stamp: null,
             post: null,
+        }
+    }
+
+    componentDidMount() {
+        try {
+            logic.retrieveUser((error, user) => {
+                if (error) {
+                    showFeedback(error)
+
+                    return
+                }
+
+                this.setState({ user })
+            })
+        } catch (error) {
+            showFeedback(error)
         }
     }
 

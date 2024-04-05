@@ -8,6 +8,14 @@ const api = express()
 
 const jsonBodyParser = express.json()
 
+api.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*')
+    res.setHeader('Access-Control-Allow-Methods', '*')
+    res.setHeader('Access-Control-Allow-Headers', '*')
+
+    next()
+})
+
 api.post('/users', jsonBodyParser, (req, res) => {
     try {
         const { name, birthdate, email, username, password } = req.body
@@ -40,7 +48,7 @@ api.post('/users/auth', jsonBodyParser, (req, res) => {
                 return
             }
 
-            res.status(202).send({ userId })
+            res.status(200).json(userId)
         })
 
     } catch (error) {
@@ -55,15 +63,15 @@ api.get('/users/:userId', (req, res) => {
         const userId = req.params.userId
         logic.retrieveUser(userId, (error, user) => {
             if (error) {
-                res.status(500).json({ error: error.constructor.name, message: error.message })
+                res.status(400).json({ error: error.constructor.name, message: error.message })
 
                 return
             }
 
-            res.status(200).send(user)
+            res.status(200).json(user)
         })
     } catch (error) {
-        res.status(500).json({ error: error.constructor.name, message: error.message })
+        res.status(400).json({ error: error.constructor.name, message: error.message })
     }
 })
 

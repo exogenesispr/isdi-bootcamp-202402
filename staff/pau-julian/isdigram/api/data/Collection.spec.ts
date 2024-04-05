@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'fs'
 
-import Collection from "./Collection.js"
+import Collection from "./Collection.ts"
 
 import { expect } from 'chai'
 
@@ -110,6 +110,7 @@ describe('Collection', () => {
 
                     const cars = new Collection('cars')
 
+                    //@ts-ignore
                     cars._saveDocuments(documents, (error) => {
                         if (error) {
                             done(error)
@@ -142,6 +143,7 @@ describe('Collection', () => {
                 let errorThrown
 
                 try {
+                    // @ts-ignore
                     cars._saveDocuments(documents, () => { })
                 } catch (error) {
                     errorThrown = error
@@ -159,6 +161,7 @@ describe('Collection', () => {
                 let errorThrown
 
                 try {
+                    // @ts-ignore
                     cars._saveDocuments(documents, () => { })
                 } catch (error) {
                     errorThrown = error
@@ -624,6 +627,59 @@ describe('Collection', () => {
                 }
 
                 expect(errorThrown).to.be.instanceof(TypeError)
+                expect(errorThrown.message).to.equal('callback is not a function')
+            })
+        })
+
+        describe('deleteAll', () => {
+            it('deletes all documents', (done) => {
+                const documents = [{ "brand": "porsche", "model": "911", "id": "8dys9xir5zs" }, { "brand": "fiat", "model": "500", "id": "qfd7zehl3mo" }]
+                const documentsJSON = JSON.stringify(documents)
+
+                writeFile('./data/cars.json', documentsJSON, (error) => {
+                    if (error) {
+                        done(error)
+
+                        return
+                    }
+
+                    const cars = new Collection('cars')
+
+                    cars.deleteAll((error) => {
+                        if (error) {
+                            done(error)
+
+                            return
+                        }
+
+                        readFile('./data/cars.json', 'utf-8', (error, json) => {
+                            if (error) {
+                                done(error)
+
+                                return
+                            }
+
+                            expect(json).to.equal('[]')
+
+                            done()
+                        })
+                    })
+                })
+            })
+
+            it('fails on no callback', () => {
+                const cars = new Collection('cars')
+
+                let errorThrown
+
+                try {
+                    //@ts-ignore
+                    cars.deleteAll()
+                } catch (error) {
+                    errorThrown = error
+                }
+
+                expect(errorThrown).to.be.instanceOf(TypeError)
                 expect(errorThrown.message).to.equal('callback is not a function')
             })
         })

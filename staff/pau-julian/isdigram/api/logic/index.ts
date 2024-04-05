@@ -320,29 +320,52 @@ function createPost(image, text, callback) {
     })
 }
 
-function retrievePosts(callback) {
+function retrievePosts(userId, callback) {
+    validateText(userId, 'userId', true)
     validateCallback(callback)
 
-    db.posts.getAll((error, posts) => {
+    db.users.findOne((user) => user.id === userId, (error, user) => {
         if (error) {
             callback(error)
 
             return
         }
 
-        posts.forEach((post) => {
-            db.users.findOne((user) => user.id === post.author, (error) => {
-                if (error) {
-                    callback(error)
+        if (!user) {
+            callback(new Error('user not found'))
 
-                    return
-                }
+            return
+        }
 
-                post.author = { id: user.id, username: user.username }
+        db.posts.getAll((error, posts) => {
+            if (error) {
+                callback(error)
+
+                return
+            }
+
+            let count = 0
+
+            posts.forEach((post) => {
+                db.users.findOne((user) => user.id === post.author, (error, user) => {
+                    if (error) {
+                        callback(error)
+
+                        return
+                    }
+
+                    post.author = {
+                        id: user.id,
+                        username: user.username
+                    }
+
+                    count++
+
+                    if (count === posts.length)
+                        callback(null, posts.reverse())
+                })
             })
         })
-
-        callback(null, posts.reverse())
     })
 }
 

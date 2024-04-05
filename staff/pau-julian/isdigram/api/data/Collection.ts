@@ -1,4 +1,4 @@
-//@ts-ignore cannot find module 'fs' or its corresponding type declarations
+
 import { readFile, writeFile } from "fs"
 
 type User = {
@@ -31,7 +31,7 @@ type Car = {
     id?: string
 }
 
-type Document = User | Post | Chat | Car
+type Document = (User | Post | Chat | Car)
 
 class Collection {
     name: string
@@ -201,6 +201,21 @@ class Collection {
                 return
             }
             callback(null, documents)
+        })
+    }
+
+    deleteAll(callback) {
+        if (typeof callback !== 'function') throw new TypeError('callback is not a function')
+
+        //@ts-ignore
+        this._saveDocuments([], (error) => {
+            if (error) {
+                callback(error)
+
+                return
+            }
+
+            callback(null)
         })
     }
 }

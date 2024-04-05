@@ -35,64 +35,132 @@ function validateUrl(url, explain) {
     if (!URL_REGEX.test(url)) throw new Error(explain + ' ' + url + ' is not an url')
 }
 
+function validateCallback(callback, explain = 'callback') {
+    if (typeof callback !== 'function') throw new TypeError(`${explain} is not a function`)
+}
+
 // Logic
 
-function registerUser(name, birthdate, email, username, password) {
+function registerUser(name, birthdate, email, username, password, callback) {
     validateText(name, 'name')
     validateDate(birthdate, 'birthday')
     validateEmail(email, 'email')
     validateText(username, 'username', true)
     validatePassword(password, 'password')
+    validateCallback(callback)
 
+    var xhr = new XMLHttpRequest
 
-    let user = db.users.findOne(function (user) {
-        return user.email === email || user.username === username
-    })
+    xhr.onload = function () {
+        const { status, responseText: json } = xhr
 
-    if (user) throw new Error('user already exists')
+        if (status >= 500) {
+            callback(new Error('system error'))
 
-    user = {
-        name: name.trim(),
-        birthdate: birthdate,
-        email: email,
-        username: username,
-        password: password,
-        status: 'offline'
+            return
+        } else if (status >= 400) {
+            const { error, message } = JSON.parse(json)
+
+            const constructor = window[error]
+
+            callback(new constructor(message))
+        } else if (status >= 300) {
+            callback(new Error('system error'))
+
+            return
+        } else {
+            callback(null)
+        }
     }
 
-    db.users.insertOne(user)
+    xhr.open('POST', 'http://localhost:8080/users')
+
+    xhr.setRequestHeader('Content-Type', 'application/json')
+
+    const user = { name, birthdate, email, username, password }
+
+    const json = JSON.stringify(user)
+
+    xhr.send(json)
 }
 
-function loginUser(username, password) {
+function loginUser(username, password, callback) {
     validateText(username, 'username', true)
     validatePassword(password, 'password')
+    validateCallback(callback)
 
-    const user = db.users.findOne(function (user) {
-        return user.username === username && user.password === password
-    })
+    var xhr = new XMLHttpRequest
 
-    if (!user) {
-        throw new Error('wrong credentials')
+    xhr.onload = function () {
+        const { status, responseText: json } = xhr
+
+        if (status >= 500) {
+            callback(new Error('system error'))
+
+            return
+        } else if (status >= 400) {
+            const { error, message } = JSON.parse(json)
+
+            const constructor = window[error]
+
+            callback(new constructor(message))
+        } else if (status >= 300) {
+            callback(new Error('system error'))
+
+            return
+        } else {
+            const userId = JSON.parse(json)
+
+            sessionStorage.userId = userId
+
+            callback(null)
+        }
     }
 
-    user.status = 'online'
+    xhr.open('POST', 'http://localhost:8080/users/auth')
 
-    db.users.updateOne(user)
+    xhr.setRequestHeader('Content-Type', 'application/json')
 
-    sessionStorage.userId = user.id
+    const user = { username, password }
+
+    const json = JSON.stringify(user)
+
+    xhr.send(json)
 }
 
 
-function retrieveUser() {
-    const user = db.users.findOne(function (user) {
-        return user.id === sessionStorage.userId
-    })
+function retrieveUser(callback) {
+    validateCallback(callback)
 
-    if (!user) {
-        throw new Error('user not found')
+    const xhr = new XMLHttpRequest
+
+    xhr.onload = function () {
+        const { status, responseText: json } = xhr
+
+        if (status >= 500) {
+            callback(new Error('system error'))
+
+            return
+        } else if (status >= 400) {
+            const { error, message } = JSON.parse(json)
+
+            const constructor = window[error]
+
+            callback(new constructor(message))
+        } else if (status >= 300) {
+            callback(new Error('system error'))
+
+            return
+        } else {
+            const user = JSON.parse(json)
+
+            callback(null, user)
+        }
     }
 
-    return user
+    xhr.open('GET', `http://localhost:8080/users/${sessionStorage.userId}`)
+
+    xhr.send()
 }
 
 function logoutUser() {
@@ -206,18 +274,40 @@ function createPost(image, text) {
     db.posts.insertOne(post)
 }
 
-function retrievePosts() {
-    const posts = db.posts.getAll()
+function retrievePosts(callback) {
+    validateCallback(callback)
 
-    posts.forEach(function (post) {
-        const user = db.users.findOne(function (user) {
-            return user.id === post.author
-        })
+    var xhr = new XMLHttpRequest
 
-        post.author = { id: user.id, username: user.username }
-    })
+    xhr.onload = function () {
+        const { status, responseText: json } = xhr
 
-    return posts.reverse()
+        if (status >= 500) {
+            callback(new Error('system error'))
+
+            return
+        } else if (status >= 400) {
+            const { error, message } = JSON.parse(json)
+
+            const constructor = window[error]
+
+            callback(new constructor(message))
+        } else if (status >= 300) {
+            callback(new Error('system error'))
+
+            return
+        } else {
+            const posts = JSON.parse(json)
+
+            callback(null, posts.reverse())
+        }
+    }
+
+    xhr.open('GET', 'http://localhost:8080/posts')
+
+    xhr.setRequestHeader('Authorization', sessionStorage.userId)
+
+    xhr.send()
 }
 
 function removePost(postId) {

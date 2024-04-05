@@ -30,7 +30,6 @@ function CreatePost(props) {
 
     const handleCancelClick = () => props.onCancelClick()
 
-
     logger.debug('CreatePost -> render')
     return (
         <section className='create-post'>
