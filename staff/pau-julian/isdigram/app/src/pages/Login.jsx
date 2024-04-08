@@ -6,7 +6,6 @@ import SubmitButton from '../components/library/SubmitButton'
 function Login(props) {
     logger.debug('Login')
 
-
     const handleSubmit = (event) => {
         event.preventDefault()
 
@@ -29,7 +28,6 @@ function Login(props) {
 
                 props.onUserLoggedIn()
             })
-
         } catch (error) {
             utils.showFeedback(error)
         }

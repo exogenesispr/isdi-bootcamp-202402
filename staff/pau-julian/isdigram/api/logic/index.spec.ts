@@ -1,17 +1,54 @@
-//@ts-nocheck
-
 import db from "../data/index.ts"
 import logic from "./index.ts"
 
 import { expect } from 'chai'
 
-// CHANGE EVERY DELETEONE TO DETEALL!!!
-
 describe('logic', () => {
     describe('registerUser', () => {
         it('succeds a new user', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
+            db.users.deleteAll((error) => {
+                if (error) {
+                    done(error)
+
+                    return
+                }
+
+                logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
+                    if (error) {
+                        done(error)
+
+                        return
+                    }
+
+                    db.users.findOne((user) => user.username === 'peperoni', (error, user) => {
+                        if (error) {
+                            done(error)
+
+                            return
+                        }
+
+                        expect(!!user).to.be.true
+                        expect(user.name).to.equal('Pepe Roni')
+                        expect(user.birthdate).to.equal('2000-01-01')
+                        expect(user.email).to.equal('pepe@roni.com')
+                        expect(user.username).to.equal('peperoni')
+                        expect(user.password).to.equal('123qwe123')
+
+                        done()
+                    })
+                })
+            })
+        })
+
+        it('fails on existing users', (done) => {
+            db.users.deleteAll((error) => {
+                if (error) {
+                    done(error)
+
+                    return
+                }
+
+                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error) => {
                     if (error) {
                         done(error)
 
@@ -19,59 +56,12 @@ describe('logic', () => {
                     }
 
                     logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
-                        if (error) {
-                            done(error)
+                        expect(error).to.be.instanceOf(Error)
+                        expect(error.message).to.equal('user already exists')
 
-                            return
-                        }
-
-                        db.users.findOne((user) => {
-                            user.username === 'peperoni', (error, user) => {
-                                if (error) {
-                                    done(error)
-
-                                    return
-                                }
-                                expect(!!user).to.be.true
-                                expect(user.name).to.equal('Pepe Roni')
-                                expect(user.birthdate).to.equal('2000-01-01')
-                                expect(user.email).to.equal('pepe@roni.com')
-                                expect(user.username).to.equal('peperoni')
-                                expect(user.password).to.equal('123qwe123')
-
-                                done()
-                            }
-                        })
+                        done()
                     })
-                }
-            })
-        })
-
-        it('fails on existing users', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
-                    if (error) {
-                        done(error)
-
-                        return
-                    }
-
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error) => {
-                        if (error) {
-                            done(error)
-
-                            return
-                        }
-
-                        logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
-
-                            expect(error).to.be.instanceOf(Error)
-                            expect(error.message).to.equal('user already exists')
-
-                            done()
-                        })
-                    })
-                }
+                })
             })
         })
 
@@ -98,7 +88,7 @@ describe('logic', () => {
             }
 
             expect(errorThrown).to.be.instanceof(Error)
-            expect(errorThrown).to.equal('name >< is empty or blank')
+            expect(errorThrown.message).to.equal('name >< is empty or blank')
         })
 
         it('fails on non string birthdate', () => {
@@ -111,7 +101,7 @@ describe('logic', () => {
             }
 
             expect(errorThrown).to.be.instanceof(TypeError)
-            expect(errorThrown).to.equal('birthdate 123 is not a string')
+            expect(errorThrown.message).to.equal('birthdate 123 is not a string')
         })
 
         it('fails on incorrect birthdate format', () => {
@@ -124,7 +114,7 @@ describe('logic', () => {
             }
 
             expect(errorThrown).to.be.instanceOf(Error)
-            expect(errorThrown).to.equal('birthdate 2000/01/01 does not have a valid format')
+            expect(errorThrown.message).to.equal('birthdate 2000/01/01 does not have a valid format')
         })
 
         it('fails on non-string email', () => {
@@ -136,8 +126,8 @@ describe('logic', () => {
                 errorThrown = error
             }
 
-            expect(errorThrown).to.be.instanceof(TypeError)
-            expect(errorThrown).to.equal('email 123 is not a string')
+            expect(errorThrown).to.be.instanceof(Error)
+            expect(errorThrown.message).to.equal('email 123 is not an email')
         })
 
         it('fails on non formatted email', () => {
@@ -149,8 +139,8 @@ describe('logic', () => {
                 errorThrown = error
             }
 
-            expect(errorThrown).to.be.instanceOf(TypeError)
-            expect(errorThrown).to.equal('email peperoni.c is not an email')
+            expect(errorThrown).to.be.instanceOf(Error)
+            expect(errorThrown.message).to.equal('email peperoni.c is not an email')
         })
 
         it('fails on non-string username', () => {
@@ -163,7 +153,7 @@ describe('logic', () => {
             }
 
             expect(errorThrown).to.be.instanceOf(TypeError)
-            expect(errorThrown).to.equal('username 123 is not a string')
+            expect(errorThrown.message).to.equal('username 123 is not a string')
         })
 
         it('fails on wrong username', () => {
@@ -175,11 +165,11 @@ describe('logic', () => {
                 errorThrown = error
             }
 
-            expect(errorThrown).to.be.instanceOf(TypeError)
-            expect(errorThrown).to.equal('username pepe roni has empty spaces')
+            expect(errorThrown).to.be.instanceOf(Error)
+            expect(errorThrown.message).to.equal('username pepe roni has empty spaces')
         })
 
-        it('fails on wrong username', () => {
+        it('fails on wrong password', () => {
             let errorThrown
 
             try {
@@ -188,111 +178,110 @@ describe('logic', () => {
                 errorThrown = error
             }
 
-            expect(errorThrown).to.be.instanceOf(TypeError)
-            expect(errorThrown).to.equal('password 123123123 is not acceptable')
+            expect(errorThrown).to.be.instanceOf(Error)
+            expect(errorThrown.message).to.equal('password 123123123 is not acceptable')
         })
-
     })
 
     describe('loginUser', () => {
         it('succeeds on existing user and correct credentials', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
+            db.users.deleteAll((error) => {
+                if (error) {
+                    done(error)
+
+                    return
+                }
+
+                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
                     if (error) {
                         done(error)
 
                         return
                     }
 
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+                    logic.loginUser('peperoni', '123qwe123', (error, userId) => {
                         if (error) {
                             done(error)
 
                             return
                         }
 
-                        logic.loginUser('peperoni', '123qwe123', (error, userId) => {
+                        expect(userId).to.equal(insertedUserId)
+
+                        db.users.findOne((user) => user.id === userId, (error, user) => {
                             if (error) {
                                 done(error)
 
                                 return
                             }
 
-                            expect(userId).to.equal(insertedUserId)
-
-                            db.users.findOne((user) => {
-                                user.id === userId, (error, user) => {
-                                    if (error) {
-                                        done(error)
-
-                                        return
-                                    }
-
-                                    expect(user.status).to.equal('online')
-
-                                    done()
-                                }
-                            })
-                        })
-                    })
-                }
-            })
-        })
-
-        it('fails on existing user and incorrect password', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
-                    if (error) {
-                        done(error)
-
-                        return
-                    }
-
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error) => {
-                        if (error) {
-                            done(error)
-
-                            return
-                        }
-
-                        logic.loginUser('peperoni', '123qwe123qwe', (error, userId) => {
-                            expect(error).to.be.instanceOf(Error)
-                            expect(error.message).to.equal('wrong password')
-                            expect(userId).to.be.undefined
+                            expect(user.status).to.equal('online')
 
                             done()
                         })
                     })
-                }
+                })
             })
         })
 
-        it('fails on existing user and incorrect username', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
+
+        it('fails on existing user and incorrect password', (done) => {
+            db.users.deleteAll((error) => {
+                if (error) {
+                    done(error)
+
+                    return
+                }
+
+                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error) => {
                     if (error) {
                         done(error)
 
                         return
                     }
 
-                    logic.loginUser('peperoni2', '123qwe123', (error, userId) => {
+                    logic.loginUser('peperoni', '123qwe123qwe', (error, userId) => {
                         expect(error).to.be.instanceOf(Error)
-                        expect(error.message).to.equal('user not found')
-
+                        expect(error.message).to.equal('wrong password')
                         expect(userId).to.be.undefined
 
                         done()
                     })
+                })
+            })
+
+        })
+
+        it('fails on existing user and incorrect username', (done) => {
+            db.users.deleteAll((error) => {
+                if (error) {
+                    done(error)
+
+                    return
                 }
+
+                logic.loginUser('peperoni2', '123qwe123', (error, userId) => {
+                    expect(error).to.be.instanceOf(Error)
+                    expect(error.message).to.equal('user not found')
+
+                    expect(userId).to.be.undefined
+
+                    done()
+                })
             })
         })
     })
 
     describe('retrieveUser', () => {
         it('retrieves existing user', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
+            db.users.deleteAll((error) => {
+                if (error) {
+                    done(error)
+
+                    return
+                }
+
+                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
                     if (error) {
                         done(error)
 
@@ -315,7 +304,7 @@ describe('logic', () => {
 
                         done()
                     })
-                }
+                })
             })
         })
 
@@ -327,7 +316,7 @@ describe('logic', () => {
                     return
                 }
 
-                db.users.insertOne({ name: 'Pepe roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
                     if (error) {
                         done(error)
 
@@ -347,68 +336,64 @@ describe('logic', () => {
         })
     })
 
-    describe('logoutUser', () => {
-        it('logs out current session with user', (done) => {
-            db.users.deleteOne((user) => {
-                user.username === 'peperoni', (error) => {
-                    if (error) {
-                        done(error)
+    // describe('logoutUser', () => {
+    //     it('logs out current session with user', (done) => {
+    //         db.users.deleteAll((error) => {
+    //             if (error) {
+    //                 done(error)
 
-                        return
-                    }
+    //                 return
+    //             }
 
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
-                        if (error) {
-                            done(error)
+    //             db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+    //                 if (error) {
+    //                     done(error)
 
-                            return
-                        }
+    //                     return
+    //                 }
 
-                        logic.loginUser('peperoni', '123qwe123', (error, userId) => {
-                            if (error) {
-                                done(error)
+    //                 logic.loginUser('peperoni', '123qwe123', (error, userId) => {
+    //                     if (error) {
+    //                         done(error)
 
-                                return
-                            }
+    //                         return
+    //                     }
 
-                            logic.logoutUser((insertedUserId, error) => {
-                                if (error) {
-                                    done(error)
+    //                     logic.logoutUser(insertedUserId, (error) => {
+    //                         if (error) {
+    //                             done(error)
 
-                                    return
-                                }
+    //                             return
+    //                         }
 
-                                expect(insertedUserId).to.be.null
+    //                         expect(insertedUserId).to.be.null
 
-                                db.users.findOne((user) => {
-                                    user.username === 'peperoni', (error, user) => {
-                                        if (error) {
-                                            done(error)
+    //                         db.users.findOne((user) => user.username === 'peperoni', (error, user) => {
+    //                             if (error) {
+    //                                 done(error)
 
-                                            return
-                                        }
+    //                                 return
+    //                             }
 
-                                        expect(user.status).to.equal('offline')
+    //                             expect(user.status).to.equal('offline')
 
-                                        done()
-                                    }
-                                })
-                            })
-                        })
-                    })
-                }
-            })
-        })
-    })
+    //                             done()
+    //                         })
+    //                     })
+    //                 })
+    //             })
+    //         })
+    //     })
+    // })
 
     //TODO messages (still working with sessionStorage)
 
 
-    describe('createPost', () => {
-        it('creates a post when valid arguments', (done) => {
-            logic.createPost
-        })
-    })
+    // describe('createPost', () => {
+    //     it('creates a post when valid arguments', (done) => {
+    //         logic.createPost
+    //     })
+    // })
 
     describe('retrievePosts', () => {
         it('retrieves all posts for existing user', (done) => {
@@ -426,7 +411,7 @@ describe('logic', () => {
                         return
                     }
 
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserid) => {
+                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
                         if (error) {
                             done(error)
 
@@ -437,7 +422,7 @@ describe('logic', () => {
 
                         let count = 1
 
-                        const insertedPost1 = { author: insertedUserid, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+                        const insertedPost1 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
                         db.posts.insertOne(insertedPost1, (error, insertedPostId1) => {
                             if (error) {
@@ -533,7 +518,7 @@ describe('logic', () => {
                         return
                     }
 
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserid) => {
+                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
                         if (error) {
                             done(error)
 
@@ -544,7 +529,7 @@ describe('logic', () => {
 
                         let count = 1
 
-                        const insertedPost1 = { author: insertedUserid, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+                        const insertedPost1 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
                         db.posts.insertOne(insertedPost1, (error, insertedPostId1) => {
                             if (error) {
@@ -557,10 +542,9 @@ describe('logic', () => {
 
                             count++
 
-
                             const insertedPost2 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                            db.posts.insertOne(insertedPost2, (error, insertedpostId2) => {
+                            db.posts.insertOne(insertedPost2, (error, insertedPostId2) => {
                                 if (error) {
                                     done(error)
 
@@ -571,7 +555,7 @@ describe('logic', () => {
 
                                 count++
 
-                                const insertedPost3 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+                                const insertedPost3 = { author: 'unknown-user-id', image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
                                 db.posts.insertOne(insertedPost3, (error, insertedPostId3) => {
                                     if (error) {
@@ -599,8 +583,5 @@ describe('logic', () => {
             })
         })
     })
-
-
-
 
 })

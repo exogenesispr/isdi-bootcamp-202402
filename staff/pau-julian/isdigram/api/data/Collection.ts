@@ -1,4 +1,3 @@
-
 import { readFile, writeFile } from "fs"
 
 type User = {
@@ -7,7 +6,7 @@ type User = {
     email: string
     username: string
     password: string
-    status: string
+    status?: string
     id?: string
 }
 

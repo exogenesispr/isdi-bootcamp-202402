@@ -2,27 +2,19 @@ import { logger, showFeedback } from '../utils'
 
 import logic from '../logic.mjs'
 
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
 import PostList from '../components/PostList'
 import CreatePost from '../components/CreatePost'
 import EditPost from '../components/EditPost'
 import Nav from '../components/Nav'
 
-class Home extends Component {
-    constructor() {
-        logger.debug('Home')
+function Home(props) {
+    const [user, setUser] = useState(null)
+    const [view, setView] = useState(null)
+    const [stamp, setStamp] = useState(null)
+    const [post, setPost] = useState(null)
 
-        super()
-
-        this.state = {
-            user: null,
-            view: null,
-            stamp: null,
-            post: null,
-        }
-    }
-
-    componentDidMount() {
+    useEffect(() => {
         try {
             logic.retrieveUser((error, user) => {
                 if (error) {
@@ -31,57 +23,59 @@ class Home extends Component {
                     return
                 }
 
-                this.setState({ user })
+                setUser(user)
             })
         } catch (error) {
             showFeedback(error)
         }
+    }, [])
+
+    const clearView = () => setView(null)
+
+    const handleCreatePostCancelClick = () => clearView()
+
+    const handlePostCreated = () => {
+        setView(null)
+        setStamp(Date.now())
     }
 
-    setState(state) {
-        logger.debug('Home -> setState', JSON.stringify(state))
+    const handleCreatePostClick = () => setView('create-post')
 
-        super.setState(state)
+    const handleLogoutClick = () => { props.onUserLoggedOut() }
+
+    const handleEditPostCancelClick = () => clearView()
+
+    const handleEditPostClick = (post) => {
+        setView('edit-post')
+        setPost(post)
     }
 
-    clearView = () => this.setState({ view: null })
-
-    handleCreatePostCancelClick = () => this.clearView()
-
-    handlePostCreated = () => this.setState({ view: null, stamp: Date.now() })
-
-    handleCreatePostClick = () => this.setState({ view: 'create-post' })
-
-    handleLogoutClick = () => { this.props.onUserLoggedOut() }
-
-    handleEditPostCancelClick = () => this.clearView()
-
-    handleEditPostClick = (post) => this.setState({ view: 'edit-post', post })
-
-    handlePostEdited = () => this.setState({ view: null, stamp: Date.now(), post: null })
-
-
-    render() {
-        logger.debug('Home -> render')
-        const navStatus = 'home'
-
-        return <main className="main">
-            {this.state.user && <h1>Hello, {this.state.user.name}!</h1>}
-
-            <Nav onNavChatClick={() => this.props.onNavChatClick()} onNavLogoutClick={this.handleLogoutClick} navStatus={navStatus} />
-
-            <PostList stamp={this.state.stamp} onEditPostClick={this.handleEditPostClick} />
-
-            {this.state.view === 'create-post' && <CreatePost onCancelClick={this.handleCreatePostCancelClick} onPostCreated={this.handlePostCreated} />}
-
-            {this.state.view === 'edit-post' && <EditPost post={this.state.post} onCancelClick={this.handleEditPostCancelClick} onPostEdited={this.handlePostEdited} />}
-
-
-            <footer className="footer">
-                <button onClick={this.handleCreatePostClick}>➕</button>
-            </footer>
-        </main>
+    const handlePostEdited = () => {
+        setView(null)
+        setStamp(Date.now())
+        setPost(null)
     }
+
+    const handleNavChatClick = () => props.onNavChatClick()
+
+    const navStatus = 'home'
+
+    return <main className="main">
+        {user && <h1>Hello, {user.name}!</h1>}
+
+        <Nav onNavChatClick={handleNavChatClick} onNavLogoutClick={handleLogoutClick} navStatus={navStatus} />
+
+        <PostList stamp={stamp} onEditPostClick={handleEditPostClick} />
+
+        {view === 'create-post' && <CreatePost onCancelClick={handleCreatePostCancelClick} onPostCreated={handlePostCreated} />}
+
+        {view === 'edit-post' && <EditPost post={post} onCancelClick={handleEditPostCancelClick} onPostEdited={handlePostEdited} />}
+
+        <footer className="footer">
+            <button onClick={handleCreatePostClick}>➕</button>
+        </footer>
+    </main>
+
 }
 
 export default Home

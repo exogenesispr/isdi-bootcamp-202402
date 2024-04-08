@@ -2,8 +2,6 @@ import { logger, showFeedback } from '../utils'
 
 import logic from '../logic'
 
-import { Component } from 'react'
-
 function Nav(props) {
     logger.debug('Nav')
 
