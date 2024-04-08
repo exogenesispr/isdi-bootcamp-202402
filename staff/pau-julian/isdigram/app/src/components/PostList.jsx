@@ -10,14 +10,8 @@ class PostList extends Component {
         logger.debug('PostList')
         super()
 
-        try {
-            const posts = logic.retrievePosts()
-
-            this.state = {
-                posts: []
-            }
-        } catch (error) {
-            utils.showFeedback(error)
+        this.state = {
+            posts: []
         }
     }
 
@@ -25,9 +19,15 @@ class PostList extends Component {
         logger.debug('PostList -> loadPosts')
 
         try {
-            const posts = logic.retrievePosts()
+            logic.retrievePosts((error, posts) => {
+                if (error) {
+                    showFeedback(error)
 
-            this.setState({ posts })
+                    return
+                }
+
+                this.setState({ posts })
+            })
         } catch (error) {
             showFeedback(error)
         }

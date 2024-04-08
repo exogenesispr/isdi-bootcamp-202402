@@ -345,11 +345,20 @@ function retrievePosts(userId, callback) {
             }
 
             let count = 0
+            let errorDetected = false
 
             posts.forEach((post) => {
                 db.users.findOne((user) => user.id === post.author, (error, user) => {
                     if (error) {
                         callback(error)
+
+                        return
+                    }
+
+                    if (!user) {
+                        callback(new Error('post owner not found'))
+
+                        errorDetected = true
 
                         return
                     }
@@ -361,7 +370,7 @@ function retrievePosts(userId, callback) {
 
                     count++
 
-                    if (count === posts.length)
+                    if (!errorDetected && count === posts.length)
                         callback(null, posts.reverse())
                 })
             })

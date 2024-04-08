@@ -1,7 +1,6 @@
 import express from 'express'
 import logic from './logic/index.ts'
 
-// @ts-ignore
 import fs from 'fs'
 
 const api = express()
@@ -88,6 +87,7 @@ api.get('/users', (req, res) => {
 
             const users = JSON.parse(json)
 
+            // @ts-ignore
             const user = users.find((user) => user.id === req.params.userId)
 
             if (user) {
@@ -101,21 +101,23 @@ api.get('/users', (req, res) => {
     }
 })
 
-
 // retrieve posts -> GET /posts WITH FS!!
 
 api.get('/posts', (req, res) => {
-    fs.readFile('./data/posts.json', 'utf-8', (error, json) => {
-        if (error) {
-            res.status(500).json({ error: error.constructor.name, message: error.message })
+    try {
+        const { authorization: userId } = req.headers
+        logic.retrievePosts(userId, (error, posts) => {
+            if (error) {
+                res.status(200).json({ error: error.constructor.name, message: error.message })
 
-            return
-        }
+                return
+            }
 
-        const posts = JSON.parse(json)
-
-        res.status(200).send(posts)
-    })
+            res.json(posts)
+        })
+    } catch (error) {
+        res.status(200).json({ error: error.constructor.name, message: error.message })
+    }
 })
 
 // create post -> POST /posts

@@ -163,7 +163,34 @@ function retrieveUser(callback) {
     xhr.send()
 }
 
-function logoutUser() {
+function logoutUser(callback) {
+    validateCallback(callback)
+
+    const xhr = new XMLHttpRequest
+
+    xhr.onload = function () {
+        const { status, responseText: json } = xhr
+
+        if (status >= 500) {
+            callback(new Error('system error'))
+
+            return
+        } else if (status >= 400) {
+            const { error, message } = JSON.parse(json)
+            const constructor = window[error]
+            callback(new constructor(message))
+        } else if (status >= 400) {
+            callback(new Error('system error'))
+
+            callback
+        } else {
+            delete sessionStorage.userId
+
+            callback(null)
+        }
+    }
+
+    /*
     const user = db.users.findOne(function (user) {
         return user.id === sessionStorage.userId
     })
@@ -175,6 +202,7 @@ function logoutUser() {
     db.users.updateOne(user)
 
     delete sessionStorage.userId
+    */
 }
 
 function getLoggedInUserId() {

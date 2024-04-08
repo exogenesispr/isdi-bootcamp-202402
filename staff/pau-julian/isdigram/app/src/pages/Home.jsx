@@ -66,7 +66,7 @@ class Home extends Component {
         const navStatus = 'home'
 
         return <main className="main">
-            <h1>Hello, {this.user.name}!</h1>
+            {this.state.user && <h1>Hello, {this.state.user.name}!</h1>}
 
             <Nav onNavChatClick={() => this.props.onNavChatClick()} onNavLogoutClick={this.handleLogoutClick} navStatus={navStatus} />
 
