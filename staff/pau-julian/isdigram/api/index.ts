@@ -1,8 +1,6 @@
 import express from 'express'
 import logic from './logic/index.ts'
 
-import fs from 'fs'
-
 const api = express()
 
 const jsonBodyParser = express.json()
@@ -124,9 +122,11 @@ api.get('/posts', (req, res) => {
 
 api.post('/posts', jsonBodyParser, (req, res) => {
     try {
+        const { authorization: userId } = req.headers
+
         const { image, text } = req.body
 
-        logic.createPost(image, text, (error) => {
+        logic.createPost(userId, image, text, (error) => {
             if (error) {
                 res.status(400).json({ error: error.constructor.name, message: error.message })
 

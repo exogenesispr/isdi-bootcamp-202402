@@ -286,20 +286,47 @@ function retrieveMessagesWithUser(userId) {
     }
 }
 
-function createPost(image, text) {
+function createPost(image, text, callback) {
     validateUrl(image, 'image')
     if (text) {
         validateText(text, 'text')
     }
+    validateCallback(callback)
 
-    const post = {
-        author: sessionStorage.userId,
-        image: image,
-        text: text,
-        date: new Date().toLocaleDateString('en-CA'),
+    var xhr = new XMLHttpRequest
+
+    xhr.onload = () => {
+        const { status, responseText: json } = xhr
+
+        if (status >= 500) {
+            callback(new Error('system error'))
+
+            return
+        } else if (status >= 400) {
+            const { error, message } = JSON.parse(json)
+
+            const constructor = window[error]
+
+            callback(new constructor(message))
+        } else if (status >= 300) {
+            callback(new Error('system error'))
+
+            return
+        } else {
+            callback(null)
+        }
     }
 
-    db.posts.insertOne(post)
+    xhr.open('POST', 'http://localhost:8080/posts')
+
+    xhr.setRequestHeader('Authorization', sessionStorage.userId)
+    xhr.setRequestHeader('Content-type', 'application/json')
+
+    const post = { image, text }
+
+    const json = JSON.stringify(post)
+
+    xhr.send(json)
 }
 
 function retrievePosts(callback) {

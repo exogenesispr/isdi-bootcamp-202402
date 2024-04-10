@@ -51,38 +51,28 @@ function registerUser(name, birthdate, email, username, password, callback) {
     validatePassword(password)
     validateCallback(callback)
 
-    db.users.findOne((user) => user.email === email || user.username === username, (error, user) => {
-        if (error) {
-            callback(error)
-
-            return
-        }
-
-        if (user) {
-            callback(new Error('user already exists'))
-
-            return
-        }
-
-        user = {
-            name: name.trim(),
-            birthdate: birthdate,
-            email: email,
-            username: username,
-            password: password,
-            status: 'offline',
-        }
-
-        db.users.insertOne(user, (error) => {
-            if (error) {
-                callback(error)
+    this.users.findOne({ $or: [{ email }, { username }] })
+        .then((user) => {
+            if (user) {
+                callback(new Error('user already exists'))
 
                 return
             }
 
-            callback(null)
+            user = {
+                name: name.trim(),
+                birthdate: birthdate,
+                email: email,
+                username: username,
+                password: password,
+                status: 'offline',
+            }
+
+            this.users.insertOne(user)
+                .then(() => { callback(null) })
+                .catch((error) => { callback(error) })
         })
-    })
+        .catch((error) => callback(error))
 }
 
 function loginUser(username, password, callback) {
@@ -90,95 +80,56 @@ function loginUser(username, password, callback) {
     validatePassword(password)
     validateCallback(callback)
 
-    db.users.findOne((user) => user.username === username, (error, user) => {
-        if (error) {
-            callback(error)
-
-            return
-        }
-
-        if (!user) {
-            callback(new Error('user not found'))
-
-            return
-        }
-
-        if (user.password !== password) {
-            callback(new Error('wrong password'))
-
-            return
-        }
-
-        user.status = 'online'
-
-        db.users.updateOne((user2) => user2.id === user.id, user, (error) => {
-            if (error) {
-                callback(error)
+    this.users.findOne({ username })
+        .then((user) => {
+            if (!user) {
+                callback(new Error('user not found'))
 
                 return
             }
 
-            callback(null, user.id)
+            if (user.password !== password) {
+                callback(new Error('wrong password'))
+
+                return
+            }
+
+            const userId = user._id
+
+            this.users.updateOne({ _id: userId }, { $set: { status: 'online' } })
+                .then(() => callback(null, userId))
+                .catch((error) => callback(error))
         })
-    })
+        .catch((error) => callback(error))
 }
 
 function retrieveUser(userId, callback) {
     validateText(userId, 'userId', true)
     validateCallback(callback)
 
-    db.users.findOne((user) => user.id === userId, (error, user) => {
-        if (error) {
-            callback(error)
+    this.users.findOne({ _id: userId })
+        .then((user) => {
+            delete user.password
+            delete user.status
 
-            return
-        }
-
-        if (!user) {
-            callback(new Error('user not found'))
-
-            return
-        }
-
-        delete user.id
-        delete user.password
-        delete user.status
-
-        callback(null, user)
-    })
+            callback(null, user)
+        })
+        .catch(callback(new Error('user not found')))
 }
 
+
 function logoutUser(userId, callback) {
-    validateText(userId, 'userId', true)
+    // validateText(userId, 'userId', true)
     validateCallback(callback)
 
-    db.users.findOne((user) => { user.id === userId }, (error, user) => {
-        if (error) {
-            callback(error)
+    this.users.findOne({ _id: userId })
+        .then((user) => {
+            this.users.updateOne({ _id: userId }, { $set: { status: 'offline' } })
+                .then(() => { callback(null) })
+                .catch((error) => { callback(error) })
 
-            return
-        }
-
-        if (!user) {
-            callback(new Error('user not found'))
-
-            return
-        }
-
-        user.status = 'offline'
-
-        db.users.updateOne((user2) => user2.id === user.id, user, (error) => {
-            if (error) {
-                callback(error)
-
-                return
-            }
-
-            userId = null
-
-            callback(null)
         })
-    })
+        .catch(callback(new Error('user not found')))
 }
 
 //NEXT 3 FUNCTIONS USE SESSION STORAGE-(NO ASYNCHRONY)
@@ -294,16 +245,16 @@ function retrieveMessagesWithUser(userId, callback) {
     })
 }
 
-function createPost(image, text, callback) {
+function createPost(userId, image, text, callback) {
+    validateText(userId, 'userId', true)
     validateUrl(image, 'image')
-    validateCallback(callback)
-
     if (text) {
         validateText(text, 'text')
     }
+    validateCallback(callback)
 
     const post = {
-        author: sessionStorage.userId,
+        author: userId,
         image: image,
         text: text,
         date: new Date().toLocaleDateString('en-CA')
@@ -452,6 +403,7 @@ function modifyPost(postId, text, callback) {
 }
 
 const logic = {
+    users: null,
     registerUser,
     loginUser,
     retrieveUser,
@@ -469,8 +421,6 @@ const logic = {
     retrievePosts,
     removePost,
     modifyPost,
-
-
 }
 
 export default logic

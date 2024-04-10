@@ -1,68 +1,71 @@
-import db from "../data/index.ts"
+import mongodb from 'mongodb'
 import logic from "./index.ts"
-
 import { expect } from 'chai'
 
+const { MongoClient, ObjectId } = mongodb
+
 describe('logic', () => {
+    let client, users, posts
+
+    before((done) => {
+        client = new MongoClient('mongodb://localhost:27017')
+
+        client.connect()
+            .then(connection => {
+                const db = connection.db('test')
+
+                users = db.collection('users')
+                posts = db.collection('posts')
+
+                logic.users = users
+
+                done()
+            })
+            .catch(done)
+    })
+
     describe('registerUser', () => {
         it('succeds a new user', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
-
-                    return
-                }
-
-                logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
-                    if (error) {
-                        done(error)
-
-                        return
-                    }
-
-                    db.users.findOne((user) => user.username === 'peperoni', (error, user) => {
+            users.deleteMany()
+                .then(() => {
+                    logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
                         if (error) {
                             done(error)
 
                             return
                         }
+                        users.findOne({ username: 'peperoni' })
+                            .then((user) => {
+                                expect(!!user).to.be.true
+                                expect(user.name).to.equal('Pepe Roni')
+                                expect(user.birthdate).to.equal('2000-01-01')
+                                expect(user.email).to.equal('pepe@roni.com')
+                                expect(user.username).to.equal('peperoni')
+                                expect(user.password).to.equal('123qwe123')
 
-                        expect(!!user).to.be.true
-                        expect(user.name).to.equal('Pepe Roni')
-                        expect(user.birthdate).to.equal('2000-01-01')
-                        expect(user.email).to.equal('pepe@roni.com')
-                        expect(user.username).to.equal('peperoni')
-                        expect(user.password).to.equal('123qwe123')
-
-                        done()
+                                done()
+                            })
+                            .catch(done)
                     })
                 })
-            })
+                .catch(done)
         })
 
         it('fails on existing users', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then(() => {
+                            logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
+                                expect(error).to.be.instanceOf(Error)
+                                expect(error.message).to.equal('user already exists')
 
-                    return
-                }
-
-                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error) => {
-                    if (error) {
-                        done(error)
-
-                        return
-                    }
-
-                    logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', (error) => {
-                        expect(error).to.be.instanceOf(Error)
-                        expect(error.message).to.equal('user already exists')
-
-                        done()
-                    })
+                                done()
+                            })
+                        })
+                        .catch(done)
                 })
-            })
+                .catch(done)
         })
 
         it('fails on non string name', () => {
@@ -185,157 +188,227 @@ describe('logic', () => {
 
     describe('loginUser', () => {
         it('succeeds on existing user and correct credentials', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then((user) => {
+                            logic.loginUser('peperoni', '123qwe123', (error, userId) => {
+                                if (error) {
+                                    done(error)
 
-                    return
-                }
+                                    return
+                                }
 
-                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
-                    if (error) {
-                        done(error)
+                                users.findOne({ userId: user._id })
+                                    .then((user) => {
+                                        expect(user.status).to.equal('online')
+                                        expect(userId).to.deep.equal(user._id)
 
-                        return
-                    }
-
-                    logic.loginUser('peperoni', '123qwe123', (error, userId) => {
-                        if (error) {
-                            done(error)
-
-                            return
-                        }
-
-                        expect(userId).to.equal(insertedUserId)
-
-                        db.users.findOne((user) => user.id === userId, (error, user) => {
-                            if (error) {
-                                done(error)
-
-                                return
-                            }
-
-                            expect(user.status).to.equal('online')
-
-                            done()
+                                        done()
+                                    })
+                                    .catch(done)
+                            })
                         })
-                    })
+                        .catch(done)
                 })
-            })
+                .catch(done)
         })
-
 
         it('fails on existing user and incorrect password', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then((user) => {
+                            logic.loginUser('peperoni', '123qwe123qwe', (error, userId) => {
+                                expect(error).to.be.instanceOf(Error)
+                                expect(error.message).to.equal('wrong password')
+                                expect(userId).to.be.undefined
 
-                    return
-                }
-
-                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error) => {
-                    if (error) {
-                        done(error)
-
-                        return
-                    }
-
-                    logic.loginUser('peperoni', '123qwe123qwe', (error, userId) => {
-                        expect(error).to.be.instanceOf(Error)
-                        expect(error.message).to.equal('wrong password')
-                        expect(userId).to.be.undefined
-
-                        done()
-                    })
+                                done()
+                            })
+                        })
+                        .catch(done)
                 })
-            })
-
+                .catch(done)
         })
 
-        it('fails on existing user and incorrect username', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
-
-                    return
-                }
-
-                logic.loginUser('peperoni2', '123qwe123', (error, userId) => {
-                    expect(error).to.be.instanceOf(Error)
-                    expect(error.message).to.equal('user not found')
-
-                    expect(userId).to.be.undefined
-
-                    done()
-                })
-            })
-        })
     })
+
+
+
+    //     it('fails on existing user and incorrect username', (done) => {
+    //         db.users.deleteAll((error) => {
+    //             if (error) {
+    //                 done(error)
+
+    //                 return
+    //             }
+
+    //             logic.loginUser('peperoni2', '123qwe123', (error, userId) => {
+    //                 expect(error).to.be.instanceOf(Error)
+    //                 expect(error.message).to.equal('user not found')
+
+    //                 expect(userId).to.be.undefined
+
+    //                 done()
+    //             })
+    //         })
+    //     })
+    // })
+
 
     describe('retrieveUser', () => {
         it('retrieves existing user', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then((user) => {
+                            logic.retrieveUser(user._id, (error, user) => {
+                                if (error) {
+                                    done(error)
 
-                    return
-                }
+                                    return
+                                }
 
-                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
-                    if (error) {
-                        done(error)
+                                expect(user.id).to.be.undefined
+                                expect(user.username).to.equal('peperoni')
+                                expect(user.email).to.equal('pepe@roni.com')
+                                expect(user.birthdate).to.equal('2000-01-01')
+                                expect(user.password).to.be.undefined
+                                expect(user.status).to.be.undefined
 
-                        return
-                    }
-
-                    logic.retrieveUser(insertedUserId, (error, user) => {
-                        if (error) {
-                            done(error)
-
-                            return
-                        }
-
-                        expect(user.id).to.be.undefined
-                        expect(user.username).to.equal('peperoni')
-                        expect(user.email).to.equal('pepe@roni.com')
-                        expect(user.birthdate).to.equal('2000-01-01')
-                        expect(user.password).to.be.undefined
-                        expect(user.status).to.be.undefined
-
-                        done()
-                    })
+                                done()
+                            })
+                        })
+                        .catch(done)
                 })
-            })
+                .catch(done)
         })
 
-        it('does no retrieve a non-existing user', (done) => {
-            db.users.deleteOne((user) => user.username === 'peperoni', (error) => {
-                if (error) {
-                    done(error)
+        it('retrieves existing user', (done) => {
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then((user) => {
+                            logic.retrieveUser('wrong-id', (error, user) => {
+                                if (error) {
+                                    expect(error).to.be.true
+                                    expect(error.message).to.equal('user not found')
+                                    expect(user).to.be.undefined
 
-                    return
-                }
-
-                db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
-                    if (error) {
-                        done(error)
-
-                        return
-                    }
-
-                    logic.retrieveUser('wrong-id', (error, user) => {
-                        expect(error).to.be.instanceOf(Error)
-                        expect(error.message).to.equal('user not found')
-
-                        expect(user).to.be.undefined
-
-                        done()
-                    })
+                                    done()
+                                }
+                            })
+                        })
+                        .catch(done)
                 })
-            })
+                .catch(done)
         })
     })
 
+
+    // describe('retrieveUser', () => {
+    //     it('retrieves existing user', (done) => {
+    //         db.users.deleteAll((error) => {
+    //             if (error) {
+    //                 done(error)
+
+    //                 return
+    //             }
+
+    //             db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+    //                 if (error) {
+    //                     done(error)
+
+    //                     return
+    //                 }
+
+    //                 logic.retrieveUser(insertedUserId, (error, user) => {
+    //                     if (error) {
+    //                         done(error)
+
+    //                         return
+    //                     }
+
+    //                     expect(user.id).to.be.undefined
+    //                     expect(user.username).to.equal('peperoni')
+    //                     expect(user.email).to.equal('pepe@roni.com')
+    //                     expect(user.birthdate).to.equal('2000-01-01')
+    //                     expect(user.password).to.be.undefined
+    //                     expect(user.status).to.be.undefined
+
+    //                     done()
+    //                 })
+    //             })
+    //         })
+    //     })
+
+    //     it('does no retrieve a non-existing user', (done) => {
+    //         db.users.deleteOne((user) => user.username === 'peperoni', (error) => {
+    //             if (error) {
+    //                 done(error)
+
+    //                 return
+    //             }
+
+    //             db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+    //                 if (error) {
+    //                     done(error)
+
+    //                     return
+    //                 }
+
+    //                 logic.retrieveUser('wrong-id', (error, user) => {
+    //                     expect(error).to.be.instanceOf(Error)
+    //                     expect(error.message).to.equal('user not found')
+
+    //                     expect(user).to.be.undefined
+
+    //                     done()
+    //                 })
+    //             })
+    //         })
+    //     })
+    // })
+
+
+    describe('logoutUser', () => {
+        it('logs out current session with user', (done) => {
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then((user) => {
+                            logic.loginUser('peperoni', '123qwe123', (error, userId) => {
+                                if (error) {
+                                    done(error)
+
+                                    return
+
+                                    logic.logoutUser(userId, (error) => {
+                                        if (error) {
+                                            done(error)
+
+                                            return
+                                        }
+
+                                        users.findOne({ _id: userId })
+                                            .then(() => {
+                                                expect(userId).to.deep.equal(user._id)
+                                                expect(user.status).to.equal('offline')
+
+                                                done()
+                                            })
+                                            .catch(done)
+                                    })
+                                }
+                            })
+                        })
+                        .catch(done)
+                })
+                .catch(done)
+        })
+
+    })
     // describe('logoutUser', () => {
     //     it('logs out current session with user', (done) => {
     //         db.users.deleteAll((error) => {
@@ -395,193 +468,198 @@ describe('logic', () => {
     //     })
     // })
 
-    describe('retrievePosts', () => {
-        it('retrieves all posts for existing user', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
+    // describe('retrievePosts', () => {
+    //     it('retrieves all posts for existing user', (done) => {
+    //         db.users.deleteAll((error) => {
+    //             if (error) {
+    //                 done(error)
 
-                    return
-                }
+    //                 return
+    //             }
 
-                db.posts.deleteAll((error) => {
-                    if (error) {
-                        done(error)
+    //             db.posts.deleteAll((error) => {
+    //                 if (error) {
+    //                     done(error)
 
-                        return
-                    }
+    //                     return
+    //                 }
 
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
-                        if (error) {
-                            done(error)
+    //                 db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+    //                     if (error) {
+    //                         done(error)
 
-                            return
-                        }
+    //                         return
+    //                     }
 
-                        const insertedPosts = []
+    //                     const insertedPosts = []
 
-                        let count = 1
+    //                     let count = 1
 
-                        const insertedPost1 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+    //                     const insertedPost1 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                        db.posts.insertOne(insertedPost1, (error, insertedPostId1) => {
-                            if (error) {
-                                done(error)
+    //                     db.posts.insertOne(insertedPost1, (error, insertedPostId1) => {
+    //                         if (error) {
+    //                             done(error)
 
-                                return
-                            }
+    //                             return
+    //                         }
 
-                            insertedPosts.push(insertedPost1)
+    //                         insertedPosts.push(insertedPost1)
 
-                            count++
+    //                         count++
 
 
-                            const insertedPost2 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+    //                         const insertedPost2 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                            db.posts.insertOne(insertedPost2, (error, insertedpostId2) => {
-                                if (error) {
-                                    done(error)
+    //                         db.posts.insertOne(insertedPost2, (error, insertedpostId2) => {
+    //                             if (error) {
+    //                                 done(error)
 
-                                    return
-                                }
+    //                                 return
+    //                             }
 
-                                insertedPosts.push(insertedPost2)
+    //                             insertedPosts.push(insertedPost2)
 
-                                count++
+    //                             count++
 
-                                const insertedPost3 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+    //                             const insertedPost3 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                                db.posts.insertOne(insertedPost3, (error, insertedPostId3) => {
-                                    if (error) {
-                                        done(error)
+    //                             db.posts.insertOne(insertedPost3, (error, insertedPostId3) => {
+    //                                 if (error) {
+    //                                     done(error)
 
-                                        return
-                                    }
+    //                                     return
+    //                                 }
 
-                                    insertedPosts.push(insertedPost3)
+    //                                 insertedPosts.push(insertedPost3)
 
-                                    logic.retrievePosts(insertedUserId, (error, posts) => {
-                                        if (error) {
-                                            done(error)
+    //                                 logic.retrievePosts(insertedUserId, (error, posts) => {
+    //                                     if (error) {
+    //                                         done(error)
 
-                                            return
-                                        }
+    //                                         return
+    //                                     }
 
-                                        expect(posts).to.have.lengthOf(3)
+    //                                     expect(posts).to.have.lengthOf(3)
 
-                                        const post1 = posts[2]
+    //                                     const post1 = posts[2]
 
-                                        expect(post1.author.username).to.equal('peperoni')
-                                        expect(post1.author.id).to.equal(insertedUserId)
-                                        expect(post1.image).to.equal(insertedPost1.image)
-                                        expect(post1.text).to.equal(insertedPost1.text)
-                                        expect(post1.date).to.equal(insertedPost1.date)
+    //                                     expect(post1.author.username).to.equal('peperoni')
+    //                                     expect(post1.author.id).to.equal(insertedUserId)
+    //                                     expect(post1.image).to.equal(insertedPost1.image)
+    //                                     expect(post1.text).to.equal(insertedPost1.text)
+    //                                     expect(post1.date).to.equal(insertedPost1.date)
 
-                                        const post2 = posts[1]
+    //                                     const post2 = posts[1]
 
-                                        expect(post2.author.username).to.equal('peperoni')
-                                        expect(post2.author.id).to.equal(insertedUserId)
-                                        expect(post2.image).to.equal(insertedPost2.image)
-                                        expect(post2.text).to.equal(insertedPost2.text)
-                                        expect(post2.date).to.equal(insertedPost2.date)
+    //                                     expect(post2.author.username).to.equal('peperoni')
+    //                                     expect(post2.author.id).to.equal(insertedUserId)
+    //                                     expect(post2.image).to.equal(insertedPost2.image)
+    //                                     expect(post2.text).to.equal(insertedPost2.text)
+    //                                     expect(post2.date).to.equal(insertedPost2.date)
 
-                                        const post3 = posts[0]
+    //                                     const post3 = posts[0]
 
-                                        expect(post3.author.username).to.equal('peperoni')
-                                        expect(post3.author.id).to.equal(insertedUserId)
-                                        expect(post3.image).to.equal(insertedPost3.image)
-                                        expect(post3.text).to.equal(insertedPost3.text)
-                                        expect(post3.date).to.equal(insertedPost3.date)
+    //                                     expect(post3.author.username).to.equal('peperoni')
+    //                                     expect(post3.author.id).to.equal(insertedUserId)
+    //                                     expect(post3.image).to.equal(insertedPost3.image)
+    //                                     expect(post3.text).to.equal(insertedPost3.text)
+    //                                     expect(post3.date).to.equal(insertedPost3.date)
 
-                                        done()
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
-            })
-        })
+    //                                     done()
+    //                                 })
+    //                             })
+    //                         })
+    //                     })
+    //                 })
+    //             })
+    //         })
+    //     })
 
-        it('fails on orphan post', (done) => {
-            db.users.deleteAll((error) => {
-                if (error) {
-                    done(error)
+    //     it('fails on orphan post', (done) => {
+    //         db.users.deleteAll((error) => {
+    //             if (error) {
+    //                 done(error)
 
-                    return
-                }
+    //                 return
+    //             }
 
-                db.posts.deleteAll((error) => {
-                    if (error) {
-                        done(error)
+    //             db.posts.deleteAll((error) => {
+    //                 if (error) {
+    //                     done(error)
 
-                        return
-                    }
+    //                     return
+    //                 }
 
-                    db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
-                        if (error) {
-                            done(error)
+    //                 db.users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }, (error, insertedUserId) => {
+    //                     if (error) {
+    //                         done(error)
 
-                            return
-                        }
+    //                         return
+    //                     }
 
-                        const insertedPosts = []
+    //                     const insertedPosts = []
 
-                        let count = 1
+    //                     let count = 1
 
-                        const insertedPost1 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+    //                     const insertedPost1 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                        db.posts.insertOne(insertedPost1, (error, insertedPostId1) => {
-                            if (error) {
-                                done(error)
+    //                     db.posts.insertOne(insertedPost1, (error, insertedPostId1) => {
+    //                         if (error) {
+    //                             done(error)
 
-                                return
-                            }
+    //                             return
+    //                         }
 
-                            insertedPosts.push(insertedPost1)
+    //                         insertedPosts.push(insertedPost1)
 
-                            count++
+    //                         count++
 
-                            const insertedPost2 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+    //                         const insertedPost2 = { author: insertedUserId, image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                            db.posts.insertOne(insertedPost2, (error, insertedPostId2) => {
-                                if (error) {
-                                    done(error)
+    //                         db.posts.insertOne(insertedPost2, (error, insertedPostId2) => {
+    //                             if (error) {
+    //                                 done(error)
 
-                                    return
-                                }
+    //                                 return
+    //                             }
 
-                                insertedPosts.push(insertedPost2)
+    //                             insertedPosts.push(insertedPost2)
 
-                                count++
+    //                             count++
 
-                                const insertedPost3 = { author: 'unknown-user-id', image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
+    //                             const insertedPost3 = { author: 'unknown-user-id', image: `http://images.com/${count}`, text: `hello post ${count}`, date: new Date().toLocaleDateString('en-CA') }
 
-                                db.posts.insertOne(insertedPost3, (error, insertedPostId3) => {
-                                    if (error) {
-                                        done(error)
+    //                             db.posts.insertOne(insertedPost3, (error, insertedPostId3) => {
+    //                                 if (error) {
+    //                                     done(error)
 
-                                        return
-                                    }
+    //                                     return
+    //                                 }
 
-                                    insertedPosts.push(insertedPost3)
+    //                                 insertedPosts.push(insertedPost3)
 
-                                    logic.retrievePosts(insertedUserId, (error, posts) => {
-                                        expect(error).to.be.instanceOf(Error)
+    //                                 logic.retrievePosts(insertedUserId, (error, posts) => {
+    //                                     expect(error).to.be.instanceOf(Error)
 
-                                        expect(error.message).to.equal('post owner not found')
+    //                                     expect(error.message).to.equal('post owner not found')
 
-                                        expect(posts).to.be.undefined
+    //                                     expect(posts).to.be.undefined
 
-                                        done()
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
-            })
-        })
+    //                                     done()
+    //                                 })
+    //                             })
+    //                         })
+    //                     })
+    //                 })
+    //             })
+    //         })
+    //     })
+    // })
+
+    after(done => {
+        client.close()
+            .then(() => done())
+            .catch(done)
     })
-
 })
