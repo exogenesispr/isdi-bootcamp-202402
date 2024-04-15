@@ -1,5 +1,5 @@
 import registerUser from "./registerUser"
-import loginUser from "./loginUser"
+import authenticateUser from "./authenticateUser"
 import retrieveUser from "./retrieveUser"
 import logoutUser from "./logoutUser"
 
@@ -14,7 +14,7 @@ const logic = {
     posts: null,
 
     registerUser,
-    loginUser,
+    authenticateUser,
     retrieveUser,
     logoutUser,
 

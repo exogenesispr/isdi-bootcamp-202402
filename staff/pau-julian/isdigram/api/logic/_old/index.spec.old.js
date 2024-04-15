@@ -1,4 +1,4 @@
-import { MongoClient, ObjectId } from 'mongodb'
+import mongoose from 'mongoose'
 import logic from "./index.ts"
 import { expect } from 'chai'
 

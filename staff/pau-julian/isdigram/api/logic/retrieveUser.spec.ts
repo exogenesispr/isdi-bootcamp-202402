@@ -1,4 +1,9 @@
-import { MongoClient, ObjectId } from 'mongodb'
+import mongoose, { mongo } from 'mongoose'
+
+const { Types: { ObjectId } } = mongoose
+
+import { User } from '../data/index.ts'
+
 import logic from "./index.ts"
 import { expect } from 'chai'
 import { errors } from 'com'
@@ -8,114 +13,50 @@ const { NotFoundError } = errors
 describe('retrieveUser', () => {
     let client, users
 
-    before((done) => {
-        client = new MongoClient('mongodb://localhost:27017')
-
-        client.connect()
-            .then((connection) => {
-                const db = connection.db('test')
-
-                users = db.collection('users')
-
-                logic.users = users
-
-                done()
-            })
-            .catch(done)
-    })
+    before(() => mongoose.connect('mongodb://localhost:27017/test'))
 
     //test
 
     it('retrieves existing user', (done) => {
-        users.deleteMany()
-            .then(() => {
-                users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                    .then((result) => {
-                        users.insertOne({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
-                            .then((result2) => {
-                                logic.retrieveUser(result.insertedId.toString(), result2.insertedId.toString(), (error, user) => {
-                                    if (error) {
-                                        done(error)
+        User.deleteMany()
+            .then(() => User.create({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                .then((user) =>
+                    User.create({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
+                        .then((user2) => logic.retrieveUser(user.id, new ObjectId().toString()))
+                        .then((user) => {
+                            expect(user.name).to.equal('Pepe Phone')
+                            expect(user.username).to.equal('pepephone')
+                        })
+                )
+            )
+    })
 
-                                        return
-                                    }
+    it('does no retrieve by non-existing user', () => {
+        User.deleteMany()
+            .then(() => User.create({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                .then((user) => user.create({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
+                    .then((user2) => logic.retrieveUser(new ObjectId().toString(), user2.id))
+                    .catch((error) => {
+                        expect(error).to.be.instanceOf(NotFoundError)
+                        expect(error.message).to.equal('user not found')
 
-                                    try {
-                                        expect(user.id).to.be.undefined
-                                        expect(user.username).to.equal('pepephone')
-                                        expect(user.email).to.equal('pepe@phone.com')
-                                        expect(user.birthdate).to.equal('2000-01-01')
-                                        expect(user.password).to.be.undefined
-                                        expect(user.status).to.be.undefined
-
-                                        done()
-                                    } catch (error) {
-                                        done(error)
-                                    }
-                                })
-                            })
-                            .catch(done)
                     })
-                    .catch(done)
-            })
-            .catch(done)
+                )
+            )
     })
 
-    it('does no retrieve by non-existing user', (done) => {
-        users.deleteMany()
-            .then(() => {
-                users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                    .then((result) => {
-                        users.insertOne({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
-                            .then((result2) => {
-                                logic.retrieveUser(new ObjectId().toString(), result2.insertedId.toString(), (error, user) => {
-                                    try {
-                                        expect(error).to.be.instanceOf(NotFoundError)
-                                        expect(error.message).to.equal('user not found')
-                                        expect(user).to.be.undefined
+    it('cannot retrieve a non-existing user', () => {
+        User.deleteMany()
+            .then(() => User.create({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                .then((user) => users.insertOne({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
+                    .then((user2) => logic.retrieveUser(user.id, user2.id))
+                    .catch((error) => {
+                        expect(error).to.be.instanceOf(NotFoundError)
+                        expect(error.message).to.equal('target user not found')
 
-                                        done()
-                                    } catch (error) {
-                                        done(error)
-                                    }
-                                })
-                            })
-                            .catch(done)
                     })
-                    .catch(done)
-            })
-            .catch(done)
+                )
+            )
     })
-
-    it('does not retrieve by non-existing user', (done) => {
-        users.deleteMany()
-            .then((result) => {
-                users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                    .then((result2) => {
-                        users.insertOne({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
-                            .then(() => {
-                                logic.retrieveUser(result.insertedId.toString(), new ObjectId().toString(), (error, user) => {
-                                    try {
-                                        expect(error).to.be.instanceOf(NotFoundError)
-                                        expect(error.message).to.equal('target user not found')
-                                        expect(user).to.be.undefined
-
-                                        done()
-                                    } catch (error) {
-                                        done(error)
-                                    }
-                                })
-                            })
-                            .catch(done)
-                    })
-                    .catch(done)
-            })
-            .catch(done)
-    })
-
-    after((done) => {
-        client.close()
-            .then(() => done())
-            .catch(done)
-    })
+    after(() => mongoose.disconnect())
 })
