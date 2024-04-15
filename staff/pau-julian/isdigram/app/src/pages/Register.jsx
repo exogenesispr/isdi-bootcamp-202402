@@ -1,6 +1,6 @@
 import { logger, showFeedback } from '../utils/'
 
-import logic from '../logic.mjs'
+import logic from '../logic/index.js'
 import SubmitButton from '../components/library/SubmitButton'
 
 function Register(props) {

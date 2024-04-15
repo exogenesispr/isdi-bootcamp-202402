@@ -1,6 +1,6 @@
 import { logger, showFeedback } from '../utils'
 
-import logic from '../logic.mjs'
+import logic from '../logic/index.js'
 
 import { useState, useEffect } from 'react'
 import PostList from '../components/PostList'
@@ -60,21 +60,25 @@ function Home(props) {
 
     const navStatus = 'home'
 
-    return <main className="main">
-        {user && <h1>Hello, {user.name}!</h1>}
+    return <>
+        <header className='px-[5vw] fixed top-0 bg-white w-full'>
+            {user && <h1>Hello, {user.name}!</h1>}
 
-        <Nav onNavChatClick={handleNavChatClick} onNavLogoutClick={handleLogoutClick} navStatus={navStatus} />
+            <Nav onNavChatClick={handleNavChatClick} onNavLogoutClick={handleLogoutClick} navStatus={navStatus} />
+        </header>
+        <main className="my-[50px] px-[5vw]">
+            <PostList stamp={stamp} onEditPostClick={handleEditPostClick} />
 
-        <PostList stamp={stamp} onEditPostClick={handleEditPostClick} />
+            {view === 'create-post' && <CreatePost onCancelClick={handleCreatePostCancelClick} onPostCreated={handlePostCreated} />}
 
-        {view === 'create-post' && <CreatePost onCancelClick={handleCreatePostCancelClick} onPostCreated={handlePostCreated} />}
+            {view === 'edit-post' && <EditPost post={post} onCancelClick={handleEditPostCancelClick} onPostEdited={handlePostEdited} />}
 
-        {view === 'edit-post' && <EditPost post={post} onCancelClick={handleEditPostCancelClick} onPostEdited={handlePostEdited} />}
+            <footer className="fixed bottom-0 w-full h-[50px]] flex justify-center items-center p-[10px] box-border bg-white">
+                <button onClick={handleCreatePostClick}>➕</button>
+            </footer>
+        </main>
 
-        <footer className="footer">
-            <button onClick={handleCreatePostClick}>➕</button>
-        </footer>
-    </main>
+    </>
 
 }
 

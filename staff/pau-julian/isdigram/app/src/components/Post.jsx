@@ -1,6 +1,6 @@
 import { logger, showFeedback } from '../utils'
 
-import logic from '../logic.mjs'
+import logic from '../logic/index.js'
 
 function Post(props) {
     logger.debug('Post')
@@ -28,7 +28,7 @@ function Post(props) {
 
         <p>{post.text}</p>
 
-        <time>{post.date}</time>
+        <time>{new Date(post.date).toLocaleDateString('en-CA')}</time>
 
         {post.author.id === logic.getLoggedInUserId() && <>
             <button onClick={() => handleDeleteClick(post.id)}>🚮</button>

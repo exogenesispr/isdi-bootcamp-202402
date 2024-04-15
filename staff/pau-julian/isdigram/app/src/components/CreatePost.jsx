@@ -38,8 +38,8 @@ function CreatePost(props) {
 
     logger.debug('CreatePost -> render')
     return (
-        <section className='create-post'>
-            <form onSubmit={handleSubmit}>
+        <section className='mb-[50px] fixed bottom-0 left-0 bg-white w-full box-border p-[5vw]'>
+            <form onSubmit={handleSubmit} className='flex flex-col'>
                 <label htmlFor="text">Image</label>
                 <input type="text" id="image" />
 

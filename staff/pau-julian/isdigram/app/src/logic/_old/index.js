@@ -1,53 +1,10 @@
-import db from './data/index.mjs'
-
-// Constants
-const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/
-const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-const PASSWORD_REGEX = /^(?=.*[0-9])(?=.*[A-Za-z])[A-Za-z0-9]+$/
-const URL_REGEX = /^(http|https):\/\//
-
-// Helpers
-
-function validateText(text, explain, checkEmptySpaceInside) {
-    if (typeof text !== 'string') throw new Error(explain + ' ' + ' is not a string')
-    if (!text.trim().length) throw new Error(explain + ' >' + text + '< is empty or blank')
-
-    if (checkEmptySpaceInside) {
-        if (text.includes(' ')) throw new Error(explain + ' ' + text + ' has empty spaces')
-    }
-}
-
-function validateDate(date, explain) {
-    if (typeof date !== 'string') throw new TypeError(explain + '' + date + ' is not a string')
-    if (!DATE_REGEX.test(date)) throw new Error(explain + ' ' + date + ' is not a date')
-}
-
-function validateEmail(email, explain) {
-    if (typeof email !== 'string') throw new TypeError(explain + '' + email + ' is not a string')
-    if (!EMAIL_REGEX.test(email)) throw new Error(explain + ' ' + email + ' is not an email')
-}
-
-function validatePassword(password, explain) {
-    if (!PASSWORD_REGEX.test(password)) throw new Error(explain + ' ' + password + ' is not acceptable')
-}
-
-function validateUrl(url, explain) {
-    if (!URL_REGEX.test(url)) throw new Error(explain + ' ' + url + ' is not an url')
-}
-
-function validateCallback(callback, explain = 'callback') {
-    if (typeof callback !== 'function') throw new TypeError(`${explain} is not a function`)
-}
-
-// Logic
-
 function registerUser(name, birthdate, email, username, password, callback) {
-    validateText(name, 'name')
-    validateDate(birthdate, 'birthday')
-    validateEmail(email, 'email')
-    validateText(username, 'username', true)
-    validatePassword(password, 'password')
-    validateCallback(callback)
+    validate.text(name, 'name')
+    validate.date(birthdate, 'birthday')
+    validate.email(email, 'email')
+    validate.text(username, 'username', true)
+    validate.password(password, 'password')
+    validate.callback(callback)
 
     var xhr = new XMLHttpRequest
 
@@ -85,9 +42,9 @@ function registerUser(name, birthdate, email, username, password, callback) {
 }
 
 function loginUser(username, password, callback) {
-    validateText(username, 'username', true)
-    validatePassword(password, 'password')
-    validateCallback(callback)
+    validate.text(username, 'username', true)
+    validate.password(password, 'password')
+    validate.callback(callback)
 
     var xhr = new XMLHttpRequest
 
@@ -130,7 +87,7 @@ function loginUser(username, password, callback) {
 
 
 function retrieveUser(callback) {
-    validateCallback(callback)
+    validate.callback(callback)
 
     const xhr = new XMLHttpRequest
 
@@ -160,11 +117,13 @@ function retrieveUser(callback) {
 
     xhr.open('GET', `http://localhost:8080/users/${sessionStorage.userId}`)
 
+    xhr.setRequestHeader('Authorization', sessionStorage.userId)
+
     xhr.send()
 }
 
 function logoutUser(callback) {
-    validateCallback(callback)
+    validate.callback(callback)
 
     const xhr = new XMLHttpRequest
 
@@ -243,8 +202,8 @@ function retrieveUsersWithStatus() {
 }
 
 function sendMessageToUser(userId, text) {
-    validateText(userId, 'userId', true)
-    validateText(text, 'text')
+    validate.text(userId, 'userId', true)
+    validate.text(text, 'text')
 
     let chat = db.chats.findOne(function (chat) {
         return chat.users.includes(userId) && chat.users.includes(sessionStorage.userId)
@@ -273,7 +232,7 @@ function sendMessageToUser(userId, text) {
 }
 
 function retrieveMessagesWithUser(userId) {
-    validateText(userId, 'userId', true)
+    validate.text(userId, 'userId', true)
 
     const chat = db.chats.findOne(function (chat) {
         return chat.users.includes(userId) && chat.users.includes(sessionStorage.userId)
@@ -289,9 +248,9 @@ function retrieveMessagesWithUser(userId) {
 function createPost(image, text, callback) {
     validateUrl(image, 'image')
     if (text) {
-        validateText(text, 'text')
+        validate.text(text, 'text')
     }
-    validateCallback(callback)
+    validate.callback(callback)
 
     var xhr = new XMLHttpRequest
 
@@ -330,7 +289,7 @@ function createPost(image, text, callback) {
 }
 
 function retrievePosts(callback) {
-    validateCallback(callback)
+    validate.callback(callback)
 
     var xhr = new XMLHttpRequest
 
@@ -366,7 +325,7 @@ function retrievePosts(callback) {
 }
 
 function removePost(postId) {
-    validateText(postId, 'postId')
+    validate.text(postId, 'postId')
 
     const post = db.posts.findOne(function (post) {
         return post.id === postId
@@ -382,8 +341,8 @@ function removePost(postId) {
 }
 
 function modifyPost(postId, text) {
-    validateText(postId, 'postId', true)
-    validateText(text, 'text',)
+    validate.text(postId, 'postId', true)
+    validate.text(text, 'text',)
 
     const post = db.posts.findOne(function (post) {
         return post.id === postId
@@ -400,7 +359,7 @@ function modifyPost(postId, text) {
 
 /* PREVIOUS MESSAGE FEATURE (NOW INCLUDED WITH CHATS)
 function createMessage(userId, message2) {
-    validateText(message2, 'message')
+    validate.text(message2, 'message')
 
     const timestamp = Date.now()
     const messageDate = new Date(timestamp).toISOString()
@@ -445,35 +404,3 @@ function retrieveMessages(userIdFrom, userIdTo) {
     return formattedMessages
 }
 */
-
-function showForm(id) {
-    const form = document.getElementById(id)
-    if (form.style.display === 'none' || form.style.display === '') {
-        form.style.display = 'block'
-    } else {
-        form.style.display = 'none'
-    }
-}
-
-const logic = {
-    registerUser,
-    loginUser,
-    retrieveUser,
-    logoutUser,
-    getLoggedInUserId,
-    isUserLoggedIn,
-    cleanUpLoggedInUserId,
-
-    retrieveUsers: retrieveUsersWithStatus,
-    sendMessageToUser,
-    retrieveMessagesWithUser,
-
-    createPost,
-    retrievePosts,
-    removePost,
-    modifyPost,
-
-    showForm,
-}
-
-export default logic

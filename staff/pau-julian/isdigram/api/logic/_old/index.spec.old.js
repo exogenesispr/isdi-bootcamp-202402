@@ -1,8 +1,6 @@
-import mongodb from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 import logic from "./index.ts"
 import { expect } from 'chai'
-
-const { MongoClient, ObjectId } = mongodb
 
 describe('logic', () => {
     let client, users, posts
@@ -11,7 +9,7 @@ describe('logic', () => {
         client = new MongoClient('mongodb://localhost:27017')
 
         client.connect()
-            .then(connection => {
+            .then((connection) => {
                 const db = connection.db('test')
 
                 users = db.collection('users')
@@ -72,6 +70,7 @@ describe('logic', () => {
             let errorThrown
 
             try {
+                //@ts-ignore
                 logic.registerUser(123, '2000-01-01', 'pepe@roni.com', 'peperoni', '123qwe123', () => { })
             } catch (error) {
                 errorThrown = error
@@ -98,6 +97,7 @@ describe('logic', () => {
             let errorThrown
 
             try {
+                //@ts-ignore
                 logic.registerUser('Pepe Roni', 123, 'pepe@roni.com', 'peperoni', '123qwe123', () => { })
             } catch (error) {
                 errorThrown = error
@@ -124,6 +124,7 @@ describe('logic', () => {
             let errorThrown
 
             try {
+                //@ts-ignore
                 logic.registerUser('Pepe Roni', '2000-01-01', 123, 'peperoni', '123qwe123', () => { })
             } catch (error) {
                 errorThrown = error
@@ -150,6 +151,7 @@ describe('logic', () => {
             let errorThrown
 
             try {
+                //@ts-ignore
                 logic.registerUser('Pepe Roni', '2000-01-01', 'pepe@roni.com', 123, '123qwe123', () => { })
             } catch (error) {
                 errorThrown = error
@@ -191,18 +193,19 @@ describe('logic', () => {
             users.deleteMany()
                 .then(() => {
                     users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                        .then((user) => {
+                        .then((result) => {
                             logic.loginUser('peperoni', '123qwe123', (error, userId) => {
                                 if (error) {
                                     done(error)
 
                                     return
                                 }
+                                expect(userId).to.be.a('string')
+                                expect(userId).to.equal(result.insertedId.toString())
 
-                                users.findOne({ userId: user._id })
+                                users.findOne({ _id: new ObjectId(userId) })
                                     .then((user) => {
                                         expect(user.status).to.equal('online')
-                                        expect(userId).to.deep.equal(user._id)
 
                                         done()
                                     })
@@ -218,7 +221,7 @@ describe('logic', () => {
             users.deleteMany()
                 .then(() => {
                     users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                        .then((user) => {
+                        .then((result) => {
                             logic.loginUser('peperoni', '123qwe123qwe', (error, userId) => {
                                 expect(error).to.be.instanceOf(Error)
                                 expect(error.message).to.equal('wrong password')
@@ -232,50 +235,19 @@ describe('logic', () => {
                 .catch(done)
         })
 
-    })
 
 
 
-    //     it('fails on existing user and incorrect username', (done) => {
-    //         db.users.deleteAll((error) => {
-    //             if (error) {
-    //                 done(error)
 
-    //                 return
-    //             }
-
-    //             logic.loginUser('peperoni2', '123qwe123', (error, userId) => {
-    //                 expect(error).to.be.instanceOf(Error)
-    //                 expect(error.message).to.equal('user not found')
-
-    //                 expect(userId).to.be.undefined
-
-    //                 done()
-    //             })
-    //         })
-    //     })
-    // })
-
-
-    describe('retrieveUser', () => {
-        it('retrieves existing user', (done) => {
+        it('fails on existing user and incorrect username', (done) => {
             users.deleteMany()
                 .then(() => {
                     users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                        .then((user) => {
-                            logic.retrieveUser(user._id, (error, user) => {
-                                if (error) {
-                                    done(error)
-
-                                    return
-                                }
-
-                                expect(user.id).to.be.undefined
-                                expect(user.username).to.equal('peperoni')
-                                expect(user.email).to.equal('pepe@roni.com')
-                                expect(user.birthdate).to.equal('2000-01-01')
-                                expect(user.password).to.be.undefined
-                                expect(user.status).to.be.undefined
+                        .then(() => {
+                            logic.loginUser('peperoni2', '123qwe123', (error, userId) => {
+                                expect(error).to.be.instanceOf(Error)
+                                expect(error.message).to.equal('user not found')
+                                expect(userId).to.be.undefined
 
                                 done()
                             })
@@ -285,25 +257,66 @@ describe('logic', () => {
                 .catch(done)
         })
 
+
+    })
+
+
+    describe('retrieveUser', () => {
         it('retrieves existing user', (done) => {
             users.deleteMany()
                 .then(() => {
                     users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
-                        .then((user) => {
-                            logic.retrieveUser('wrong-id', (error, user) => {
-                                if (error) {
-                                    expect(error).to.be.true
-                                    expect(error.message).to.equal('user not found')
-                                    expect(user).to.be.undefined
+                        .then((result) => {
+                            users.insertOne({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
+                                .then((result2) => {
+                                    logic.retrieveUser(result.insertedId.toString(), result2.insertedId.toString(), (error, user) => {
+                                        if (error) {
+                                            done(error)
 
-                                    done()
-                                }
-                            })
+                                            return
+                                        }
+
+                                        expect(user.id).to.be.undefined
+                                        expect(user.username).to.equal('pepephone')
+                                        expect(user.email).to.equal('pepe@phone.com')
+                                        expect(user.birthdate).to.equal('2000-01-01')
+                                        expect(user.password).to.be.undefined
+                                        expect(user.status).to.be.undefined
+
+                                        done()
+                                    })
+                                })
+                                .catch(done)
                         })
                         .catch(done)
                 })
                 .catch(done)
         })
+
+        it('does no retrieve by non-existing user', (done) => {
+            users.deleteMany()
+                .then(() => {
+                    users.insertOne({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' })
+                        .then((result) => {
+                            users.insertOne({ name: 'Pepe Phone', birthdate: '2000-01-01', email: 'pepe@phone.com', username: 'pepephone', password: '123qwe123' })
+                                .then((result2) => {
+                                    logic.retrieveUser(new ObjectId().toString(), result2.insertedId.toString(), (error, user) => {
+                                        if (error) {
+                                            expect(error).to.be.instanceOf(Error)
+                                            expect(error.message).to.equal('user not found')
+                                            expect(user).to.be.undefined
+
+                                            done()
+                                        }
+                                    })
+                                })
+                                .catch(done)
+                        })
+                        .catch(done)
+                })
+                .catch(done)
+        })
+
     })
 
 
@@ -383,24 +396,24 @@ describe('logic', () => {
                                     done(error)
 
                                     return
-
-                                    logic.logoutUser(userId, (error) => {
-                                        if (error) {
-                                            done(error)
-
-                                            return
-                                        }
-
-                                        users.findOne({ _id: userId })
-                                            .then(() => {
-                                                expect(userId).to.deep.equal(user._id)
-                                                expect(user.status).to.equal('offline')
-
-                                                done()
-                                            })
-                                            .catch(done)
-                                    })
                                 }
+
+                                logic.logoutUser(userId, (error) => {
+                                    if (error) {
+                                        done(error)
+
+                                        return
+                                    }
+
+                                    users.findOne({ _id: new ObjectId(userId) })
+                                        .then((result) => {
+                                            expect(userId).to.equal(result._id.toString())
+                                            expect(result.status).to.equal('offline')
+
+                                            done()
+                                        })
+                                        .catch(done)
+                                })
                             })
                         })
                         .catch(done)
@@ -461,12 +474,6 @@ describe('logic', () => {
 
     //TODO messages (still working with sessionStorage)
 
-
-    // describe('createPost', () => {
-    //     it('creates a post when valid arguments', (done) => {
-    //         logic.createPost
-    //     })
-    // })
 
     // describe('retrievePosts', () => {
     //     it('retrieves all posts for existing user', (done) => {
@@ -657,7 +664,7 @@ describe('logic', () => {
     //     })
     // })
 
-    after(done => {
+    after((done) => {
         client.close()
             .then(() => done())
             .catch(done)
