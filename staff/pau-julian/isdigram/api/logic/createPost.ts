@@ -1,36 +1,27 @@
 import { validate, errors } from 'com'
 import { ObjectId } from 'mongodb'
+import { Post, User } from '../data'
 
 const { SystemError, NotFoundError } = errors
 
-function createPost(userId, image, text, callback) {
+function createPost(userId: string, image: string, text: string): Promise<void> {
     validate.text(userId, 'userId', true)
     validate.url(image, 'image')
     if (text) {
         validate.text(text, 'text')
     }
-    validate.callback(callback)
 
-    this.users.findOne({ _id: new ObjectId(userId) })
+    return User.findById(userId)
+        .catch((error) => { throw new SystemError(error.message) })
         .then((user) => {
             if (!user) {
-                callback(new NotFoundError('user not found'))
-
-                return
+                throw new NotFoundError('user not found')
             }
 
-            const post = {
-                author: user._id,
-                image: image,
-                text: text,
-                date: new Date()
-            }
-
-            this.posts.insertOne(post)
-                .then(() => callback(null))
-                .catch((error) => { callback(new SystemError(error.message)) })
+            return Post.create({ author: user._id, image, text, date: new Date })
+                .catch((error) => { throw new SystemError(error.message) })
+                .then((post) => { })
         })
-        .catch((error) => callback(new SystemError(error.message)))
 }
 
 export default createPost

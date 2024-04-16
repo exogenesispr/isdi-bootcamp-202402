@@ -18,18 +18,13 @@ function Register(props) {
         const password = form.password.value
 
         try {
-            logic.registerUser(name, birthdate, email, username, password, (error) => {
-                if (error) {
-                    showFeedback(error)
+            logic.registerUser(name, birthdate, email, username, password)
+                .then(() => {
+                    form.reset()
 
-                    return
-                }
-
-                form.reset()
-
-                props.onRegisteredUser()
-            })
-
+                    props.onRegisteredUser()
+                })
+                .catch(showFeedback)
         } catch (error) {
             showFeedback(error)
         }
@@ -40,7 +35,6 @@ function Register(props) {
 
         props.onLoginClick()
     }
-
 
     logger.debug('Register -> render')
 

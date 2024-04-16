@@ -16,15 +16,9 @@ function Home(props) {
 
     useEffect(() => {
         try {
-            logic.retrieveUser((error, user) => {
-                if (error) {
-                    showFeedback(error)
-
-                    return
-                }
-
-                setUser(user)
-            })
+            logic.retrieveUser()
+                .then(setUser)
+                .catch(showFeedback)
         } catch (error) {
             showFeedback(error)
         }
@@ -77,7 +71,6 @@ function Home(props) {
                 <button onClick={handleCreatePostClick}>➕</button>
             </footer>
         </main>
-
     </>
 
 }
