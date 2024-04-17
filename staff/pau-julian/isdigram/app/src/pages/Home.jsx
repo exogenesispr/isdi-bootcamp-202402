@@ -2,11 +2,14 @@ import { logger, showFeedback } from '../utils'
 
 import logic from '../logic/index.js'
 
+import { Routes, Route } from 'react-router-dom'
+
 import { useState, useEffect } from 'react'
 import PostList from '../components/PostList'
 import CreatePost from '../components/CreatePost'
 import EditPost from '../components/EditPost'
 import Nav from '../components/Nav'
+import Profile from '../components/Profile.jsx'
 
 function Home(props) {
     const [user, setUser] = useState(null)
@@ -29,7 +32,7 @@ function Home(props) {
     const handleCreatePostCancelClick = () => clearView()
 
     const handlePostCreated = () => {
-        setView(null)
+        clearView()
         setStamp(Date.now())
     }
 
@@ -45,7 +48,7 @@ function Home(props) {
     }
 
     const handlePostEdited = () => {
-        setView(null)
+        clearView()
         setStamp(Date.now())
         setPost(null)
     }
@@ -61,7 +64,11 @@ function Home(props) {
             <Nav onNavChatClick={handleNavChatClick} onNavLogoutClick={handleLogoutClick} navStatus={navStatus} />
         </header>
         <main className="my-[50px] px-[5vw]">
-            <PostList stamp={stamp} onEditPostClick={handleEditPostClick} />
+            <Routes>
+                <Route path='/' element={<PostList stamp={stamp} onEditPostClick={handleEditPostClick} />} />
+                <Route path='/profile/:username' element={<Profile />} />
+            </Routes>
+
 
             {view === 'create-post' && <CreatePost onCancelClick={handleCreatePostCancelClick} onPostCreated={handlePostCreated} />}
 

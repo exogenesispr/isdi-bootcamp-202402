@@ -13,7 +13,7 @@ describe('authenticateUser', () => {
 
     //test
 
-    it('succeeds on existing user and correct credentials', (done) => {
+    it('succeeds on existing user and correct credentials', () => {
         User.deleteMany()
             .then(() => User.create({ name: 'Pepe Roni', birthdate: '2000-01-01', email: 'pepe@roni.com', username: 'peperoni', password: '123qwe123' }))
             .then((user) => logic.authenticateUser('peperoni', '123qwe123')

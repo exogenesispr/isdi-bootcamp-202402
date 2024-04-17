@@ -1,5 +1,5 @@
 function getLoggedInUserId() {
-    const [, payloadB64] = sessionStorage.token.spli('.')
+    const [, payloadB64] = sessionStorage.token.split('.')
 
     const payloadJSON = atob(payloadB64)
 

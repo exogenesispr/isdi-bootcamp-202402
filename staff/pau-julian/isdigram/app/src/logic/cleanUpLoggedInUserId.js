@@ -1,5 +1,5 @@
 function cleanUpLoggedInUserId() {
-    delete sessionStorage.userId
+    delete sessionStorage.token
 }
 
 export default cleanUpLoggedInUserId

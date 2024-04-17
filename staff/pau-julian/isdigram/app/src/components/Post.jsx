@@ -1,6 +1,8 @@
 import { logger, showFeedback } from '../utils'
 
-import logic from '../logic/index.js'
+import { Link } from 'react-router-dom'
+
+import logic from '../logic/'
 
 function Post(props) {
     logger.debug('Post')
@@ -22,7 +24,7 @@ function Post(props) {
     const { item: post } = props
 
     return <article>
-        <h3>{post.author.username}</h3>
+        <h3><Link to={`/profile/${post.author.username}`}>{post.author.username}</Link></h3>
 
         <img src={post.image} />
 

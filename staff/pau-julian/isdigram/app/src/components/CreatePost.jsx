@@ -39,7 +39,7 @@ function CreatePost(props) {
                 <label htmlFor="text">Image</label>
                 <input type="text" id="image" />
 
-                <label htmlFor="text">Image</label>
+                <label htmlFor="text">Text</label>
                 <input type="text" id="text" />
 
                 <SubmitButton>Create</SubmitButton>

@@ -19,14 +19,6 @@ const { ContentError, SystemError, DuplicityError, NotFoundError, CredentialsErr
 
 mongoose.connect('mongodb://localhost:27017/isdigram')
     .then(() => {
-        const db = mongoose.connection.db
-
-        const users = db.collection('users')
-        const posts = db.collection('posts')
-
-        logic.users = users
-        logic.posts = posts
-
         const api = express()
 
         const jsonBodyParser = express.json()
@@ -187,17 +179,29 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
                 const { sub: userId } = jwt.verify(token, 'i killed kenny')
 
                 // TODO as PROMISES
-                logic.retrievePosts(userId as string, (error, posts) => {
-                    if (error) {
-                        res.status(400).json({ error: error.constructor.name, message: error.message })
+                logic.retrievePosts(userId as string)
+                    .then((posts) => res.json(posts))
+                    .catch((error) => {
+                        if (error instanceof SystemError) {
+                            logger.error(error.message)
 
-                        return
-                    }
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        } else if (error instanceof NotFoundError) {
+                            logger.warn(error.message)
 
-                    res.json(posts)
-                })
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
             } catch (error) {
-                res.status(400).json({ error: error.constructor.name, message: error.message })
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    logger.warn(error.message)
+
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    logger.warn(error.message)
+
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
             }
         })
 
@@ -242,47 +246,47 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
         // delete post -> DELETE /posts
 
         api.delete('/posts/:postId', (req, res) => {
-            const { authorization: userId } = req.headers
+            //     const { authorization: userId } = req.headers
 
-            const { postId } = req.params
+            //     const { postId } = req.params
 
-            try {
-                logic.retrievePosts(userId, (error, json) => {
-                    if (error) {
-                        res.status(400).json({ error: error.constructor.name, message: error.message })
+            //     try {
+            //         logic.retrievePosts(userId, (error, json) => {
+            //             if (error) {
+            //                 res.status(400).json({ error: error.constructor.name, message: error.message })
 
-                        return
-                    }
+            //                 return
+            //             }
 
-                    const posts = JSON.parse(json)
+            //             const posts = JSON.parse(json)
 
-                    const postIndex = posts.findIndex((post) => post.id === postId)
+            //             const postIndex = posts.findIndex((post) => post.id === postId)
 
-                    if (postIndex > 0) {
-                        res.status(404).send()
+            //             if (postIndex > 0) {
+            //                 res.status(404).send()
 
-                        return
-                    }
+            //                 return
+            //             }
 
-                    posts.splice(postIndex, 1)
+            //             posts.splice(postIndex, 1)
 
-                    try {
-                        logic.removePost(userId, postId, (error) => {
-                            if (error) {
-                                res.status(500).json({ error: error.constructor.name, message: error.message })
+            //             try {
+            //                 logic.removePost(userId, postId, (error) => {
+            //                     if (error) {
+            //                         res.status(500).json({ error: error.constructor.name, message: error.message })
 
-                                return
-                            }
+            //                         return
+            //                     }
 
-                            res.status(204).send()
-                        })
-                    } catch (error) {
-                        res.status(500).json({ error: error.constructor.name, message: error.message })
-                    }
-                })
-            } catch (error) {
-                res.status(500).json({ error: error.constructor.name, message: error.message })
-            }
+            //                     res.status(204).send()
+            //                 })
+            //             } catch (error) {
+            //                 res.status(500).json({ error: error.constructor.name, message: error.message })
+            //             }
+            //         })
+            //     } catch (error) {
+            //         res.status(500).json({ error: error.constructor.name, message: error.message })
+            //     }
         })
 
         api.listen(8080, () => console.log('API listening on port 8080'))

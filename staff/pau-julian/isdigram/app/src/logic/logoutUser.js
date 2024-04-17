@@ -1,5 +1,8 @@
-function logoutUser(callback) {
-    validate.callback(callback)
+function logoutUser() {
+
+    delete sessionStorage.token
+
+    /*
 
     const xhr = new XMLHttpRequest
 
@@ -25,7 +28,7 @@ function logoutUser(callback) {
         }
     }
 
-    /*
+    
     const user = db.users.findOne(function (user) {
         return user.id === sessionStorage.userId
     })
