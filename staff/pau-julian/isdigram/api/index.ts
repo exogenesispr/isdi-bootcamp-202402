@@ -5,6 +5,11 @@ import { errors } from 'com'
 import tracer from 'tracer'
 import colors from 'colors'
 import jwt from 'jsonwebtoken'
+import cors from 'cors'
+
+const { TokenExpiredError } = jwt
+
+const { MONGODB_URL, PORT, JWT_SECRET, JWT_EXP } = process.env
 
 const logger = tracer.colorConsole({
     filters: {
@@ -15,21 +20,15 @@ const logger = tracer.colorConsole({
     }
 })
 
-const { ContentError, SystemError, DuplicityError, NotFoundError, CredentialsError } = errors
+const { ContentError, SystemError, DuplicityError, NotFoundError, CredentialsError, UnauthorizedError } = errors
 
-mongoose.connect('mongodb://localhost:27017/isdigram')
+mongoose.connect(MONGODB_URL)
     .then(() => {
         const api = express()
 
         const jsonBodyParser = express.json()
 
-        api.use((req, res, next) => {
-            res.setHeader('Access-Control-Allow-Origin', '*')
-            res.setHeader('Access-Control-Allow-Methods', '*')
-            res.setHeader('Access-Control-Allow-Headers', '*')
-
-            next()
-        })
+        api.use(cors())
 
         api.post('/users', jsonBodyParser, (req, res) => {
             try {
@@ -70,7 +69,7 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
 
                 logic.authenticateUser(username, password)
                     .then((userId) => {
-                        const token = jwt.sign({ sub: userId }, 'i killed kenny')
+                        const token = jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: JWT_EXP })
 
                         res.status(200).json(token)
                     })
@@ -97,7 +96,7 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
                 } else {
                     logger.warn(error.message)
 
-                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                    res.status(500).json({ error: SystemError.name, message: error.message })
                 }
             }
         })
@@ -111,7 +110,7 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
                 //Bearer {token}
                 const token = authorization.slice(7)
 
-                const { sub: userId } = jwt.verify(token, 'i killed kenny')
+                const { sub: userId } = jwt.verify(token, JWT_SECRET)
 
                 const { targetUserId } = req.params
 
@@ -133,10 +132,14 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
                     logger.warn(error.message)
 
                     res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else if (error instanceof TokenExpiredError) {
+                    logger.warn(error.message)
+
+                    res.status(498).json({ error: UnauthorizedError.name, message: 'session expired' })
                 } else {
                     logger.warn(error.message)
 
-                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                    res.status(500).json({ error: SystemError.name, message: error.message })
                 }
             }
         })
@@ -176,7 +179,7 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
 
                 const token = authorization.slice(7)
 
-                const { sub: userId } = jwt.verify(token, 'i killed kenny')
+                const { sub: userId } = jwt.verify(token, JWT_SECRET)
 
                 // TODO as PROMISES
                 logic.retrievePosts(userId as string)
@@ -197,6 +200,10 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
                     logger.warn(error.message)
 
                     res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else if (error instanceof TokenExpiredError) {
+                    logger.warn(error.message)
+
+                    res.status(498).json({ error: UnauthorizedError.name, message: 'session expired' })
                 } else {
                     logger.warn(error.message)
 
@@ -235,6 +242,10 @@ mongoose.connect('mongodb://localhost:27017/isdigram')
                     logger.warn(error.message)
 
                     res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else if (error instanceof TokenExpiredError) {
+                    logger.warn(error.message)
+
+                    res.status(498).json({ error: SystemError.name, message: 'session expired' })
                 } else {
                     logger.warn(error.message)
 

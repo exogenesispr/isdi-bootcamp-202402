@@ -5,8 +5,12 @@ import logic from '../logic'
 import { useState, useEffect } from 'react'
 import Post from './Post'
 
-function PostList(props) {
+import { useContext } from '../context'
+
+function PostList({ stamp, onEditPostClick }) {
     logger.debug('PostList')
+
+    const { showFeedback } = useContext()
 
     const [posts, setPosts] = useState([])
 
@@ -17,19 +21,19 @@ function PostList(props) {
         try {
             logic.retrievePosts()
                 .then(setPosts)
-                .catch(showFeedback)
+                .catch((error) => showFeedback(error.message, 'error'))
         } catch (error) {
-            showFeedback(error)
+            showFeedback(error.message)
         }
     }
 
     useEffect(() => {
         loadPosts()
-    }, [props.stamp])
+    }, [stamp])
 
     const handlePostDeleted = () => loadPosts()
 
-    const handleEditClick = (post) => props.onEditPostClick(post)
+    const handleEditClick = (post) => onEditPostClick(post)
 
     logger.debug('PostList -> render')
 

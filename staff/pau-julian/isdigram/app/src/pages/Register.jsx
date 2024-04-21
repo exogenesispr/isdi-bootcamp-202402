@@ -3,8 +3,12 @@ import { logger, showFeedback } from '../utils/'
 import logic from '../logic/index.js'
 import SubmitButton from '../components/library/SubmitButton'
 
-function Register(props) {
+import { useContext } from '../context.js'
+
+function Register({ onRegisteredUser, onLoginClick }) {
     logger.debug('Register')
+
+    const { showFeedback } = useContext()
 
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -22,18 +26,18 @@ function Register(props) {
                 .then(() => {
                     form.reset()
 
-                    props.onRegisteredUser()
+                    onRegisteredUser()
                 })
-                .catch(showFeedback)
+                .catch((error) => showFeedback(error.message, 'error'))
         } catch (error) {
-            showFeedback(error)
+            showFeedback(error.message)
         }
     }
 
     const handleLoginClick = (event) => {
         event.preventDefault()
 
-        props.onLoginClick()
+        onLoginClick()
     }
 
     logger.debug('Register -> render')

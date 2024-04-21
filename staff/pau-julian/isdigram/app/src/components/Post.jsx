@@ -4,24 +4,29 @@ import { Link } from 'react-router-dom'
 
 import logic from '../logic/'
 
-function Post(props) {
+import { useContext } from '../context'
+
+function Post({ item: post, onDeleted, onEditClick }) {
     logger.debug('Post')
 
-    const handleDeleteClick = (postId) => {
-        if (confirm('delete post?'))
-            try {
-                logic.removePost(postId)
+    const { showFeedback, showConfirm } = useContext()
 
-                props.onDeleted()
-            } catch (error) {
-                showFeedback(error)
-            }
+    const handleDeleteClick = (postId) => {
+        showConfirm('delete post?', confirmed => {
+            if (confirmed)
+                try {
+                    logic.removePost(postId)
+                        .then(() => onDeleted())
+                        .catch((error) => showFeedback(error.message, 'error'))
+                } catch (error) {
+                    showFeedback(error.message)
+                }
+        })
     }
 
-    const handleEditClick = (post) => props.onEditClick(post)
+    const handleEditClick = (post) => onEditClick(post)
 
     logger.debug('Post -> render')
-    const { item: post } = props
 
     return <article>
         <h3><Link to={`/profile/${post.author.username}`}>{post.author.username}</Link></h3>

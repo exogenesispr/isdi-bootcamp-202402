@@ -1,4 +1,4 @@
-import { logger, showFeedback } from '../utils/index.mjs'
+import { logger, showFeedback } from '../utils/index.js'
 
 import logic from '../logic/index.js'
 

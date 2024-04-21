@@ -1,4 +1,4 @@
-import { logger, showFeedback } from '../utils'
+import { logger } from '../utils'
 
 import logic from '../logic/index.js'
 
@@ -11,19 +11,23 @@ import EditPost from '../components/EditPost'
 import Nav from '../components/Nav'
 import Profile from '../components/Profile.jsx'
 
+import { useContext } from '../context.js'
+
 function Home(props) {
     const [user, setUser] = useState(null)
     const [view, setView] = useState(null)
     const [stamp, setStamp] = useState(null)
     const [post, setPost] = useState(null)
 
+    const { showFeedback } = useContext()
+
     useEffect(() => {
         try {
             logic.retrieveUser()
                 .then(setUser)
-                .catch(showFeedback)
+                .catch((error) => showFeedback(error.message, 'error'))
         } catch (error) {
-            showFeedback(error)
+            showFeedback(error.message)
         }
     }, [])
 

@@ -3,11 +3,14 @@ import { logger, showFeedback } from '../utils'
 import logic from '../logic'
 import CancelButton from './library/CancelButton'
 import SubmitButton from './library/SubmitButton'
+import { useContext } from '../context'
 
 import './CreatePost.sass'
 
-function CreatePost(props) {
+function CreatePost({ onPostCreated, onCancelClick }) {
     logger.debug('CreatePost')
+
+    const { showFeedback } = useContext()
 
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -22,15 +25,15 @@ function CreatePost(props) {
                 .then(() => {
                     form.reset()
 
-                    props.onPostCreated()
+                    onPostCreated()
                 })
-                .catch(showFeedback)
+                .catch((error) => showFeedback(error.message, 'error'))
         } catch (error) {
-            showFeedback(error)
+            showFeedback(error.message)
         }
     }
 
-    const handleCancelClick = () => props.onCancelClick()
+    const handleCancelClick = () => onCancelClick()
 
     logger.debug('CreatePost -> render')
     return (
