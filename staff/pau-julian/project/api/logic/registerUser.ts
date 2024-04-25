@@ -20,7 +20,7 @@ function registerUser(
         .catch((error) => { throw new SystemError(error.message) })
         .then((user: UserType | null) => {
             if (user) {
-                throw new Error('user already exists')
+                throw new SystemError('user already exists')
             }
 
             const newUser = {
@@ -30,7 +30,10 @@ function registerUser(
                 language: language,
                 online: false,
                 price: {
-                    type: [],
+                    m10: {
+                        value: null,
+                        lastEdited: null
+                    },
                 }
             }
 

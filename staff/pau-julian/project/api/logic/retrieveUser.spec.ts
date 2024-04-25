@@ -9,18 +9,17 @@ const { Types: { ObjectId } } = mongoose
 import logic from './index.ts'
 import { expect } from 'chai'
 import { errors } from 'com'
-import { NotFoundError } from 'com/errors.ts'
+
+const { NotFoundError, SystemError } = errors
 
 dotenv.config()
-
-const { SystemError } = errors
 
 describe('retrieveUser', () => {
     before(() => mongoose.connect(process.env.MONGODB_TEST_URL))
 
     it('retrieves existing user', () => {
         User.deleteMany()
-            .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'] }))
+            .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'], online: false, price: { m10: { value: 100000, lastEdited: new Date } } }))
             .then((user) => {
                 User.create({ username: 'username2', password: '123qwe123', dcName: 'usernameDC2', language: ['EN', 'ES'] })
                     .then((user2) => logic.retrieveUser(user.id, user2.id))

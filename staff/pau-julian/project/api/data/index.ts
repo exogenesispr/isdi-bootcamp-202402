@@ -33,7 +33,7 @@ type UserType = {
 
     online: Boolean
     price?: {
-        type: [PriceType]
+        m10: PriceType
     }
 }
 
@@ -62,7 +62,16 @@ const user = new Schema({
         required: true,
     },
     price: {
-        type: [price]
+        m10: {
+            value: {
+                type: Number,
+                required: true
+            },
+            lastEdited: {
+                type: Date,
+                required: true
+            }
+        }
     }
 })
 
@@ -70,7 +79,10 @@ type CommunityType = {
     name: String
     dcReference: String
     price: {
-        type: [PriceType]
+        m10: PriceType,
+        raidVip: PriceType,
+        raidUnsaved: PriceType,
+        raidSaved: PriceType
     }
 }
 
@@ -86,7 +98,46 @@ const community = new Schema({
         unique: true,
     },
     price: {
-        type: [price]
+        m10: {
+            value: {
+                type: Number,
+                required: true
+            },
+            lastEdited: {
+                type: Date,
+                required: true
+            }
+        },
+        raidVip: {
+            value: {
+                type: Number,
+                required: true
+            },
+            lastEdited: {
+                type: Date,
+                required: true
+            }
+        },
+        raidUnsaved: {
+            value: {
+                type: Number,
+                required: true
+            },
+            lastEdited: {
+                type: Date,
+                required: true
+            }
+        },
+        raidSaved: {
+            value: {
+                type: Number,
+                required: true
+            },
+            lastEdited: {
+                type: Date,
+                required: true
+            }
+        }
     }
 })
 

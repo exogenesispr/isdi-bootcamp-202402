@@ -35,7 +35,7 @@ describe('registerUser', () => {
             .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'] }))
             .then(() => logic.registerUser('username', '123qwe123', 'usernameDC', [Language.EN, Language.ES]))
             .catch((error) => {
-                expect(error).to.be.instanceOf(Error)
+                expect(error).to.be.instanceOf(SystemError)
                 expect(error.message).to.equal('user already exists')
             })
     })
@@ -73,7 +73,7 @@ describe('registerUser', () => {
             .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'] }))
             .then(() => logic.registerUser('username2', '123qwe123', 'usernameDC', [Language.EN, Language.ES]))
             .catch((error) => {
-                expect(error).to.be.instanceOf(Error)
+                expect(error).to.be.instanceOf(SystemError)
                 expect(error.message).to.equal('user already exists')
             })
     })

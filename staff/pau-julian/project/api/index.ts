@@ -1,9 +1,13 @@
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import express from 'express'
+import morgan from 'morgan'
 import logic from './logic/index.ts'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
+import { errors } from 'com'
+
+const { SystemError, ContentError, NotFoundError, CredentialsError, UnauthorizedError } = errors
 
 dotenv.config()
 
@@ -11,11 +15,13 @@ const { TokenExpiredError } = jwt
 
 const { MONGODB_URL, PORT, JWT_SECRET, JWT_EXP } = process.env
 
-mongoose.connect('MONGODB_URL') // as string?
+mongoose.connect(MONGODB_URL)
     .then(() => {
         const api = express()
 
         const jsonBodyParser = express.json()
+
+        api.use(morgan('dev'))
 
         api.use(cors())
 
@@ -23,27 +29,17 @@ mongoose.connect('MONGODB_URL') // as string?
 
         api.post('/users', jsonBodyParser, (req, res) => {
             try {
-                const { username, password, dcName, bnetName, language } = req.body
+                const { username, password, dcName, language } = req.body
 
-                logic.registerUser(username, password, dcName, bnetName, language)
+                logic.registerUser(username, password, dcName, language)
                     .then(() => res.status(201).send())
                     .catch((error) => {
-                        // FIX ERROR NAMES FAST
-                        if (error instanceof TypeError) {
-                            //logger
-
-                            res.status(500).json({ error: error.constructor.name, message: error.message })
-                        }
-
+                        res.status(500).json({ error: error.constructor.name, message: error.message })
                     })
             } catch (error) {
-                if (error instanceof TypeError) {
-                    // logger
-
+                if (error instanceof TypeError || error instanceof ContentError) {
                     res.status(406).json({ error: error.constructor.name, message: error.message })
                 } else {
-                    // logger
-
                     res.status(500).json({ error: error.constructor.name, message: error.message })
                 }
             }
@@ -57,27 +53,21 @@ mongoose.connect('MONGODB_URL') // as string?
 
                 logic.authenticateUser(username, password)
                     .then((userId) => {
-                        const token = jwt.sign({ sub: userId }, 'JWT_SECRET')
+                        const token = jwt.sign({ sub: userId }, JWT_SECRET)
 
                         res.json(token)
                     })
                     .catch((error) => {
-                        // FIX ERROR NAMES FAST
-                        if (error instanceof TypeError) {
-                            //logger
-
+                        if (error instanceof SystemError) {
                             res.status(500).json({ error: error.constructor.name, message: error.message })
+                        } else if (error instanceof NotFoundError) {
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
                         }
-
                     })
             } catch (error) {
-                if (error instanceof TypeError) {
-                    // logger
-
+                if (error instanceof TypeError || error instanceof ContentError) {
                     res.status(406).json({ error: error.constructor.name, message: error.message })
                 } else {
-                    // logger
-
                     res.status(500).json({ error: error.constructor.name, message: error.message })
                 }
             }
@@ -89,31 +79,59 @@ mongoose.connect('MONGODB_URL') // as string?
 
                 const token = authorization.slice(7)
 
-                const { sub: userId } = jwt.verify(token, 'JWT_SECRET')
+                const { sub: userId } = jwt.verify(token, JWT_SECRET)
 
                 const { targetUserId } = req.params
 
                 logic.retrieveUser(userId as string, targetUserId)
                     .then((user) => res.json(user))
                     .catch((error) => {
-                        // FIX ERROR NAMES FAST
-                        if (error instanceof TypeError) {
-                            //logger
-
+                        if (error instanceof NotFoundError) {
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        } else {
                             res.status(500).json({ error: error.constructor.name, message: error.message })
                         }
-
                     })
             } catch (error) {
-                if (error instanceof TypeError) {
-                    // logger
-
+                if (error instanceof TypeError || error instanceof ContentError) {
                     res.status(406).json({ error: error.constructor.name, message: error.message })
                 } else {
-                    // logger
-
                     res.status(500).json({ error: error.constructor.name, message: error.message })
                 }
+            }
+        })
+
+        // Retrieve Users (with online status)
+
+        api.get('/users/status/:online', (req, res) => {
+            try {
+                logic.retrieveUsersByStatus()
+                    .then((users) => res.json(users))
+                    .catch((error) => {
+                        if (error instanceof SystemError) {
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
+            } catch (error) {
+                res.status(500).json({ error: error.constructor.name, message: error.message })
+            }
+        })
+
+        // Retrieve Communities
+
+        api.get('/communities', (req, res) => {
+            try {
+                logic.retrieveCommunities()
+                    .then((communities) => res.json(communities))
+                    .catch((error) => {
+                        if (error instanceof ContentError) {
+                            res.status(406).json({ error: error.constructor.name, message: error.message })
+                        } else if (error instanceof SystemError) {
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
+            } catch (error) {
+                res.status(500).json({ error: error.constructor.name, message: error.message })
             }
         })
 

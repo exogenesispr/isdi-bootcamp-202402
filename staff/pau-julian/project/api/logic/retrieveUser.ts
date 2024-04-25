@@ -9,7 +9,7 @@ function retrieveUser(userId: string, targetUserId: string): Promise<{ username:
     validate.text(targetUserId, 'targetUserId', true)
 
     return User.findById<UserType>(userId)
-        .catch((error) => { throw new Error(error.message) })
+        .catch((error) => { throw new SystemError(error.message) })
         .then((user: UserType) => {
             if (!user) throw new NotFoundError('user not found')
 
