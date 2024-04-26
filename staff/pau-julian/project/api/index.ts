@@ -6,6 +6,7 @@ import logic from './logic/index.ts'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import { errors } from 'com'
+import { error } from 'console'
 
 const { SystemError, ContentError, NotFoundError, CredentialsError, UnauthorizedError } = errors
 
@@ -27,7 +28,7 @@ mongoose.connect(MONGODB_URL)
 
         // Register
 
-        api.post('/users', jsonBodyParser, (req, res) => {
+        api.post('/eu/users', jsonBodyParser, (req, res) => {
             try {
                 const { username, password, dcName, language } = req.body
 
@@ -47,7 +48,7 @@ mongoose.connect(MONGODB_URL)
 
         // Login
 
-        api.post('/users/auth', jsonBodyParser, (req, res) => {
+        api.post('/eu/users/auth', jsonBodyParser, (req, res) => {
             try {
                 const { username, password } = req.body
 
@@ -103,7 +104,7 @@ mongoose.connect(MONGODB_URL)
 
         // Retrieve Users (with online status)
 
-        api.get('/users/status/:online', (req, res) => {
+        api.get('/eu/users/status/:online', (req, res) => {
             try {
                 logic.retrieveUsersByStatus()
                     .then((users) => res.json(users))
@@ -119,7 +120,7 @@ mongoose.connect(MONGODB_URL)
 
         // Retrieve Communities
 
-        api.get('/communities', (req, res) => {
+        api.get('/eu/communities', (req, res) => {
             try {
                 logic.retrieveCommunities()
                     .then((communities) => res.json(communities))
@@ -134,6 +135,112 @@ mongoose.connect(MONGODB_URL)
                 res.status(500).json({ error: error.constructor.name, message: error.message })
             }
         })
+
+        // modify User
+
+        api.patch('/users/:userId', jsonBodyParser, (req, res) => {
+            try {
+                const { authorization } = req.headers
+
+                const token = authorization.slice(7)
+
+                let userIdToken
+
+                try {
+                    const { sub } = jwt.verify(token, JWT_SECRET)
+                    userIdToken = sub
+                } catch (error) {
+                    res.status(401).json({ error: error.constructor.name, message: error.message })
+                }
+
+                const { userId: userIdParams } = req.params
+
+                if (userIdParams !== userIdToken) {
+                    res.status(403).json({ error: error.constructor.name, message: 'Unauthorized' })
+                }
+
+                const { dcName, language, online, price } = req.body
+
+                logic.modifyUser(userIdParams, dcName, language, online, price)
+                    .then(() => res.status(204).send())
+                    .catch((error) => {
+                        if (error instanceof NotFoundError) {
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        } else {
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
+            }
+        })
+
+        // delete user
+
+        api.delete('/users/:userId', (req, res) => {
+            try {
+                const { authorization } = req.headers
+
+                const token = authorization.slice(7)
+
+                let userIdToken
+
+                try {
+                    const { sub } = jwt.verify(token, JWT_SECRET)
+                    userIdToken = sub
+                } catch (error) {
+                    res.status(401).json({ error: error.constructor.name, message: error.message })
+                }
+
+                const { userId: userIdParams } = req.params
+
+                if (userIdParams !== userIdToken) {
+                    res.status(403).json({ error: error.constructor.name, message: 'Unauthorized' })
+                }
+
+                logic.deleteUser(userIdToken)
+                    .then((deletedUser) => {
+                        res.status(202).send(deletedUser)
+                    })
+                    .catch((error) => {
+                        if (error instanceof NotFoundError) {
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        } else {
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
+            }
+        })
+
+        //GET wow token info
+
+        api.get('/eu/wowtoken', (req, res) => {
+            try {
+                logic.fetchWowTokenData()
+                    .then((wowToken) => res.json(wowToken))
+                    .catch((error) => {
+                        res.status(400).json({ error: error.constructor.name, message: error.message })
+                    })
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
+            }
+        })
+
+
 
         //...
 

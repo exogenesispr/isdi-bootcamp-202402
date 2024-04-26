@@ -1,4 +1,4 @@
-
+import { validate, errors } from 'com'
 
 function retrieveUser() {
 
@@ -24,7 +24,7 @@ function retrieveUser() {
                 .then((body) => {
                     const { error, message } = body
 
-                    const constructor = window[error] // FIX WINDOW
+                    const constructor = errors[error]
 
                     throw new constructor(message)
                 })

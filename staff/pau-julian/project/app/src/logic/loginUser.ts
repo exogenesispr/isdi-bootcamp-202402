@@ -1,13 +1,15 @@
-
+import { validate, errors } from 'com'
 
 function loginUser(username, password) {
-
+    validate.text(username, 'username', true)
+    validate.password(password)
 
     const user = { username, password }
 
     const json = JSON.stringify(user)
 
     return fetch(`${import.meta.env.VITE_API_URL}/users/auth`, {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },

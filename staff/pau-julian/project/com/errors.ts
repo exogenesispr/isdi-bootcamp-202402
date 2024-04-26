@@ -18,6 +18,7 @@ const SystemError = buildErrorClass('SystemError')
 const CredentialsError = buildErrorClass('CredentialsError')
 const NotFoundError = buildErrorClass('NotFoundError')
 const UnauthorizedError = buildErrorClass('UnauthorizedError')
+const ExpirationError = buildErrorClass('ExpirationError')
 
 
 const errors = {
@@ -26,6 +27,7 @@ const errors = {
     CredentialsError,
     NotFoundError,
     UnauthorizedError,
+    ExpirationError,
 }
 
 export {
@@ -34,6 +36,7 @@ export {
     CredentialsError,
     NotFoundError,
     UnauthorizedError,
+    ExpirationError,
 }
 
 export default errors

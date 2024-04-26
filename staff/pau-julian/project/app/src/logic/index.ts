@@ -7,3 +7,5 @@ const logic = {
     loginUser,
     retrieveUser,
 }
+
+export default logic

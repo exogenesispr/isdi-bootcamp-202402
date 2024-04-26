@@ -31,6 +31,16 @@ describe('modifyUser', () => {
             )
     })
 
+    it('fails on modifying unexistant userId user', () => {
+        return User.deleteMany()
+            .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'] as Language[], online: false, price: { m10: { value: 0, lastEdited: new Date() } } }))
+            .then((user) => logic.modifyUser(new ObjectId().toString(), 'usernameDCedit', ['EN', 'ES'] as Language[], true, { m10: { value: 100000, lastEdited: new Date() } }))
+            .catch((error) => {
+                expect(error).to.be.instanceOf(NotFoundError)
+                expect(error.message).to.equal('user not found')
+            })
+    })
+
 
 
     //...

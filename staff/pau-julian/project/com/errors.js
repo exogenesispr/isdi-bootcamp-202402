@@ -15,12 +15,14 @@ const SystemError = buildErrorClass('SystemError');
 const CredentialsError = buildErrorClass('CredentialsError');
 const NotFoundError = buildErrorClass('NotFoundError');
 const UnauthorizedError = buildErrorClass('UnauthorizedError');
+const ExpirationError = buildErrorClass('ExpirationError');
 const errors = {
     ContentError,
     SystemError,
     CredentialsError,
     NotFoundError,
     UnauthorizedError,
+    ExpirationError,
 };
-export { ContentError, SystemError, CredentialsError, NotFoundError, UnauthorizedError, };
+export { ContentError, SystemError, CredentialsError, NotFoundError, UnauthorizedError, ExpirationError, };
 export default errors;

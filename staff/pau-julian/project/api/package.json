@@ -8,7 +8,7 @@
     "start": "npx tsx index.ts",
     "inspect": "npx tsx --inspect-brk",
     "test": "npx mocha",
-    "test-inspec": "npx mocha --inspect-brk"
+    "test-inspect": "npx mocha --inspect-brk"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "@types/node": "^20.12.7",
     "chai": "^5.1.0",
     "com": "file:../com",
+    "jwt-decode": "^4.0.0",
     "mocha": "^10.4.0",
     "ts-node": "^10.9.2"
   },

@@ -2,7 +2,7 @@ import { validate, errors } from 'com'
 
 import { UserType, User, Language } from '../data/index.ts'
 
-const { SystemError, NotFoundError, ContentError } = errors
+const { SystemError, NotFoundError } = errors
 
 function modifyUser(
     userId: string,
