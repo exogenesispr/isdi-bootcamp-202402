@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "test-android-app",
-    "slug": "test-android-app",
+    "name": "boost-app",
+    "slug": "boost-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
