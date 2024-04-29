@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomeStack from './HomeStack'
+import HomeStack from './MainStack'
 
 import { Ionicons, AntDesign } from '@expo/vector-icons'
 

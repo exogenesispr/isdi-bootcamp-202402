@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { useState } from 'react'
 import logic from '../logic'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -19,6 +19,22 @@ function RegisterScreen({ navigation }) {
             setLanguages(languages.filter((lang) => lang !== language))
         } else {
             setLanguages([...languages, language])
+        }
+    }
+
+    const handleRegisterTap = () => {
+        try {
+            logic.registerUser(username, password, dcName, languages)
+                .then(() => {
+                    setUsername('')
+                    setPassword('')
+                    setDcName('')
+                    setLanguages('EN')
+                    navigation.navigate('Login')
+                })
+                .catch((error) => Alert.alert(error.message))
+        } catch (error) {
+            Alert.alert(error.message)
         }
     }
 
@@ -63,7 +79,7 @@ function RegisterScreen({ navigation }) {
 
             </ScrollView>
 
-            <Button title='Start' onPress={() => navigation.navigate('Login')} />
+            <Button title='Register' onPress={handleRegisterTap} />
         </View>
     )
 }

@@ -104,7 +104,7 @@ mongoose.connect(MONGODB_URL)
 
         // Retrieve Users (with online status)
 
-        api.get('/eu/users/status/:online', (req, res) => {
+        api.get('/eu/users/status/online', (req, res) => {
             try {
                 logic.retrieveUsersByStatus()
                     .then((users) => res.json(users))
