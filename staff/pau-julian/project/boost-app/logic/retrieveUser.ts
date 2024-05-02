@@ -1,6 +1,5 @@
-import { validate, errors } from 'com'
+import { validate, errors } from '../com/index.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import dotenv from 'dotenv'
 import { decode } from 'base-64'
 
 function retrieveUser() {

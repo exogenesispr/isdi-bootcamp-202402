@@ -10,6 +10,8 @@ function RegisterScreen({ navigation }) {
     const [dcName, setDcName] = useState('')
     const [languages, setLanguages] = useState(['EN'])
 
+    const languagesDisplay = ['EN', 'ES', 'IT', 'DE', 'PT', 'RU']
+
     const toggleShowPassword = () => {
         setShowPassword(!showPassword)
     }
@@ -41,7 +43,7 @@ function RegisterScreen({ navigation }) {
 
     return (
         <View style={styles.mainContainer}>
-            <Text style={styles.text}>Register</Text>
+            <Text style={styles.heading}>Register</Text>
 
             <ScrollView style={styles.container}>
                 <TextInput style={styles.input} placeholder='Username'
@@ -62,7 +64,7 @@ function RegisterScreen({ navigation }) {
 
                 <View style={styles.languageContainer}>
                     <Text style={styles.heading}>Languages:</Text>
-                    {Object.values(Language).map((lang) => (
+                    {languagesDisplay.map((lang) => (
                         <TouchableOpacity key={lang}
                             style={[
                                 styles.language,
@@ -106,7 +108,12 @@ const styles = StyleSheet.create({
     icon: {
         position: 'absolute',
         right: 10,
-        top: 35
+        top: 72
+    },
+    headingTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 5
     },
     heading: {
         fontWeight: 'bold',

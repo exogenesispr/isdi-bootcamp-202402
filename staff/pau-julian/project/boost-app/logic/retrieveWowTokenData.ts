@@ -1,5 +1,5 @@
-import { errors } from 'com'
-import dotenv from 'dotenv'
+import { errors } from '../com/index.js'
+
 
 function retrieveWowTokenData() {
     return fetch(`${process.env.EXPO_PUBLIC_API_URL}/eu/wowtoken`)

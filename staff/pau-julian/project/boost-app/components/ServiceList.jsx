@@ -1,7 +1,68 @@
 import React, { useEffect, useState } from 'react'
-import { View, FlatList, Text, TouchableOpacity } from 'react-native'
-import logic from '../logic'
+import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import Service from './Service'
 
-function ServiceList({ service }) {
+const LanguageOptions = ['EN', 'ES', 'IT', 'DE', 'PT', 'RU']
 
+function ServiceList({ services, serviceType, navigation }) {
+    const [languageFilter, setLanguageFilter] = useState('')
+
+    const filteredServices = services.filter((service) => service.price.hasOwnProperty(serviceType) && (languageFilter ? service.language.includes(languageFilter) : true))
+
+    const handleLanguageFilter = (language) => {
+        setLanguageFilter(language)
+    }
+
+    return (
+        <View style={styles.container}>
+            <View style={styles.languageFilter}>
+                <Text style={styles.filterLabel}>Language filter:</Text>
+                {LanguageOptions.map((language) => (
+                    <TouchableOpacity key={language} onPress={() => handleLanguageFilter(language)}>
+                        <Text
+                            style={[
+                                styles.filterOption,
+                                languageFilter === language && styles.activeFilter,
+                            ]}
+                        >
+                            {language}
+                        </Text>
+                    </TouchableOpacity>
+                ))}
+            </View>
+            <FlatList
+                data={filteredServices}
+                renderItem={({ item }) =>
+                    <Service service={item} navigation={navigation} />
+                }
+                keyExtractor={(item) => item.id}
+            />
+        </View>
+    )
 }
+
+export default ServiceList
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff'
+    },
+    languageFilter: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    filterLabel: {
+        marginRight: 10,
+        fontWeight: 'bold',
+    },
+    filterOption: {
+        marginRight: 10,
+        color: '#666',
+    },
+    activeFilter: {
+        color: 'blue',
+        fontWeight: 'bold',
+    }
+})

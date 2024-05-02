@@ -1,6 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { validate, errors } from 'com'
-import dotenv from 'dotenv'
+import { validate, errors } from '../com/index.js'
 import { decode } from 'base-64'
 
 function modifyUser(username, password, dcName, language) {

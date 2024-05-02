@@ -1,5 +1,5 @@
-import { errors } from 'com'
-import dotenv from 'dotenv'
+import { errors } from '../com/index.js'
+
 
 function retrieveUsersByStatus() {
     return fetch(`${process.env.EXPO_PUBLIC_API_URL}/eu/users/status/online`)

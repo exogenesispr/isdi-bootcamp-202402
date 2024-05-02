@@ -23,6 +23,11 @@ function fetchWowTokenData() {
                 return wowToken
             }
 
+            if (res.status === 400) {
+                throw new ExpirationError('Token expired')
+            }
+            //TEST WITH EXPIRED TOKEN!!!
+
             return res.json()
                 .then((body) => {
                     const { error, message } = body

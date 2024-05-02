@@ -1,4 +1,4 @@
-import { validate } from 'com'
+import { validate } from '../com/index.js'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { decode } from 'base-64'
 

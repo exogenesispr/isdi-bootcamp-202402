@@ -8,7 +8,8 @@
     "start": "npx tsx index.ts",
     "inspect": "npx tsx --inspect-brk",
     "test": "npx mocha",
-    "test-inspect": "npx mocha --inspect-brk"
+    "test-inspect": "npx mocha --inspect-brk",
+    "populate": "tsx data/populateCommunities.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,8 @@
     "com": "file:../com",
     "jwt-decode": "^4.0.0",
     "mocha": "^10.4.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.7.3"
   },
   "dependencies": {
     "cors": "^2.8.5",

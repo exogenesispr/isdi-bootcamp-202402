@@ -7,6 +7,7 @@ import { View, Text, Button, TextInput, StyleSheet, Alert } from 'react-native'
 function LoginScreen({ navigation, HomeScreen }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
 
     const handleLogin = () => {
         console.log('USERNAME', username)
@@ -27,6 +28,10 @@ function LoginScreen({ navigation, HomeScreen }) {
         }
     }
 
+    const toggleShowPassword = () => {
+        setShowPassword(!showPassword)
+    }
+
 
     return (
         <View style={styles.container}>
@@ -37,10 +42,12 @@ function LoginScreen({ navigation, HomeScreen }) {
                 onChangeText={setUsername}
             />
 
-            <TextInput secureTextEntry={true} style={styles.input} placeholder='password'
+            <TextInput secureTextEntry={!showPassword} style={styles.input} placeholder='password'
                 value={password}
                 onChangeText={setPassword}
             />
+            <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
+                onPress={toggleShowPassword} />
 
             <Button title='Log in' onPress={handleLogin} />
             <Button title='Register' onPress={() => navigation.navigate('Register')} />
@@ -48,7 +55,7 @@ function LoginScreen({ navigation, HomeScreen }) {
     )
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'center',

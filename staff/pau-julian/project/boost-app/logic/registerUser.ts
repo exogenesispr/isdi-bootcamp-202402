@@ -1,4 +1,5 @@
-import { validate, errors } from 'com'
+import { validate, errors } from '../com/index.js'
+
 
 function registerUser(username: string, password: string, dcName: string, language) {
     validate.text(username, 'username', true)
