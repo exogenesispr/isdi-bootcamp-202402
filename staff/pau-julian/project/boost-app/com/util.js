@@ -49,10 +49,15 @@ function priceFormatter(value, isToken = false) {
     return (value / 10000000).toFixed(1) + 'k'
 }
 
+function sortProvidersByServicePrice(providers, serviceType) {
+    return providers.sort((a, b) => a.price[serviceType].value - b.price[serviceType].value)
+}
+
 const util = {
     extractJwtPayload,
     getCheapestCommunity,
     getBackgroundColor,
     priceFormatter,
+    sortProvidersByServicePrice,
 };
 export default util;

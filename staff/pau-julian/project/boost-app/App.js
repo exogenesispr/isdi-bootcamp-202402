@@ -9,7 +9,9 @@ import { useContext } from './context'
 const { useEffect, useState } = React
 
 export default function App() {
-  const { setUser } = useContext()
+  const [user, setUser] = useState('')
+  const [stamp, setStamp] = useState(null)
+  const [wowToken, setWowToken] = useState(null)
   const [isUserLogged, setIsUserLogged] = useState(false)
 
   useEffect(() => {

@@ -1,7 +1,8 @@
+import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeStack from './MainStack'
-
 import { Ionicons, AntDesign } from '@expo/vector-icons'
+import { util } from '../com/index.js'
 
 const Tab = createBottomTabNavigator()
 
@@ -11,19 +12,7 @@ function Tabs() {
             screenOptions={{
                 headerShown: false,
                 tabBarShowLabel: false,
-                tabBarStyle: {
-                    backgroundColor: '#ff9999',
-                    borderRadius: 20,
-                    height: 90,
-                    bottom: 20,
-                    left: 20,
-                    right: 20,
-                    position: 'absolute',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingBottom: 10,
-                    paddingBottom: 10
-                }
+                tabBarStyle: styles.tabBar
             }}
         >
             <Tab.Screen name='Home' component={HomeStack} options={{
@@ -38,3 +27,19 @@ function Tabs() {
 }
 
 export default Tabs
+
+const styles = StyleSheet.create({
+    tabBar: {
+        backgroundColor: '#E69561',
+        borderRadius: 20,
+        height: 90,
+        bottom: 20,
+        left: 20,
+        right: 20,
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 10,
+        paddingBottom: 10
+    }
+})

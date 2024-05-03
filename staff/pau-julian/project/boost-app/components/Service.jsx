@@ -1,4 +1,4 @@
-import react from 'react'
+import React from 'react'
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
 import { util } from '../com/index.js'
 import moment from 'moment'
@@ -7,7 +7,7 @@ export default function Service({ service, navigation }) {
     const { getBackgroundColor, priceFormatter } = util
 
     const onPressServiceHandler = () => {
-        navigation.navigate('ServiceProvider', { id: service.id })
+        navigation.navigate('Provider', { id: service.id })
     }
 
     return (

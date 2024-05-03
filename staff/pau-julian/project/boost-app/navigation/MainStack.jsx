@@ -1,9 +1,13 @@
+import React from 'react'
 import { View, Text, Button, StyleSheet, } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import LandingScreen from '../screens/LandingScreen'
 import RegisterScreen from '../screens/RegisterScreen'
 import LoginScreen from '../screens/LoginScreen'
 import HomeScreen from '../screens/HomeScreen'
+import ServiceListScreen from '../screens/ServiceListScreen'
+import ProviderScreen from '../screens/ProviderScreen'
+import UserScreen from '../screens/UserScreen'
 
 const LandingStack = createNativeStackNavigator()
 const HomeStack = createNativeStackNavigator()
@@ -22,16 +26,20 @@ export function LandingStackScreen() {
 }
 
 export function HomeStackScreen() {
-    <HomeStack.Navigator
-        screenOptions={{ headerShown: false }}
-    >
-        <HomeStack.Screen name='Home' component={HomeScreen} />
-    </HomeStack.Navigator >
+    return (
+        <HomeStack.Navigator
+            screenOptions={{ headerShown: false }}
+        >
+            <HomeStack.Screen name='Home' component={HomeScreen} />
+            <HomeStack.Screen name='ServiceList' component={ServiceListScreen} />
+            <HomeStack.Screen name='Provider' component={ProviderScreen} />
+        </HomeStack.Navigator>
+    )
 }
 
 export function UserStackScreen() {
     <UserStack.Navigator>
-        <UserStack.Screen name='user-profile' component={UserScreen} />
+        <UserStack.Screen name='UserProfile' component={UserScreen} />
     </UserStack.Navigator>
 }
 

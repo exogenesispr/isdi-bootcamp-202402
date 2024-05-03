@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGODB_URL)
     .then(() => Community.deleteMany())
     .then(() => Community.create({
         name: 'Nova',
-        dcReference: 'https://discordapp.com/channels/895261686955667466/895261691099639847',
+        dcReference: 'discord://app/channels/895261686955667466/895261691099639847',
         price: {
             m10: {
                 value: 7000000,
@@ -31,7 +31,7 @@ mongoose.connect(process.env.MONGODB_URL)
     }))
     .then(() => Community.create({
         name: 'Oblivion',
-        dcReference: 'https://discordapp.com/channels/817565728965525534/817565729192673347',
+        dcReference: 'discord://app/channels/817565728965525534/817565729192673347',
         price: {
             m10: {
                 value: 1000000,
@@ -53,7 +53,7 @@ mongoose.connect(process.env.MONGODB_URL)
     }))
     .then(() => Community.create({
         name: 'Dawn',
-        dcReference: 'https://discordapp.com/channels/1006174254284423299/1006186471402770535',
+        dcReference: 'discord://app/channels/1006174254284423299/1006186471402770535',
         price: {
             m10: {
                 value: 700000,
@@ -75,7 +75,7 @@ mongoose.connect(process.env.MONGODB_URL)
     }))
     .then(() => Community.create({
         name: 'Sylvanas',
-        dcReference: 'https://discordapp.com/channels/1005035543580643381/1005081350371541092',
+        dcReference: 'discord://app/channels/1005035543580643381/1005081350371541092',
         price: {
             m10: {
                 value: 700000,

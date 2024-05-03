@@ -4,7 +4,7 @@ import logic from '../logic'
 import { View, Text, Button, TextInput, StyleSheet, Alert } from 'react-native'
 
 
-function LoginScreen({ navigation, HomeScreen }) {
+function LoginScreen({ navigation }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
