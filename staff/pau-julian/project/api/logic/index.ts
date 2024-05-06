@@ -1,6 +1,8 @@
 import registerUser from './registerUser.ts'
 import authenticateUser from './authenticateUser.ts'
 import retrieveUser from './retrieveUser.ts'
+import modifyUserOnlineStatus from './modifyUserOnlineStatus.ts'
+import modifyUserPrice from './modifyUserPrice.ts'
 import modifyUser from './modifyUser.ts'
 import deleteUser from './deleteUser.ts'
 
@@ -15,6 +17,8 @@ const logic = {
     authenticateUser,
     retrieveUser,
     modifyUser,
+    modifyUserOnlineStatus,
+    modifyUserPrice,
     deleteUser,
     retrieveUsersByStatus,
     retrieveCommunities,

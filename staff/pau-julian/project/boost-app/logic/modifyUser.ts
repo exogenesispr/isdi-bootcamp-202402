@@ -22,7 +22,8 @@ function modifyUser(username, password, dcName, language) {
             return fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/${userId}`, {
                 method: 'PATCH',
                 headers: {
-                    'Content-type': 'application/json'
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: json
             })

@@ -74,6 +74,8 @@ mongoose.connect(MONGODB_URL)
             }
         })
 
+        //retrieve user
+
         api.get('/users/:targetUserId', (req, res) => {
             try {
                 const { authorization } = req.headers
@@ -156,12 +158,98 @@ mongoose.connect(MONGODB_URL)
                 const { userId: userIdParams } = req.params
 
                 if (userIdParams !== userIdToken) {
-                    res.status(403).json({ error: error.constructor.name, message: 'Unauthorized' })
+                    res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
                 }
 
                 const { dcName, language, online, price } = req.body
 
                 logic.modifyUser(userIdParams, dcName, language, online, price)
+                    .then(() => res.status(204).send())
+                    .catch((error) => {
+                        if (error instanceof NotFoundError) {
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        } else {
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
+            }
+        })
+
+        // modify user online status
+
+        api.put('/users/:userId', jsonBodyParser, (req, res) => {
+            try {
+                const { authorization } = req.headers
+
+                const token = authorization.slice(7)
+
+                let userIdToken
+
+                try {
+                    const { sub } = jwt.verify(token, JWT_SECRET)
+                    userIdToken = sub
+                } catch (error) {
+                    res.status(401).json({ error: error.constructor.name, message: error.message })
+                }
+
+                const { userId: userIdParams } = req.params
+
+                if (userIdParams !== userIdToken) {
+                    res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
+                }
+
+                const { online } = req.body
+
+                logic.modifyUserOnlineStatus(userIdParams, online)
+                    .then(() => res.status(204).send())
+                    .catch((error) => {
+                        if (error instanceof NotFoundError) {
+                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                        } else {
+                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                        }
+                    })
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
+            }
+        })
+
+        // modify user price value
+
+        api.put('/users/:userId', jsonBodyParser, (req, res) => {
+            try {
+                const { authorization } = req.headers
+
+                const token = authorization.slice(7)
+
+                let userIdToken
+
+                try {
+                    const { sub } = jwt.verify(token, JWT_SECRET)
+                    userIdToken = sub
+                } catch (error) {
+                    res.status(401).json({ error: error.constructor.name, message: error.message })
+                }
+
+                const { userId: userIdParams } = req.params
+
+                if (userIdParams !== userIdToken) {
+                    res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
+                }
+
+                const { newPrice } = req.body
+
+                logic.modifyUserPrice(userIdParams, newPrice)
                     .then(() => res.status(204).send())
                     .catch((error) => {
                         if (error instanceof NotFoundError) {
@@ -199,7 +287,7 @@ mongoose.connect(MONGODB_URL)
                 const { userId: userIdParams } = req.params
 
                 if (userIdParams !== userIdToken) {
-                    res.status(403).json({ error: error.constructor.name, message: 'Unauthorized' })
+                    res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
                 }
 
                 logic.deleteUser(userIdToken)

@@ -1,1 +1,0 @@
-curl -H "Authorization: Bearer TOKEN" "https://eu.api.blizzard.com/data/wow/token/index?namespace=dynamic-eu" -v
