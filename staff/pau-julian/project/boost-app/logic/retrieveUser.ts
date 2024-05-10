@@ -17,7 +17,7 @@ function retrieveUser() {
 
             return fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/${userId}`, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
             })
                 .then((res) => {

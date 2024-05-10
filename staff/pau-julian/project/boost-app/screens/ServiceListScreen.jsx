@@ -5,7 +5,8 @@ import ServiceList from '../components/ServiceList'
 import logic from '../logic'
 import { util } from '../com/index.js'
 
-export default function ServiceListScreen({ navigation, serviceType }) {
+export default function ServiceListScreen({ navigation, route }) {
+    const { serviceType } = route.params
     const { communities } = useContext()
     const [providers, setProviders] = useState([])
     const { sortProvidersByServicePrice } = util
@@ -24,16 +25,29 @@ export default function ServiceListScreen({ navigation, serviceType }) {
                 Alert.alert('Error with fetch', error)
             }
         } else {
-            setProviders(communities)
+            const sortedCommunities = sortProvidersByServicePrice(communities, serviceType)
+            setProviders(sortedCommunities)
         }
-
     }, [])
 
     return (
         <View style={styles.container}>
-            <Text style={styles.headingText}>Prices :{serviceType}</Text>
+            <Text style={styles.headingText}>Prices: {serviceType}</Text>
             <ServiceList services={providers} serviceType={serviceType} navigation={navigation} />
         </View>
 
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        padding: 20,
+    },
+    headingText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+    }
+})

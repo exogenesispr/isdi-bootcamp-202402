@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, Button, ScrollView, Alert, Image } from 'react-native'
+import { View, Text, StyleSheet, Button, ScrollView, Alert, Image, ActivityIndicator } from 'react-native'
 import logic from '../logic'
 import { AntDesign } from '@expo/vector-icons'
 import { util } from '../com/index.js'
@@ -28,7 +28,13 @@ export default function LandingScreen({ navigation }) {
                         <Button title='Register' onPress={() => navigation.navigate('Register')} />
                     </View>
                 </View>
-                {cheapest && <ServiceDisplay cheapest={cheapest} isTouchable={false} />}
+                {cheapest ?
+                    <ServiceDisplay cheapest={cheapest} isTouchable={false} />
+                    :
+                    <View style={styles.container}>
+                        <ActivityIndicator size='large' color='#0000ff' />
+                    </View>
+                }
             </ScrollView>
         </View>
     )

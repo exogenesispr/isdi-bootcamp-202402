@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, Pressable } from 'react-native'
 import { util } from '../com/index.js'
 import moment from 'moment'
 
-export default function Service({ service, navigation }) {
+export default function Service({ service, navigation, serviceType }) {
     const { getBackgroundColor, priceFormatter } = util
 
     const onPressServiceHandler = () => {
@@ -11,17 +11,21 @@ export default function Service({ service, navigation }) {
     }
 
     return (
-        <TouchableOpacity
-            style={[
-                styles.item,
-                { backgroundColor: getBackgroundColor(service.name) }
-            ]}
-            onPress={onPressServiceHandler}
-        >
-            <Text style={styles.text}>{service.name}</Text>
-            <Text style={styles.text}>{priceFormatter(service.price.value)}</Text>
-            <Text style={styles.text}>{moment(service.price.lastEdited).format('HH:mm DD/MM')}</Text>
-        </TouchableOpacity>
+        <View>
+            {/* <Text>{JSON.stringify(service)} SEPARATOR</Text>
+            <Text>{JSON.stringify(serviceType)}</Text> */}
+            <Pressable
+                style={[
+                    styles.item,
+                    { backgroundColor: getBackgroundColor(service) }
+                ]}
+                onPress={onPressServiceHandler}
+            >
+                <Text style={styles.text}>{service.name}</Text>
+                <Text style={styles.text}>{priceFormatter(service.price[serviceType].value)}</Text>
+                <Text style={styles.text}>{moment(service.price[serviceType].lastEdited).format('HH:mm DD/MM')}</Text>
+            </Pressable>
+        </View>
     )
 }
 

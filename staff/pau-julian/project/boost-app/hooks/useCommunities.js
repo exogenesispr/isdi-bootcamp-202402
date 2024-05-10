@@ -1,5 +1,5 @@
 import { Alert } from 'react-native'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import logic from '../logic'
 import { util } from '../com/index.js'
 
@@ -12,7 +12,9 @@ export default function useCommunities() {
         raidSaved: null,
     })
 
-    useEffect(() => {
+    // const fetchData = useCallback(
+    const fetchData = () => {
+
         let isMounted = true
 
         try {
@@ -44,7 +46,14 @@ export default function useCommunities() {
         return () => {
             isMounted = false
         }
+    }
+    // ,[])
+
+
+    useEffect(() => {
+        fetchData()
     }, [])
+
 
     return { communities, cheapest }
 }

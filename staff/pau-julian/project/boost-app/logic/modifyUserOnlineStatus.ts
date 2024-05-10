@@ -15,10 +15,10 @@ function modifyUserOnlineStatus(online) {
 
             const { sub: userId } = payload
 
-            const json = JSON.stringify(online)
+            const json = JSON.stringify({ online })
 
             return fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/${userId}`, {
-                method: 'PUT',
+                method: 'PATCH',
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -26,9 +26,9 @@ function modifyUserOnlineStatus(online) {
                 body: json
             })
                 .then((res) => {
-                    if (res.status === 204)
-                        return res.json()
-
+                    if (res.status === 204) {
+                        return res
+                    }
                     return res.json()
                         .then((body) => {
                             const { error, message } = body

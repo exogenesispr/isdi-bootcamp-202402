@@ -3,6 +3,8 @@ import loginUser from './loginUser'
 import logoutUser from './logoutUser'
 import retrieveUser from './retrieveUser'
 import modifyUser from './modifyUser'
+import modifyUserPrice from './modifyUserPrice'
+import modifyUserOnlineStatus from './modifyUserOnlineStatus'
 import deleteUser from './deleteUser'
 
 import retrieveUsersByStatus from './retrieveUsersByStatus'
@@ -17,6 +19,8 @@ const logic = {
     logoutUser,
     retrieveUser,
     modifyUser,
+    modifyUserPrice,
+    modifyUserOnlineStatus,
     deleteUser,
 
     retrieveUsersByStatus,

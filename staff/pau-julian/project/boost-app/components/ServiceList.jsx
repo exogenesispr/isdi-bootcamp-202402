@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, FlatList, Text, StyleSheet, Pressable } from 'react-native'
 import Service from './Service'
 
 const LanguageOptions = ['EN', 'ES', 'IT', 'DE', 'PT', 'RU']
@@ -18,7 +18,7 @@ function ServiceList({ services, serviceType, navigation }) {
             <View style={styles.languageFilter}>
                 <Text style={styles.filterLabel}>Language filter:</Text>
                 {LanguageOptions.map((language) => (
-                    <TouchableOpacity key={language} onPress={() => handleLanguageFilter(language)}>
+                    <Pressable key={language} onPress={() => handleLanguageFilter(language)}>
                         <Text
                             style={[
                                 styles.filterOption,
@@ -27,13 +27,13 @@ function ServiceList({ services, serviceType, navigation }) {
                         >
                             {language}
                         </Text>
-                    </TouchableOpacity>
+                    </Pressable>
                 ))}
             </View>
             <FlatList
                 data={filteredServices}
                 renderItem={({ item }) =>
-                    <Service service={item} navigation={navigation} />
+                    <Service service={item} navigation={navigation} serviceType={serviceType} />
                 }
                 keyExtractor={(item) => item.id}
             />

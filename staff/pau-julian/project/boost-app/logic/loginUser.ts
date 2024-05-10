@@ -10,7 +10,7 @@ function loginUser(username: string, password: string) {
 
     const json = JSON.stringify(user)
 
-    return fetch(`${process.env.EXPO_PUBLIC_API_URL}/users/auth`, {
+    return fetch(`${process.env.EXPO_PUBLIC_API_URL}/eu/users/auth`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -23,7 +23,6 @@ function loginUser(username: string, password: string) {
                 return res.json()
                     .then((token) => {
                         return AsyncStorage.setItem('token', token)
-                            .then(() => token)
                     })
 
             return res.json()

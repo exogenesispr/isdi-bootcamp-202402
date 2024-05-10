@@ -15,7 +15,6 @@ function registerUser(
     validate.text(dcName, 'Discord name', true)
     validate.language(language)
 
-
     return User.findOne({ $or: [{ username }, { dcName }] })
         .catch((error) => { throw new SystemError(error.message) })
         .then((user: UserType | null) => {
@@ -31,8 +30,8 @@ function registerUser(
                 online: false,
                 price: {
                     m10: {
-                        value: null,
-                        lastEdited: null
+                        value: 0,
+                        lastEdited: new Date
                     },
                 }
             }

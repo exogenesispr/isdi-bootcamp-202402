@@ -1,32 +1,41 @@
 import React from 'react'
+import { StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import HomeStack from './MainStack'
+import HomeStackScreen from './HomeStack'
+import UserStackScreen from './UserStack'
 import { Ionicons, AntDesign } from '@expo/vector-icons'
 import { util } from '../com/index.js'
 
 const Tab = createBottomTabNavigator()
 
-function Tabs() {
+const tabScreenOptions = {
+    headerShown: false,
+    tabBarShowLabel: false,
+    tabBarStyle: {
+        backgroundColor: '#7ABA78',
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: 10,
+        height: 80
+    },
+}
+
+export default function HomeTabs() {
     return (
         <Tab.Navigator
-            screenOptions={{
-                headerShown: false,
-                tabBarShowLabel: false,
-                tabBarStyle: styles.tabBar
-            }}
+            screenOptions={tabScreenOptions}
         >
-            <Tab.Screen name='Home' component={HomeStack} options={{
+            <Tab.Screen name='HomeStack' component={HomeStackScreen} options={{
                 tabBarIcon: () => (<AntDesign name='home' color='#000000' size={30} />)
             }} />
-            <Tab.Screen name='User' component={UserScreen} options={{
+            <Tab.Screen name='UserStack' component={UserStackScreen} options={{
                 tabBarIcon: () => (<AntDesign name='user' color='#000000' size={30} />)
             }} />
 
         </Tab.Navigator>
     )
 }
-
-export default Tabs
 
 const styles = StyleSheet.create({
     tabBar: {

@@ -9,6 +9,7 @@ import deleteUser from './deleteUser.ts'
 import retrieveUsersByStatus from './retrieveUsersByStatus.ts'
 import retrieveCommunities from './retrieveCommunities.ts'
 
+import getProviderById from './getProviderById.ts'
 import fetchWowTokenData from './fetchWowTokenData.ts'
 
 
@@ -22,6 +23,7 @@ const logic = {
     deleteUser,
     retrieveUsersByStatus,
     retrieveCommunities,
+    getProviderById,
     fetchWowTokenData,
 }
 

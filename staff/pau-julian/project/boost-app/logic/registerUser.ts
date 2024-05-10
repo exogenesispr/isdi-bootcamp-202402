@@ -11,7 +11,7 @@ function registerUser(username: string, password: string, dcName: string, langua
 
     const json = JSON.stringify(user)
 
-    return fetch(`${process.env.EXPO_PUBLIC_API_URL}/users`, {
+    return fetch(`${process.env.EXPO_PUBLIC_API_URL}/eu/users`, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json'

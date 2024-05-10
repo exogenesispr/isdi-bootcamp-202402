@@ -140,96 +140,95 @@ mongoose.connect(MONGODB_URL)
 
         // modify User
 
-        api.patch('/users/:userId', jsonBodyParser, (req, res) => {
-            try {
-                const { authorization } = req.headers
+        // api.patch('/users/:userId', jsonBodyParser, (req, res) => {
+        //     try {
+        //         const { authorization } = req.headers
 
-                const token = authorization.slice(7)
+        //         const token = authorization.slice(7)
 
-                let userIdToken
+        //         let userIdToken
 
-                try {
-                    const { sub } = jwt.verify(token, JWT_SECRET)
-                    userIdToken = sub
-                } catch (error) {
-                    res.status(401).json({ error: error.constructor.name, message: error.message })
-                }
+        //         try {
+        //             const { sub } = jwt.verify(token, JWT_SECRET)
+        //             userIdToken = sub
+        //         } catch (error) {
+        //             res.status(401).json({ error: error.constructor.name, message: error.message })
+        //         }
 
-                const { userId: userIdParams } = req.params
+        //         const { userId: userIdParams } = req.params
 
-                if (userIdParams !== userIdToken) {
-                    res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
-                }
+        //         if (userIdParams !== userIdToken) {
+        //             res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
+        //         }
 
-                const { dcName, language, online, price } = req.body
+        //         const { dcName, language, online, price } = req.body
 
-                logic.modifyUser(userIdParams, dcName, language, online, price)
-                    .then(() => res.status(204).send())
-                    .catch((error) => {
-                        if (error instanceof NotFoundError) {
-                            res.status(404).json({ error: error.constructor.name, message: error.message })
-                        } else {
-                            res.status(500).json({ error: error.constructor.name, message: error.message })
-                        }
-                    })
-            } catch (error) {
-                if (error instanceof TypeError || error instanceof ContentError) {
-                    res.status(406).json({ error: error.constructor.name, message: error.message })
-                } else {
-                    res.status(500).json({ error: error.constructor.name, message: error.message })
-                }
-            }
-        })
+        //         logic.modifyUser(userIdParams, dcName, language, online, price)
+        //             .then(() => res.status(204).send())
+        //             .catch((error) => {
+        //                 if (error instanceof NotFoundError) {
+        //                     res.status(404).json({ error: error.constructor.name, message: error.message })
+        //                 } else {
+        //                     res.status(500).json({ error: error.constructor.name, message: error.message })
+        //                 }
+        //             })
+        //     } catch (error) {
+        //         if (error instanceof TypeError || error instanceof ContentError) {
+        //             res.status(406).json({ error: error.constructor.name, message: error.message })
+        //         } else {
+        //             res.status(500).json({ error: error.constructor.name, message: error.message })
+        //         }
+        //     }
+        // })
 
         // modify user online status
 
-        api.put('/users/:userId', jsonBodyParser, (req, res) => {
-            try {
-                const { authorization } = req.headers
+        // api.patch('/users/:userId', jsonBodyParser, (req, res) => {
+        //     try {
+        //         const { authorization } = req.headers
 
-                const token = authorization.slice(7)
+        //         const token = authorization.slice(7)
 
-                let userIdToken
+        //         let userIdToken
 
-                try {
-                    const { sub } = jwt.verify(token, JWT_SECRET)
-                    userIdToken = sub
-                } catch (error) {
-                    res.status(401).json({ error: error.constructor.name, message: error.message })
-                }
+        //         try {
+        //             const { sub } = jwt.verify(token, JWT_SECRET)
+        //             userIdToken = sub
+        //         } catch (error) {
+        //             res.status(401).json({ error: error.constructor.name, message: error.message })
+        //         }
 
-                const { userId: userIdParams } = req.params
+        //         const { userId: userIdParams } = req.params
 
-                if (userIdParams !== userIdToken) {
-                    res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
-                }
+        //         if (userIdParams !== userIdToken) {
+        //             res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
+        //         }
 
-                const { online } = req.body
+        //         const { online } = req.body
 
-                logic.modifyUserOnlineStatus(userIdParams, online)
-                    .then(() => res.status(204).send())
-                    .catch((error) => {
-                        if (error instanceof NotFoundError) {
-                            res.status(404).json({ error: error.constructor.name, message: error.message })
-                        } else {
-                            res.status(500).json({ error: error.constructor.name, message: error.message })
-                        }
-                    })
-            } catch (error) {
-                if (error instanceof TypeError || error instanceof ContentError) {
-                    res.status(406).json({ error: error.constructor.name, message: error.message })
-                } else {
-                    res.status(500).json({ error: error.constructor.name, message: error.message })
-                }
-            }
-        })
+        // logic.modifyUserOnlineStatus(userIdParams, online)
+        //     .then(() => res.status(204).send())
+        //     .catch((error) => {
+        //         if (error instanceof NotFoundError) {
+        //             res.status(404).json({ error: error.constructor.name, message: error.message })
+        //         } else {
+        //             res.status(500).json({ error: error.constructor.name, message: error.message })
+        //         }
+        //     })
+        //     } catch (error) {
+        //         if (error instanceof TypeError || error instanceof ContentError) {
+        //             res.status(406).json({ error: error.constructor.name, message: error.message })
+        //         } else {
+        //             res.status(500).json({ error: error.constructor.name, message: error.message })
+        //         }
+        //     }
+        // })
 
         // modify user price value
 
-        api.put('/users/:userId', jsonBodyParser, (req, res) => {
+        api.patch('/users/:userId', jsonBodyParser, (req, res) => {
             try {
                 const { authorization } = req.headers
-
                 const token = authorization.slice(7)
 
                 let userIdToken
@@ -239,25 +238,48 @@ mongoose.connect(MONGODB_URL)
                     userIdToken = sub
                 } catch (error) {
                     res.status(401).json({ error: error.constructor.name, message: error.message })
+                    return
                 }
 
                 const { userId: userIdParams } = req.params
 
                 if (userIdParams !== userIdToken) {
                     res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
+                    return
                 }
 
-                const { newPrice } = req.body
+                const { newPrice, online } = req.body
 
-                logic.modifyUserPrice(userIdParams, newPrice)
-                    .then(() => res.status(204).send())
-                    .catch((error) => {
-                        if (error instanceof NotFoundError) {
-                            res.status(404).json({ error: error.constructor.name, message: error.message })
-                        } else {
-                            res.status(500).json({ error: error.constructor.name, message: error.message })
-                        }
-                    })
+                if (newPrice !== undefined) {
+                    logic.modifyUserPrice(userIdParams, newPrice)
+                        .then(() => {
+                            if (online !== undefined) {
+                                logic.modifyUserOnlineStatus(userIdParams, online)
+                                    .then(() => res.status(204).send())
+                                    .catch((error) => {
+                                        if (error instanceof NotFoundError) {
+                                            res.status(404).json({ error: error.constructor.name, message: error.message })
+                                        } else {
+                                            res.status(500).json({ error: error.constructor.name, message: error.message })
+                                        }
+                                    })
+                            } else {
+                                res.status(204).send()
+                            }
+                        })
+                } else if (online !== undefined) {
+                    logic.modifyUserOnlineStatus(userIdParams, online)
+                        .then(() => res.status(204).send())
+                        .catch((error) => {
+                            if (error instanceof NotFoundError) {
+                                res.status(404).json({ error: error.constructor.name, message: error.message });
+                            } else {
+                                res.status(500).json({ error: error.constructor.name, message: error.message });
+                            }
+                        })
+                } else {
+                    res.status(204).send()
+                }
             } catch (error) {
                 if (error instanceof TypeError || error instanceof ContentError) {
                     res.status(406).json({ error: error.constructor.name, message: error.message })
@@ -265,7 +287,58 @@ mongoose.connect(MONGODB_URL)
                     res.status(500).json({ error: error.constructor.name, message: error.message })
                 }
             }
+
+            //     logic.modifyUserPrice(userIdParams, newPrice)
+            //         .then(() => {
+            //             logic.modifyUserOnlineStatus(userIdParams, online as boolean)
+            //                 .then(() => {
+            //                     res.status(204).send()
+            //                 })
+            //                 .catch((error) => {
+            //                     if (error instanceof NotFoundError) {
+            //                         res.status(404).json({ error: error.constructor.name, message: error.message })
+            //                     } else {
+            //                         res.status(500).json({ error: error.constructor.name, message: error.message })
+            //                     }
+            //                 })
+            //         })
+            // } catch (error) {
+            //     if (error instanceof TypeError || error instanceof ContentError) {
+            //         res.status(406).json({ error: error.constructor.name, message: error.message })
+            //     } else {
+            //         res.status(500).json({ error: error.constructor.name, message: error.message })
+            //     }
         })
+
+        //         if (newPrice) {
+        //             logic.modifyUserPrice(userIdParams, newPrice)
+        //                 .then(() => res.status(204).send())
+        //                 .catch((error) => {
+        //                     if (error instanceof NotFoundError) {
+        //                         res.status(404).json({ error: error.constructor.name, message: error.message })
+        //                     } else {
+        //                         res.status(500).json({ error: error.constructor.name, message: error.message })
+        //                     }
+        //                 })
+        //         }
+        //         if (online) {
+        //             logic.modifyUserOnlineStatus(userIdParams, online)
+        //                 .then(() => res.status(204).send())
+        //                 .catch((error) => {
+        //                     if (error instanceof NotFoundError) {
+        //                         res.status(404).json({ error: error.constructor.name, message: error.message })
+        //                     } else {
+        //                         res.status(500).json({ error: error.constructor.name, message: error.message })
+        //                     }
+        //                 })
+        //         }
+        //     } catch (error) {
+        //         if (error instanceof TypeError || error instanceof ContentError) {
+        //             res.status(406).json({ error: error.constructor.name, message: error.message })
+        //         } else {
+        //             res.status(500).json({ error: error.constructor.name, message: error.message })
+        //         }
+
 
         // delete user
 
@@ -307,6 +380,27 @@ mongoose.connect(MONGODB_URL)
                 } else {
                     res.status(500).json({ error: error.constructor.name, message: error.message })
                 }
+            }
+        })
+
+        //get provider by Id
+
+        api.get('/eu/providers/:providerId', (req, res) => {
+            const { providerId } = req.params
+
+            try {
+                logic.getProviderById(providerId)
+                    .then((provider) => res.json(provider))
+                    .catch((error) => {
+                        res.status(400).json({ error: error.constructor.name, message: error.message })
+                    })
+            } catch (error) {
+                if (error instanceof TypeError || error instanceof ContentError) {
+                    res.status(406).json({ error: error.constructor.name, message: error.message })
+                } else {
+                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                }
+
             }
         })
 

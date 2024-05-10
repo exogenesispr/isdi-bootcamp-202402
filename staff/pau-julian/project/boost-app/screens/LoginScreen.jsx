@@ -2,9 +2,12 @@ import React, { useState } from 'react'
 import logic from '../logic'
 
 import { View, Text, Button, TextInput, StyleSheet, Alert } from 'react-native'
+import { useContext } from '../context'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 
 function LoginScreen({ navigation }) {
+    const { setStamp } = useContext()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
@@ -18,7 +21,8 @@ function LoginScreen({ navigation }) {
                 .then(() => {
                     setUsername('')
                     setPassword('')
-                    navigation.navigate('Home')
+                    setStamp(Date.now())
+                    // navigation.navigate('Home')
                 })
                 .catch((error) => {
                     Alert.alert(error.message)

@@ -15,7 +15,7 @@ dotenv.config()
 describe('modifyUserOnlineStatus', () => {
     before(() => mongoose.connect(process.env.MONGODB_TEST_URL))
 
-    it('modifies user online status', () => {
+    it('modifies user online status to true', () => {
         return User.deleteMany()
             .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'] as Language[], online: false, price: { m10: { value: 0, lastEdited: new Date() } } }))
             .then((user) => logic.modifyUserOnlineStatus(user.id, true)
@@ -24,6 +24,20 @@ describe('modifyUserOnlineStatus', () => {
 
                     expect(user.online).to.be.false
                     expect(updatedUser.online).to.be.true
+
+                })
+            )
+    })
+
+    it('modifies user online status to false', () => {
+        return User.deleteMany()
+            .then(() => User.create({ username: 'username', password: '123qwe123', dcName: 'usernameDC', language: ['EN', 'ES'] as Language[], online: true, price: { m10: { value: 0, lastEdited: new Date() } } }))
+            .then((user) => logic.modifyUserOnlineStatus(user.id, false)
+                .then((updatedUser) => {
+                    expect(updatedUser.id).to.equal(user.id)
+
+                    expect(user.online).to.be.true
+                    expect(updatedUser.online).to.be.false
 
                 })
             )

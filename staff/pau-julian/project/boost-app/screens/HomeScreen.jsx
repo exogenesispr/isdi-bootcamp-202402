@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, ScrollView, FlatList } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import useCommunities from '../hooks/useCommunities'
 import { useState, useEffect } from 'react'
@@ -10,31 +10,51 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const Stack = createNativeStackNavigator()
 
 function HomeScreen({ navigation }) {
-    const { setCommunities, setWowToken } = useContext()
     const { communities, cheapest } = useCommunities()
+    const { user, setCommunities, setWowToken } = useContext()
 
-    { communities && setCommunities(communities) }
+    useEffect(() => {
+        try {
+            logic.retrieveWowTokenData()
+                .then((wowToken) => {
+                    console.log(wowToken)
+                    setWowToken(wowToken)
+                })
+                .catch((error) => {
+                    Alert.alert(`Can't retrieve WOW token data`, error.message)
+                })
+        } catch (error) {
+            Alert.alert(`Failed to fetch token data`, error.message)
+        }
+    }, [setWowToken])
+
+    useEffect(() => {
+        try {
+            setCommunities(communities)
+            console.log('communities printed after setting in context:', communities)
+        } catch (error) {
+            Alert.alert(`Failed to set communities`, error.message)
+        }
+
+    }, [communities])
 
     const onPressService = (service) => {
-        if (service === 'm10')
-            navigation.navigate('m10')
-        else if (service === 'raidVip')
-            navigation.navigate('raidVip')
-        else if (service === 'raidUnsaved')
-            navigation.navigate('raidUnsaved')
-        else if (service === 'raidSaved')
-            navigation.navigate('raidSaved')
-        else
-            navigation.navigate('Home')
+        navigation.navigate('ServiceList', { serviceType: service })
     }
 
-
-
+    if (!user || !cheapest) {
+        return (
+            <View style={styles.mainContainer}>
+                <ActivityIndicator size='large' color='#0000ff' />
+            </View>
+        )
+    }
 
     return (
         <View style={styles.mainContainer}>
+
             <View style={styles.container}>
-                {user ? <Text style={styles.text}> Welcome {user.username}!</Text> : <Text style={styles.text}>Welcome!</Text>}
+                {user ? <Text > Welcome {user.username}!</Text> : <Text >Welcome!</Text>}
             </View>
 
             <ServiceDisplay cheapest={cheapest} isTouchable={true} onPressService={onPressService} />
@@ -46,24 +66,20 @@ function HomeScreen({ navigation }) {
 export default HomeScreen
 
 const styles = StyleSheet.create({
+    mainContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     container: {
         alignItems: 'center',
         justifyContent: 'space-between',
-        top: 0,
-        display: 'flex',
         flexDirection: 'row',
         padding: 12,
-        marginTop: 40
+        marginTop: 40,
     },
-    text: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    button: {
-
-    },
-    h1: {
+    heading: {
         fontSize: 90,
         marginBottom: 30,
-    }
-})
+    },
+});

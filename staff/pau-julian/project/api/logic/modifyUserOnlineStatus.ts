@@ -1,6 +1,6 @@
 import { validate, errors } from 'com'
 
-import { User } from '../data'
+import { User } from '../data/index.ts'
 const { SystemError, NotFoundError } = errors
 
 function modifyUserOnlineStatus(
@@ -13,11 +13,10 @@ function modifyUserOnlineStatus(
         online?: boolean
     } = {}
 
-    if (online) {
-        update.online = online
-    }
+    update.online = online
 
-    return User.findByIdAndUpdate(userId, update, { new: true })
+
+    return User.findByIdAndUpdate(userId, { $set: update }, { new: true })
         .catch((error) => { throw new SystemError(`Failed to modify user status: ${error.message}`) })
         .then((updatedUser) => {
             if (!updatedUser) throw new NotFoundError('user not found')
