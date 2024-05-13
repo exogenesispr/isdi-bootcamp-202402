@@ -27,7 +27,7 @@ const price = {
 
 type UserType = {
     username: String
-    password: String
+    password?: String
     dcName: String
     language: Language[]
 
@@ -72,6 +72,28 @@ const user = new Schema({
                 required: true
             }
         }
+    }
+})
+
+type WowTokenType = {
+    last_updated_timestamp: {
+        type: Number,
+        required: true
+    },
+    price: {
+        type: Number,
+        required: true
+    }
+}
+
+const wowToken = new Schema({
+    last_updated_timestamp: {
+        type: Number,
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
     }
 })
 
@@ -143,11 +165,14 @@ const community = new Schema({
 
 const User = model<UserType>('User', user)
 const Community = model<CommunityType>('Community', community)
+const WowToken = model<WowTokenType>('WowToken', wowToken)
 
 export {
     Language,
     UserType,
     User,
+    WowTokenType,
+    WowToken,
     CommunityType,
     Community,
 }

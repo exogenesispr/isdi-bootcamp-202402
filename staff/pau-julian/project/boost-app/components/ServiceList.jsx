@@ -31,7 +31,7 @@ function ServiceList({ services, serviceType, navigation }) {
                 ))}
             </View>
             <FlatList
-                data={filteredServices}
+                data={services}
                 renderItem={({ item }) =>
                     <Service service={item} navigation={navigation} serviceType={serviceType} />
                 }

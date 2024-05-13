@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import useCommunities from '../hooks/useCommunities'
 import { useState, useEffect } from 'react'
 import { useContext } from '../context'
+import useCommunities from '../hooks/useCommunities'
 import ServiceDisplay from '../components/ServiceDisplay'
+import { StatusBar } from 'expo-status-bar'
 import logic from '../logic'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Header from '../components/Header'
 
 const Stack = createNativeStackNavigator()
 
@@ -52,6 +54,8 @@ function HomeScreen({ navigation }) {
 
     return (
         <View style={styles.mainContainer}>
+            <StatusBar style='auto' />
+            <Header />
 
             <View style={styles.container}>
                 {user ? <Text > Welcome {user.username}!</Text> : <Text >Welcome!</Text>}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import logic from '../logic'
 
-import { View, Text, Button, TextInput, StyleSheet, Alert } from 'react-native'
+import { View, Text, Button, TextInput, StyleSheet, Alert, Pressable } from 'react-native'
 import { useContext } from '../context'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
 
 
 function LoginScreen({ navigation }) {
@@ -39,7 +40,8 @@ function LoginScreen({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <Text>Log in here</Text>
+            <StatusBar style='auto' />
+            <Text style={styles.heading}>Log in here</Text>
 
             <TextInput style={styles.input} placeholder='Username'
                 value={username}
@@ -50,11 +52,15 @@ function LoginScreen({ navigation }) {
                 value={password}
                 onChangeText={setPassword}
             />
-            <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
-                onPress={toggleShowPassword} />
+            {<MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
+                onPress={toggleShowPassword} />}
 
-            <Button title='Log in' onPress={handleLogin} />
-            <Button title='Register' onPress={() => navigation.navigate('Register')} />
+            <Pressable style={styles.button} onPress={handleLogin}>
+                <Text style={styles.text}>Log in</Text>
+            </Pressable>
+            <Pressable style={styles.button} onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.text}>Register</Text>
+            </Pressable>
         </View>
     )
 }
@@ -66,10 +72,13 @@ const styles = StyleSheet.create({
         padding: 16,
         marginTop: 40
     },
-    text: {
+    heading: {
         fontSize: 24,
         fontWeight: 'bold',
-
+    },
+    text: {
+        fontSize: 14,
+        fontWeight: 'bold',
     },
     input: {
         width: '100%',
@@ -79,6 +88,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         padding: 12,
         borderRadius: 12
+    },
+    button: {
+        backgroundColor: '#2196F3',
+        padding: 10,
+        borderRadius: 5,
     },
 
 })

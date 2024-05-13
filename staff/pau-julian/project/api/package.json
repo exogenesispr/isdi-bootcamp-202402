@@ -9,7 +9,8 @@
     "inspect": "npx tsx --inspect-brk",
     "test": "npx mocha",
     "test-inspect": "npx mocha --inspect-brk",
-    "populate": "tsx data/populateCommunities.ts"
+    "populate": "tsx data/populateCommunities.ts",
+    "wowtoken": "tsx data/wowTokenScript/updateWowToken.ts"
   },
   "keywords": [],
   "author": "",
@@ -33,6 +34,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3"
   }
 }

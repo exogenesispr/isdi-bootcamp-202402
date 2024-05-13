@@ -8,16 +8,30 @@ function getProviderById(
 ): Promise<UserType | CommunityType> {
     validate.text(providerId, 'providerId', true)
 
-    const userQuery = User.findById(providerId).select('-password').lean()
-    const communityQuery = Community.findById(providerId).lean()
+    const userQuery = User.findById(providerId).select('-password -__v').lean()
+    const communityQuery = Community.findById(providerId).select('-__v').lean()
 
     return Promise.all([userQuery, communityQuery])
         .then(([user, community]) => {
             if (community) {
-                return community
+                const communityFormatted = {
+                    id: community._id.toString(),
+                    name: community.name,
+                    dcReference: community.dcReference,
+                    price: community.price
+                }
+                return communityFormatted
             }
             if (user) {
-                return user
+                const userFormatted = {
+                    id: user._id.toString(),
+                    username: user.username,
+                    dcName: user.dcName,
+                    online: user.online,
+                    language: user.language,
+                    price: user.price
+                }
+                return userFormatted
             }
             throw new NotFoundError('Provider not found')
         })

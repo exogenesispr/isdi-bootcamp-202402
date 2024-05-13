@@ -4,6 +4,8 @@ import { useContext } from '../context'
 import ServiceList from '../components/ServiceList'
 import logic from '../logic'
 import { util } from '../com/index.js'
+import Header from '../components/Header'
+import { StatusBar } from 'expo-status-bar'
 
 export default function ServiceListScreen({ navigation, route }) {
     const { serviceType } = route.params
@@ -32,6 +34,8 @@ export default function ServiceListScreen({ navigation, route }) {
 
     return (
         <View style={styles.container}>
+            <StatusBar style='auto' />
+            <Header />
             <Text style={styles.headingText}>Prices: {serviceType}</Text>
             <ServiceList services={providers} serviceType={serviceType} navigation={navigation} />
         </View>

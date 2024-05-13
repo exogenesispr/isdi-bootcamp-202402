@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity
 import { useState } from 'react'
 import logic from '../logic'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
 
 function RegisterScreen({ navigation }) {
     const [username, setUsername] = useState('')
@@ -43,6 +44,7 @@ function RegisterScreen({ navigation }) {
 
     return (
         <View style={styles.mainContainer}>
+            <StatusBar style='auto' />
             <Text style={styles.heading}>Register</Text>
 
             <ScrollView style={styles.container}>
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        paddin: 20
+        padding: 20
     },
     container: {
         width: '100%'

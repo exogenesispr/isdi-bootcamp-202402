@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native'
 import { util } from '../com/index.js'
 import moment from 'moment'
 
@@ -14,7 +14,7 @@ export default function Service({ service, navigation, serviceType }) {
         <View>
             {/* <Text>{JSON.stringify(service)} SEPARATOR</Text>
             <Text>{JSON.stringify(serviceType)}</Text> */}
-            <Pressable
+            <TouchableOpacity
                 style={[
                     styles.item,
                     { backgroundColor: getBackgroundColor(service) }
@@ -24,7 +24,7 @@ export default function Service({ service, navigation, serviceType }) {
                 <Text style={styles.text}>{service.name}</Text>
                 <Text style={styles.text}>{priceFormatter(service.price[serviceType].value)}</Text>
                 <Text style={styles.text}>{moment(service.price[serviceType].lastEdited).format('HH:mm DD/MM')}</Text>
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
 }

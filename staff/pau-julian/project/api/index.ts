@@ -181,50 +181,7 @@ mongoose.connect(MONGODB_URL)
         //     }
         // })
 
-        // modify user online status
-
-        // api.patch('/users/:userId', jsonBodyParser, (req, res) => {
-        //     try {
-        //         const { authorization } = req.headers
-
-        //         const token = authorization.slice(7)
-
-        //         let userIdToken
-
-        //         try {
-        //             const { sub } = jwt.verify(token, JWT_SECRET)
-        //             userIdToken = sub
-        //         } catch (error) {
-        //             res.status(401).json({ error: error.constructor.name, message: error.message })
-        //         }
-
-        //         const { userId: userIdParams } = req.params
-
-        //         if (userIdParams !== userIdToken) {
-        //             res.status(403).json({ error: UnauthorizedError.name, message: 'Unauthorized' })
-        //         }
-
-        //         const { online } = req.body
-
-        // logic.modifyUserOnlineStatus(userIdParams, online)
-        //     .then(() => res.status(204).send())
-        //     .catch((error) => {
-        //         if (error instanceof NotFoundError) {
-        //             res.status(404).json({ error: error.constructor.name, message: error.message })
-        //         } else {
-        //             res.status(500).json({ error: error.constructor.name, message: error.message })
-        //         }
-        //     })
-        //     } catch (error) {
-        //         if (error instanceof TypeError || error instanceof ContentError) {
-        //             res.status(406).json({ error: error.constructor.name, message: error.message })
-        //         } else {
-        //             res.status(500).json({ error: error.constructor.name, message: error.message })
-        //         }
-        //     }
-        // })
-
-        // modify user price value
+        // modify user price value and online status
 
         api.patch('/users/:userId', jsonBodyParser, (req, res) => {
             try {
@@ -250,36 +207,20 @@ mongoose.connect(MONGODB_URL)
 
                 const { newPrice, online } = req.body
 
-                if (newPrice !== undefined) {
-                    logic.modifyUserPrice(userIdParams, newPrice)
-                        .then(() => {
-                            if (online !== undefined) {
-                                logic.modifyUserOnlineStatus(userIdParams, online)
-                                    .then(() => res.status(204).send())
-                                    .catch((error) => {
-                                        if (error instanceof NotFoundError) {
-                                            res.status(404).json({ error: error.constructor.name, message: error.message })
-                                        } else {
-                                            res.status(500).json({ error: error.constructor.name, message: error.message })
-                                        }
-                                    })
-                            } else {
+                logic.modifyUserPrice(userIdParams, newPrice)
+                    .then(() => {
+                        logic.modifyUserOnlineStatus(userIdParams, online as boolean)
+                            .then(() => {
                                 res.status(204).send()
-                            }
-                        })
-                } else if (online !== undefined) {
-                    logic.modifyUserOnlineStatus(userIdParams, online)
-                        .then(() => res.status(204).send())
-                        .catch((error) => {
-                            if (error instanceof NotFoundError) {
-                                res.status(404).json({ error: error.constructor.name, message: error.message });
-                            } else {
-                                res.status(500).json({ error: error.constructor.name, message: error.message });
-                            }
-                        })
-                } else {
-                    res.status(204).send()
-                }
+                            })
+                            .catch((error) => {
+                                if (error instanceof NotFoundError) {
+                                    res.status(404).json({ error: error.constructor.name, message: error.message })
+                                } else {
+                                    res.status(500).json({ error: error.constructor.name, message: error.message })
+                                }
+                            })
+                    })
             } catch (error) {
                 if (error instanceof TypeError || error instanceof ContentError) {
                     res.status(406).json({ error: error.constructor.name, message: error.message })
@@ -287,58 +228,7 @@ mongoose.connect(MONGODB_URL)
                     res.status(500).json({ error: error.constructor.name, message: error.message })
                 }
             }
-
-            //     logic.modifyUserPrice(userIdParams, newPrice)
-            //         .then(() => {
-            //             logic.modifyUserOnlineStatus(userIdParams, online as boolean)
-            //                 .then(() => {
-            //                     res.status(204).send()
-            //                 })
-            //                 .catch((error) => {
-            //                     if (error instanceof NotFoundError) {
-            //                         res.status(404).json({ error: error.constructor.name, message: error.message })
-            //                     } else {
-            //                         res.status(500).json({ error: error.constructor.name, message: error.message })
-            //                     }
-            //                 })
-            //         })
-            // } catch (error) {
-            //     if (error instanceof TypeError || error instanceof ContentError) {
-            //         res.status(406).json({ error: error.constructor.name, message: error.message })
-            //     } else {
-            //         res.status(500).json({ error: error.constructor.name, message: error.message })
-            //     }
         })
-
-        //         if (newPrice) {
-        //             logic.modifyUserPrice(userIdParams, newPrice)
-        //                 .then(() => res.status(204).send())
-        //                 .catch((error) => {
-        //                     if (error instanceof NotFoundError) {
-        //                         res.status(404).json({ error: error.constructor.name, message: error.message })
-        //                     } else {
-        //                         res.status(500).json({ error: error.constructor.name, message: error.message })
-        //                     }
-        //                 })
-        //         }
-        //         if (online) {
-        //             logic.modifyUserOnlineStatus(userIdParams, online)
-        //                 .then(() => res.status(204).send())
-        //                 .catch((error) => {
-        //                     if (error instanceof NotFoundError) {
-        //                         res.status(404).json({ error: error.constructor.name, message: error.message })
-        //                     } else {
-        //                         res.status(500).json({ error: error.constructor.name, message: error.message })
-        //                     }
-        //                 })
-        //         }
-        //     } catch (error) {
-        //         if (error instanceof TypeError || error instanceof ContentError) {
-        //             res.status(406).json({ error: error.constructor.name, message: error.message })
-        //         } else {
-        //             res.status(500).json({ error: error.constructor.name, message: error.message })
-        //         }
-
 
         // delete user
 

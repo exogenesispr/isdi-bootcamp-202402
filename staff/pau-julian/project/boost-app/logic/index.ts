@@ -6,6 +6,7 @@ import modifyUser from './modifyUser'
 import modifyUserPrice from './modifyUserPrice'
 import modifyUserOnlineStatus from './modifyUserOnlineStatus'
 import deleteUser from './deleteUser'
+import getProviderById from './getProviderById'
 
 import retrieveUsersByStatus from './retrieveUsersByStatus'
 import retrieveCommunities from './retrieveCommunities'
@@ -26,6 +27,7 @@ const logic = {
     retrieveUsersByStatus,
     retrieveCommunities,
     retrieveWowTokenData,
+    getProviderById,
 
     getLoggedInUserId,
     isUserLoggedIn,

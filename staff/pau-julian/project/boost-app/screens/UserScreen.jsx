@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable, Switch, TextInput, ActivityIndicator
 import { useContext } from '../context'
 import { MaterialIcons } from '@expo/vector-icons'
 import logic from '../logic'
+import { StatusBar } from 'expo-status-bar'
 
 function UserScreen({ navigation }) {
     const { user, stamp, setStamp } = useContext()
@@ -49,6 +50,7 @@ function UserScreen({ navigation }) {
 
     return (
         <View style={styles.mainContainer}>
+            <StatusBar />
             <Text style={styles.heading}>User profile</Text>
             <View style={styles.infoContainer}>
                 <Text style={styles.label}>Username:</Text>

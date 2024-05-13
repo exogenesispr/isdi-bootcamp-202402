@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, Button, ScrollView, Alert, Image, ActivityIndicator } from 'react-native'
+import { StatusBar } from 'expo-status-bar'
 import logic from '../logic'
 import { AntDesign } from '@expo/vector-icons'
 import { util } from '../com/index.js'
@@ -15,12 +16,11 @@ export default function LandingScreen({ navigation }) {
 
     return (
         <View style={styles.mainContainer}>
-            <View style={styles.header}>
-            </View>
+            <StatusBar style='auto' />
+            <Text style={styles.heading}>Welcome to Boost</Text>
 
-            <ScrollView >
+            <View>
                 <View>
-                    <Text style={styles.heading}>Welcome to Boost</Text>
                 </View>
                 <View style={styles.container}>
                     <View style={styles.row}>
@@ -35,24 +35,24 @@ export default function LandingScreen({ navigation }) {
                         <ActivityIndicator size='large' color='#0000ff' />
                     </View>
                 }
-            </ScrollView>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
+        // flex: 1,
         backgroundColor: '#ffffff',
         padding: 20,
-    },
-    header: {
-
     },
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20,
+    },
+    button: {
+
     },
     container: {
         marginBottom: 20,
