@@ -10,6 +10,7 @@ import retrieveUsersByStatus from './retrieveUsersByStatus.ts'
 import retrieveCommunities from './retrieveCommunities.ts'
 
 import getProviderById from './getProviderById.ts'
+import retrieveWowTokenData from './retrieveWowTokenData.ts'
 import fetchWowTokenData from './fetchWowTokenData.ts'
 
 
@@ -24,6 +25,7 @@ const logic = {
     retrieveUsersByStatus,
     retrieveCommunities,
     getProviderById,
+    retrieveWowTokenData,
     fetchWowTokenData,
 }
 

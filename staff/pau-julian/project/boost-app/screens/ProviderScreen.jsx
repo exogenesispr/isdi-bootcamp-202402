@@ -1,18 +1,21 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Text, View, StyleSheet, Alert, Linking, ActivityIndicator, Pressable, Modal } from 'react-native'
+import { Text, View, StyleSheet, Alert, Linking, Image, Pressable, Modal } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import * as Clipboard from 'expo-clipboard'
 import logic from '../logic'
 import { util } from '../com/index.js'
 import moment from 'moment'
 import { StatusBar } from 'expo-status-bar'
+import Header from '../components/Header'
+import commonStyles from '../commonStyles'
+import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function ProviderScreen({ route }) {
     const [provider, setProvider] = useState(null)
     const [isCommunity, setIsCommunity] = useState(false)
     const [copied, setCopied] = useState(false)
 
-    const { priceFormatter } = util
+    const { priceFormatter, getServiceImage } = util
     const { id } = route.params
 
     useFocusEffect(
@@ -48,62 +51,98 @@ export default function ProviderScreen({ route }) {
     }
 
     const handleDiscordUserLinkPress = () => {
-        Linking.openURL('discord://')
+        Linking.openURL('discordapp://')
             .catch((error) => {
                 Alert.alert('Discord App not found', error.message)
             })
     }
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.mainContainer}>
             <StatusBar />
+            <Header />
             {provider && (
                 <>
-                    <Text>{JSON.stringify(provider)}</Text>
-
-                    <Pressable style={styles.copyButton} onLongPress={handleClipboardPress}>
-                        <Text style={styles.heading}>{isCommunity ? provider.name : provider.username}</Text>
-                    </Pressable>
-
-                    {/* {copied && <Text style={styles.copiedText}>Discord name copied to clipboard!</Text>} */}
-
-                    {isCommunity ? (
-                        <Pressable style={styles.button} onPress={handleDiscordCommunityLinkPress}>
-                            <Text style={styles.buttonText}>Join Discord</Text>
-                        </Pressable>
-                    ) : (
-                        <Pressable style={styles.button} onPress={handleDiscordUserLinkPress} >
-                            <Text style={styles.buttonText}>Contact on Discord</Text>
-                        </Pressable>
-                    )}
-
                     <View style={styles.container}>
-                        <Text style={styles.heading} >Prices</Text>
-                        <View style={styles.row}>
-                            <View style={styles.serviceBox}>
-                                <Text style={styles.serviceTitle}>Mythic 10</Text>
-                                <Text style={styles.servicePrice}>{priceFormatter(provider.price?.m10?.value)}</Text>
-                                <Text style={styles.serviceDate}>{moment(provider.price?.m10?.lastEdited).format('HH:mm DD/MM')}</Text>
+                        <Image
+                            source={getServiceImage(provider)}
+                            style={styles.bigIcon}
+                        />
+                        <Pressable style={styles.button} onLongPress={isCommunity ? null : handleClipboardPress} >
+                            <View style={styles.row}>
+                                <Text style={styles.heading}>{isCommunity ? provider.name : provider.username}</Text>
+                                {isCommunity ? null : <FontAwesome6 name="file-clipboard" size={24} color="black" />}
                             </View>
-                        </View>
-                        {isCommunity && <View style={styles.row}>
-                            <View style={styles.serviceBox}>
-                                <Text style={styles.serviceTitle}>Raid Vip</Text>
-                                <Text style={styles.servicePrice}>{priceFormatter(provider.price?.raidVip?.value)}</Text>
-                                <Text style={styles.serviceDate}>{moment(provider.price?.raidVip?.lastEdited).format('HH:mm DD/MM')}</Text>
-                            </View>
-                            <View style={styles.serviceBox}>
-                                <Text style={styles.serviceTitle}>Raid Unsaved</Text>
-                                <Text style={styles.servicePrice}>{priceFormatter(provider.price?.raidUnsaved?.value)}</Text>
-                                <Text style={styles.serviceDate}>{moment(provider.price?.raidUnsaved?.lastEdited).format('HH:mm DD/MM')}</Text>
-                            </View>
-                            <View style={styles.serviceBox}>
-                                <Text style={styles.serviceTitle}>Raid Saved</Text>
-                                <Text style={styles.servicePrice}>{priceFormatter(provider.price?.raidSaved?.value)}</Text>
-                                <Text style={styles.serviceDate}>{moment(provider.price?.raidSaved?.lastEdited).format('HH:mm DD/MM')}</Text>
-                            </View>
-                        </View>}
+                        </Pressable>
+                    </View>
 
+                    <View style={styles.priceContainer}>
+                        <Text style={styles.tableHeading}>Prices</Text>
+                        <View style={styles.priceContainerBorder}>
+                            <View style={styles.column}>
+                                <View style={styles.serviceBox}>
+                                    <View style={styles.serviceBoxWithTextAlignStart}>
+                                        <Text style={styles.serviceTitle}>Mythic 10</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.servicePrice}>{priceFormatter(provider.price?.m10?.value)}</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.serviceDate}>{moment(provider.price?.m10?.lastEdited).format('HH:mm DD/MM')}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                            {isCommunity && <View style={styles.column}>
+                                <View style={styles.serviceBox}>
+                                    <View style={styles.serviceBoxWithTextAlignStart}>
+                                        <Text style={styles.serviceTitle}>Raid Vip</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.servicePrice}>{priceFormatter(provider.price?.raidVip?.value)}</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.serviceDate}>{moment(provider.price?.raidVip?.lastEdited).format('HH:mm DD/MM')}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.serviceBox}>
+                                    <View style={styles.serviceBoxWithTextAlignStart}>
+                                        <Text style={styles.serviceTitle}>Raid Unsaved</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.servicePrice}>{priceFormatter(provider.price?.raidUnsaved?.value)}</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.serviceDate}>{moment(provider.price?.raidUnsaved?.lastEdited).format('HH:mm DD/MM')}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.serviceBox}>
+                                    <View style={styles.serviceBoxWithTextAlignStart}>
+                                        <Text style={styles.serviceTitle}>Raid Saved</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.servicePrice}>{priceFormatter(provider.price?.raidSaved?.value)}</Text>
+                                    </View>
+                                    <View style={styles.serviceBoxWithTextAlignEnd}>
+                                        <Text style={styles.serviceDate}>{moment(provider.price?.raidSaved?.lastEdited).format('HH:mm DD/MM')}</Text>
+                                    </View>
+                                </View>
+                            </View>}
+                        </View>
+                    </View>
+                    <View style={styles.buttonView}>
+                        {isCommunity ? (
+                            <Pressable style={styles.button} onPress={handleDiscordCommunityLinkPress}>
+                                <Text style={styles.buttonText}>Join Discord</Text>
+                            </Pressable>
+                        ) : (
+                            <Pressable style={styles.button} onPress={handleDiscordUserLinkPress} >
+                                <Text style={styles.buttonText}>Contact on Discord</Text>
+                            </Pressable>
+                        )}
+                        <Image
+                            style={styles.icon}
+                            source={require('../assets/icons/discordlogo.png')}
+                        />
                     </View>
                 </>
             )}
@@ -131,22 +170,46 @@ export default function ProviderScreen({ route }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 20,
+        paddingTop: 20,
+    },
+    bigIcon: {
+        height: 120,
+        width: 120,
+    },
+    icon: {
+        height: 30,
+        width: 30,
+        resizeMode: 'contain',
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    column: {
+        flexDirection: 'column',
+        justifyContent: 'space-between',
     },
     button: {
-        backgroundColor: '#007bff',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingRight: 10,
         borderRadius: 5,
-        marginBottom: 20,
     },
     buttonText: {
-        color: '#fff',
+        color: '#5661ea',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    buttonView: {
+        backgroundColor: '#f6f2f6',
+        padding: 20,
+        borderRadius: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'absolute',
+        bottom: 70,
     },
     copyButton: {
         backgroundColor: '#007bff',
@@ -156,33 +219,53 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         width: '100%',
     },
-    serviceContainer: {
-        flex: 1,
-        width: '100%',
+    priceContainer: {
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+    },
+    priceContainerBorder: {
+        borderWidth: 2,
+        borderColor: '#58545B',
+        borderRadius: 10,
+        backgroundColor: '#f6f2f6',
+        padding: 10,
     },
     heading: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginRight: 10,
+    },
+    tableHeading: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        paddingLeft: 20,
     },
     serviceBox: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
-        paddingVertical: 10,
+        width: '96%',
+        paddingVertical: 16,
+        paddingLeft: 10,
+    },
+    serviceBoxWithTextAlignStart: {
+        alignItems: 'flex-start',
+        width: '33%',
+    },
+    serviceBoxWithTextAlignEnd: {
+        alignItems: 'flex-end',
+        width: '33%',
     },
     serviceTitle: {
         fontSize: 16,
         fontWeight: 'bold',
     },
     servicePrice: {
-        fontSize: 16,
+        fontSize: 18,
     },
     serviceDate: {
         fontSize: 12,
-        color: '#666',
+        color: '#000000',
     },
     modalContainer: {
         flex: 0.99,
@@ -206,6 +289,16 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         width: '100%',
+        boxShadow: {
+            shadowColor: "gray",
+            shadowOffset: {
+                width: 6,
+                height: 6,
+            },
+            shadowOpacity: 1,
+            shadowRadius: 1,
+            elevation: 15,
+        }
     },
     copiedText: {
         fontSize: 16,

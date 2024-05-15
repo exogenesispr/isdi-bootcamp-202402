@@ -11,13 +11,14 @@ const Tab = createBottomTabNavigator()
 const tabScreenOptions = {
     headerShown: false,
     tabBarShowLabel: false,
+    tabBarVisible: false,
     tabBarStyle: {
-        backgroundColor: '#7ABA78',
+        backgroundColor: '#58545B',
         position: 'absolute',
         alignItems: 'center',
         justifyContent: 'center',
-        paddingBottom: 10,
-        height: 80
+        paddingBottom: 0,
+        height: 60,
     },
 }
 
@@ -27,10 +28,10 @@ export default function HomeTabs() {
             screenOptions={tabScreenOptions}
         >
             <Tab.Screen name='HomeStack' component={HomeStackScreen} options={{
-                tabBarIcon: () => (<AntDesign name='home' color='#000000' size={30} />)
+                tabBarIcon: () => (<AntDesign name='home' color='#e1d5d9' size={30} />)
             }} />
             <Tab.Screen name='UserStack' component={UserStackScreen} options={{
-                tabBarIcon: () => (<AntDesign name='user' color='#000000' size={30} />)
+                tabBarIcon: () => (<AntDesign name='user' color='#e1d5d9' size={30} />)
             }} />
 
         </Tab.Navigator>

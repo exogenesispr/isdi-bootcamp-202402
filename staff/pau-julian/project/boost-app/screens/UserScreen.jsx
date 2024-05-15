@@ -1,9 +1,11 @@
 import React, { useDebugValue, useEffect, useRef, useState } from 'react'
-import { View, Text, StyleSheet, Pressable, Switch, TextInput, ActivityIndicator, Alert } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Switch, TextInput, ActivityIndicator, Alert, Image } from 'react-native'
 import { useContext } from '../context'
 import { MaterialIcons } from '@expo/vector-icons'
 import logic from '../logic'
 import { StatusBar } from 'expo-status-bar'
+import Header from '../components/Header'
+import commonStyles from '../commonStyles'
 
 function UserScreen({ navigation }) {
     const { user, stamp, setStamp } = useContext()
@@ -49,37 +51,68 @@ function UserScreen({ navigation }) {
     }
 
     return (
-        <View style={styles.mainContainer}>
+        <View style={commonStyles.mainContainer}>
             <StatusBar />
-            <Text style={styles.heading}>User profile</Text>
-            <View style={styles.infoContainer}>
-                <Text style={styles.label}>Username:</Text>
-                <Text style={styles.value}>{user.username}</Text>
-                <Text style={styles.label}>Discord Username:</Text>
-                <Text style={styles.value}>{user.dcName}</Text>
-            </View>
-            <View style={styles.editContainer}>
-                <Text style={styles.label}>Edit your data</Text>
-                <TextInput
-                    style={styles.textInput}
-                    onChangeText={setPriceValue}
-                    value={priceValue.toString()}
-                    inputMode='numeric'
-                />
-                <Switch
-                    trackColor={{ false: '#767577', true: '#81b0ff' }}
-                    thumbColor={isOnline ? '#f5dd4b' : '#f4f3f4'}
-                    onValueChange={(value) => (setIsOnline(value))}
-                    value={isOnline}
-                />
-                <Pressable style={styles.button} onPress={handleEditPress}>
-                    <Text style={styles.buttonText}>Save Changes</Text>
-                </Pressable>
-            </View>
+
+            <Header />
+
             <View style={styles.container}>
-                <Text style={styles.label}>Logout: </Text>
-                <MaterialIcons name="logout" size={24} color="black" onPress={handleLogoutPress} />
+                <Text style={styles.heading}>Profile</Text>
             </View>
+
+            <View style={styles.userDataContainer}>
+                <Image
+                    source={require('../assets/icons/useravataricon.png')}
+                    style={styles.bigIcon}
+                />
+
+                <View style={styles.infoContainer}>
+                    <Text style={styles.label}>Username:</Text>
+                    <Text style={styles.value}>{user.username}</Text>
+                    <Text style={styles.label}>Discord Username:</Text>
+                    <Text style={styles.value}>{user.dcName}</Text>
+                </View>
+            </View>
+
+            <View style={styles.columnContainer}>
+                <Text style={styles.label}>Set your Mythic 10 price:</Text>
+
+                <View style={styles.editContainer}>
+                    <View style={styles.containerRow}>
+                        <View style={styles.containerCenter}>
+                            <Text style={styles.textPriceSet}>Your price:</Text>
+                            <TextInput
+                                style={styles.textInput}
+                                onChangeText={setPriceValue}
+                                value={priceValue.toString()}
+                                inputMode='numeric'
+                            />
+                        </View>
+                        <View style={styles.containerCenter}>
+                            <View style={styles.containerRow}>
+                                <Text style={styles.switchTagText}>Offline</Text>
+                                <Switch
+                                    trackColor={{ false: '#767577', true: '#B7A7AE' }}
+                                    thumbColor={isOnline ? '#58545B' : '#f4f3f4'}
+                                    onValueChange={(value) => (setIsOnline(value))}
+                                    value={isOnline}
+                                />
+                                <Text style={styles.switchTagText}>Online</Text>
+                            </View>
+                        </View>
+                    </View>
+                    <View style={{ paddingTop: 20 }}>
+                        <Pressable style={styles.button} onPress={handleEditPress}>
+                            <Text style={styles.buttonText}>Save Changes</Text>
+                        </Pressable>
+
+                    </View>
+                </View>
+            </View>
+
+            <Pressable style={styles.logoutPressable} onPress={handleLogoutPress}>
+                <MaterialIcons name="logout" size={36} color="black" />
+            </Pressable>
 
         </View>
     )
@@ -88,24 +121,45 @@ function UserScreen({ navigation }) {
 export default UserScreen
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
+    container: {
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: 20,
+        justifyContent: 'space-between'
+    },
+    userDataContainer: {
+        flexDirection: 'row',
+        padding: 10,
+        justifyContent: 'space-between'
+    },
+    infoContainer: {
+        paddingLeft: 30,
+        marginBottom: 20,
+    },
+    logoutPressable: {
+        position: 'absolute',
+        top: 160,
+        right: 10,
+        padding: 10,
+    },
+    columnContainer: {
+        flexDirection: 'column',
+        padding: 20,
+        width: '96%',
     },
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 20,
     },
-    infoContainer: {
-        marginBottom: 20,
+    bigIcon: {
+        height: 120,
+        width: 120,
+        resizeMode: 'contain',
     },
     label: {
         fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 5,
+        paddingLeft: 20,
     },
     value: {
         fontSize: 16,
@@ -113,22 +167,53 @@ const styles = StyleSheet.create({
     },
     editContainer: {
         alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#58545B',
+        borderRadius: 10,
+        backgroundColor: '#f6f2f6',
+        padding: 16,
+    },
+    containerRow: {
+        width: '96%',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    containerCenter: {
+        width: '45%',
+        justifyContent: 'center',
+    },
+    textPriceSet: {
+        textAlign: 'left',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-start',
+        fontWeight: 'bold'
+    },
+    switch: {
+        backgroundColor: 'red',
+        padding: 10,
+    },
+    switchTagText: {
+        color: '#58545B',
+        fontWeight: 'bold',
     },
     textInput: {
         width: '100%',
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#58545B',
         borderRadius: 5,
         padding: 10,
         marginBottom: 10,
+        textAlign: 'right',
     },
     button: {
-        backgroundColor: '#E69561',
+        backgroundColor: '#58545B',
         padding: 10,
         borderRadius: 5,
     },
     buttonText: {
-        color: 'white',
+        color: '#ffffff',
         fontWeight: 'bold',
+        fontSize: 16,
     },
 })

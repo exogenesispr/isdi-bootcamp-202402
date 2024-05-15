@@ -13,6 +13,7 @@
     ],
     "include": [
         "**/*.ts",
-        "data/wowTokenScript/fetchWowTokenData.js"
+        "data/wowTokenScript/fetchWowTokenData.ts",
+        "data/wowTokenScript/updateWowTokenData.js"
     ]
 }

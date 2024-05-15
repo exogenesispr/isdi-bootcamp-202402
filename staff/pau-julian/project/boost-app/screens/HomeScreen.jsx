@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ActivityIndicator, Alert } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, Alert, Image } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useState, useEffect } from 'react'
 import { useContext } from '../context'
@@ -6,8 +6,8 @@ import useCommunities from '../hooks/useCommunities'
 import ServiceDisplay from '../components/ServiceDisplay'
 import { StatusBar } from 'expo-status-bar'
 import logic from '../logic'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import Header from '../components/Header'
+import commonStyles from '../commonStyles'
 
 const Stack = createNativeStackNavigator()
 
@@ -46,19 +46,19 @@ function HomeScreen({ navigation }) {
 
     if (!user || !cheapest) {
         return (
-            <View style={styles.mainContainer}>
+            <View style={commonStyles.mainContainer}>
                 <ActivityIndicator size='large' color='#0000ff' />
             </View>
         )
     }
 
     return (
-        <View style={styles.mainContainer}>
+        <View style={commonStyles.mainContainer}>
             <StatusBar style='auto' />
             <Header />
 
             <View style={styles.container}>
-                {user ? <Text > Welcome {user.username}!</Text> : <Text >Welcome!</Text>}
+                <Text style={commonStyles.headingText}>Welcome to Boost! </Text>
             </View>
 
             <ServiceDisplay cheapest={cheapest} isTouchable={true} onPressService={onPressService} />
@@ -79,11 +79,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         flexDirection: 'row',
-        padding: 12,
-        marginTop: 40,
+        padding: 25,
+        marginTop: 0,
     },
     heading: {
         fontSize: 90,
         marginBottom: 30,
     },
+    icon: {
+        resizeMode: 'contain',
+        height: 40,
+        width: 40,
+    }
 });

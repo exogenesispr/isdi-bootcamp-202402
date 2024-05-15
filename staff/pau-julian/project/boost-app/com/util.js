@@ -22,24 +22,54 @@ function getCheapestCommunity(communities, service) {
 }
 
 function getBackgroundColor(service) {
-    if (!service || !service.name) {
-        return '#e0e0e0'
-    }
-
     const cheapestName = service.name
 
     switch (cheapestName) {
         case 'Nova':
-            return '#F19001'
+            // return '#F19001'
+            return '#f6b556'
         case 'Dawn':
-            return '#EB4E49'
+            // return '#EB4E49'
+            return '#f28986'
         case 'Sylvanas':
-            return '#4B4B4B'
+            // return '#4B4B4B'
+            return '#696969'
         case 'Oblivion':
-            return '#036FA9'
+            // return '#036FA9'
+            return '#579fc6'
         default:
-            return '#e0e0e0'
+            return '#C7AD95'
     }
+}
+
+function getServiceImage(service) {
+    if (!service || !service.name) {
+        return require('../assets/icons/useravataricon.png')
+    }
+
+    switch (service.name) {
+        case 'Nova':
+            return require('../assets/icons/novalogopau.png')
+        case 'Dawn':
+            return require('../assets/icons/dawnlogopau.png')
+        case 'Sylvanas':
+            return require('../assets/icons/sylvanaslogopau.png')
+        case 'Oblivion':
+            return require('../assets/icons/oblivionlogopau.png')
+        case 'default':
+            return require('../assets/icons/useravataricon.png')
+    }
+}
+
+function formatServiceName(serviceType) {
+    if (serviceType === 'm10')
+        return 'Mythic 10'
+    else if (serviceType === 'raidVip')
+        return 'Raid Vip'
+    else if (serviceType === 'raidUnsaved')
+        return 'Raid Unsaved'
+    else if (serviceType === 'raidSaved')
+        return 'Raid Saved'
 }
 
 function priceFormatter(value, isToken = false) {
@@ -64,6 +94,8 @@ const util = {
     getCheapestCommunity,
     getBackgroundColor,
     priceFormatter,
+    getServiceImage,
+    formatServiceName,
     sortProvidersByServicePrice,
 };
 export default util;

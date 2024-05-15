@@ -298,7 +298,7 @@ mongoose.connect(MONGODB_URL)
 
         api.get('/eu/wowtoken', (req, res) => {
             try {
-                logic.fetchWowTokenData()
+                logic.retrieveWowTokenData()
                     .then((wowToken) => res.json(wowToken))
                     .catch((error) => {
                         res.status(400).json({ error: error.constructor.name, message: error.message })

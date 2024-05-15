@@ -1,35 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { View, FlatList, Text, StyleSheet, Pressable } from 'react-native'
 import Service from './Service'
+import commonStyles from '../commonStyles'
 
-const LanguageOptions = ['EN', 'ES', 'IT', 'DE', 'PT', 'RU']
 
 function ServiceList({ services, serviceType, navigation }) {
     const [languageFilter, setLanguageFilter] = useState('')
 
-    const filteredServices = services.filter((service) => service.price.hasOwnProperty(serviceType) && (languageFilter ? service.language.includes(languageFilter) : true))
-
-    const handleLanguageFilter = (language) => {
-        setLanguageFilter(language)
-    }
-
     return (
         <View style={styles.container}>
-            <View style={styles.languageFilter}>
-                <Text style={styles.filterLabel}>Language filter:</Text>
-                {LanguageOptions.map((language) => (
-                    <Pressable key={language} onPress={() => handleLanguageFilter(language)}>
-                        <Text
-                            style={[
-                                styles.filterOption,
-                                languageFilter === language && styles.activeFilter,
-                            ]}
-                        >
-                            {language}
-                        </Text>
-                    </Pressable>
-                ))}
-            </View>
+
             <FlatList
                 data={services}
                 renderItem={({ item }) =>
@@ -45,8 +25,8 @@ export default ServiceList
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff'
+        width: '100%',
+        paddingBottom: 230,
     },
     languageFilter: {
         flexDirection: 'row',

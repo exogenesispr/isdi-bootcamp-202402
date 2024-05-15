@@ -6,12 +6,13 @@ import logic from '../logic'
 import { util } from '../com/index.js'
 import Header from '../components/Header'
 import { StatusBar } from 'expo-status-bar'
+import commonStyles from '../commonStyles'
 
 export default function ServiceListScreen({ navigation, route }) {
     const { serviceType } = route.params
     const { communities } = useContext()
     const [providers, setProviders] = useState([])
-    const { sortProvidersByServicePrice } = util
+    const { sortProvidersByServicePrice, formatServiceName } = util
 
     useEffect(() => {
         if (serviceType === 'm10') {
@@ -33,10 +34,14 @@ export default function ServiceListScreen({ navigation, route }) {
     }, [])
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.mainContainer}>
             <StatusBar style='auto' />
+
             <Header />
-            <Text style={styles.headingText}>Prices: {serviceType}</Text>
+
+            <View style={styles.container}>
+                <Text style={commonStyles.headingText}>{formatServiceName(serviceType)}</Text>
+            </View>
             <ServiceList services={providers} serviceType={serviceType} navigation={navigation} />
         </View>
 
@@ -45,9 +50,11 @@ export default function ServiceListScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        padding: 20,
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        padding: 25,
+        marginTop: 0,
     },
     headingText: {
         fontSize: 24,

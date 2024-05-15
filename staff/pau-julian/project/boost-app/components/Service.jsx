@@ -1,10 +1,11 @@
 import React from 'react'
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import { util } from '../com/index.js'
 import moment from 'moment'
+import commonStyles from '../commonStyles.js'
 
 export default function Service({ service, navigation, serviceType }) {
-    const { getBackgroundColor, priceFormatter } = util
+    const { getBackgroundColor, priceFormatter, getServiceImage } = util
 
     const onPressServiceHandler = () => {
         navigation.navigate('Provider', { id: service.id })
@@ -12,8 +13,6 @@ export default function Service({ service, navigation, serviceType }) {
 
     return (
         <View>
-            {/* <Text>{JSON.stringify(service)} SEPARATOR</Text>
-            <Text>{JSON.stringify(serviceType)}</Text> */}
             <TouchableOpacity
                 style={[
                     styles.item,
@@ -21,9 +20,25 @@ export default function Service({ service, navigation, serviceType }) {
                 ]}
                 onPress={onPressServiceHandler}
             >
-                <Text style={styles.text}>{service.name}</Text>
-                <Text style={styles.text}>{priceFormatter(service.price[serviceType].value)}</Text>
-                <Text style={styles.text}>{moment(service.price[serviceType].lastEdited).format('HH:mm DD/MM')}</Text>
+                <View style={commonStyles.row}>
+                    <View style={styles.container}>
+                        <Image
+                            source={getServiceImage(service)}
+                            style={styles.icon}
+                        />
+                        <Text style={styles.serviceText}>{service.name ? service.name : service.username}</Text>
+                    </View>
+
+                    <View style={styles.container}>
+                        <Text style={styles.serviceText}>Price:</Text>
+                        <Text style={styles.serviceValue}>{priceFormatter(service.price[serviceType].value)}</Text>
+                    </View>
+
+                    <View style={styles.dateContainer}>
+                        <Text style={styles.serviceDate}>Last updated:</Text>
+                        <Text style={styles.serviceDate}>{moment(service.price[serviceType].lastEdited).format('HH:mm DD/MM')}</Text>
+                    </View>
+                </View>
             </TouchableOpacity>
         </View>
     )
@@ -36,8 +51,29 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         borderRadius: 10,
     },
-    text: {
-        fontSize: 16,
-        color: '#ffffff'
+    serviceText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    serviceValue: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    serviceDate: {
+        fontSize: 12,
+        color: 'black',
+        textAlign: 'right',
+    },
+    icon: {
+        height: 45,
+        width: 45,
+        marginBottom: 5,
+    },
+    container: {
+        alignItems: 'center'
+    },
+    dateContainer: {
+        flexDirection: 'column',
+        alignItems: 'end'
     }
 })

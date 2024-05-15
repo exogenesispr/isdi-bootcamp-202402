@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native'
+import { View, Text, StyleSheet, Pressable, TextInput, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import { useState } from 'react'
 import logic from '../logic'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
+import commonStyles from '../commonStyles'
 
 function RegisterScreen({ navigation }) {
     const [username, setUsername] = useState('')
@@ -43,47 +44,53 @@ function RegisterScreen({ navigation }) {
 
 
     return (
-        <View style={styles.mainContainer}>
+        <View style={commonStyles.mainContainer}>
             <StatusBar style='auto' />
-            <Text style={styles.heading}>Register</Text>
-
-            <ScrollView style={styles.container}>
-                <TextInput style={styles.input} placeholder='Username'
-                    value={username}
-                    onChangeText={setUsername}
-                />
-                <TextInput secureTextEntry={!showPassword} style={styles.input} placeholder='Password'
-                    value={password}
-                    onChangeText={setPassword}
-                />
-                <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
-                    onPress={toggleShowPassword} />
-
-                <TextInput style={styles.input} placeholder='Discord name'
-                    value={dcName}
-                    onChangeText={setDcName}
-                />
-
-                <View style={styles.languageContainer}>
-                    <Text style={styles.heading}>Languages:</Text>
-                    {languagesDisplay.map((lang) => (
-                        <TouchableOpacity key={lang}
-                            style={[
-                                styles.language,
-                                languages.includes(lang) && styles.selectedLanguage,
-                                lang === 'EN' && styles.disabledLanguage
-                            ]}
-                            onPress={() => handleLanguageToggle(lang)}
-                            disabled={lang === 'EN'}
-                        >
-                            <Text>{lang}</Text>
-                        </TouchableOpacity>
-                    ))}
+            <View style={styles.container}>
+                <View style={commonStyles.container}>
+                    <Text style={commonStyles.heading}>Register</Text>
                 </View>
+                <ScrollView style={styles.container}>
+                    <TextInput style={commonStyles.input} placeholder='Username'
+                        value={username}
+                        onChangeText={setUsername}
+                    />
+                    <TextInput secureTextEntry={!showPassword} style={commonStyles.input} placeholder='Password'
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                    <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
+                        onPress={toggleShowPassword} />
 
-            </ScrollView>
+                    <TextInput style={commonStyles.input} placeholder='Discord name'
+                        value={dcName}
+                        onChangeText={setDcName}
+                    />
 
-            <Button title='Register' onPress={handleRegisterTap} />
+                    <View style={styles.languageContainer}>
+                        <Text style={styles.text}>Languages:</Text>
+                        {languagesDisplay.map((lang) => (
+                            <TouchableOpacity key={lang}
+                                style={[
+                                    styles.language,
+                                    languages.includes(lang) && styles.selectedLanguage,
+                                    lang === 'EN' && styles.disabledLanguage
+                                ]}
+                                onPress={() => handleLanguageToggle(lang)}
+                                disabled={lang === 'EN'}
+                            >
+                                <Text style={styles.languageText}>{lang}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+
+                </ScrollView>
+            </View>
+
+            <Pressable onPress={handleRegisterTap} style={commonStyles.button}>
+                <Text style={commonStyles.buttonText}>Register</Text>
+            </Pressable>
+
         </View>
     )
 }
@@ -91,14 +98,24 @@ function RegisterScreen({ navigation }) {
 export default RegisterScreen
 
 const styles = StyleSheet.create({
-    mainContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20
-    },
     container: {
-        width: '100%'
+        width: '100%',
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    text: {
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginBottom: 10,
+    },
+    languageText: {
+        fontWeight: 'bold'
+    },
+    icon: {
+        position: 'absolute',
+        right: 0,
+        top: 72,
+        padding: 10,
     },
     input: {
         borderWidth: 1,
@@ -106,20 +123,6 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 10,
         marginBottom: 10
-    },
-    icon: {
-        position: 'absolute',
-        right: 10,
-        top: 72
-    },
-    headingTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 5
-    },
-    heading: {
-        fontWeight: 'bold',
-        marginBottom: 5
     },
     languageContainer: {
         marginBottom: 20
@@ -133,9 +136,10 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     selectedLanguage: {
-        backgroundColor: 'lightblue'
+        backgroundColor: '#f6f2f6'
     },
     disabledLanguage: {
-        backgroundColor: 'tomato'
+        backgroundColor: '#b7a7ae'
+
     }
 })

@@ -24,7 +24,7 @@ mongoose.connect(process.env.MONGODB_URL)
                 lastEdited: Date.now()
             },
             raidSaved: {
-                value: 4200000,
+                value: 150000,
                 lastEdited: Date.now()
             }
         }
@@ -42,7 +42,7 @@ mongoose.connect(process.env.MONGODB_URL)
                 lastEdited: Date.now()
             },
             raidUnsaved: {
-                value: 1600000,
+                value: 290000,
                 lastEdited: Date.now()
             },
             raidSaved: {

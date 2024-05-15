@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import logic from '../logic'
 
-import { View, Text, Button, TextInput, StyleSheet, Alert, Pressable } from 'react-native'
+import { View, Text, KeyboardAvoidingView, TextInput, StyleSheet, Alert, Pressable } from 'react-native'
 import { useContext } from '../context'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
+import commonStyles from '../commonStyles'
 
 
 function LoginScreen({ navigation }) {
@@ -39,28 +40,32 @@ function LoginScreen({ navigation }) {
 
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.mainContainer}>
             <StatusBar style='auto' />
-            <Text style={styles.heading}>Log in here</Text>
+            <View style={styles.loginContainer}>
+                <Text style={styles.heading}>LOGO</Text>
+                <View style={styles.container}>
+                    <TextInput style={commonStyles.input} placeholder='Username'
+                        value={username}
+                        onChangeText={setUsername}
+                    />
 
-            <TextInput style={styles.input} placeholder='Username'
-                value={username}
-                onChangeText={setUsername}
-            />
+                    <TextInput secureTextEntry={!showPassword} style={commonStyles.input} placeholder='Password'
+                        value={password}
+                        onChangeText={setPassword}
+                    />
+                    {<MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
+                        onPress={toggleShowPassword} />}
+                </View>
+                <Pressable style={commonStyles.button} onPress={handleLogin}>
+                    <Text style={commonStyles.buttonText}>Log in</Text>
+                </Pressable>
+            </View>
 
-            <TextInput secureTextEntry={!showPassword} style={styles.input} placeholder='password'
-                value={password}
-                onChangeText={setPassword}
-            />
-            {<MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={24} style={styles.icon}
-                onPress={toggleShowPassword} />}
-
-            <Pressable style={styles.button} onPress={handleLogin}>
-                <Text style={styles.text}>Log in</Text>
+            <Pressable style={styles.registerButton} onPress={() => navigation.navigate('Register')}>
+                <Text style={styles.registerText}>Register</Text>
             </Pressable>
-            <Pressable style={styles.button} onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.text}>Register</Text>
-            </Pressable>
+
         </View>
     )
 }
@@ -70,27 +75,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 16,
-        marginTop: 40
+        marginTop: 200,
+        width: '100%',
+        height: 'auto'
+    },
+    loginContainer: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 240,
+    },
+    icon: {
+        position: 'absolute',
+        right: 18,
+        top: 90,
+        padding: 10,
     },
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
     },
-    text: {
-        fontSize: 14,
+    registerText: {
+        color: '#58545B',
+        fontSize: 16,
         fontWeight: 'bold',
     },
-    input: {
-        width: '100%',
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 20,
-        padding: 12,
-        borderRadius: 12
-    },
-    button: {
-        backgroundColor: '#2196F3',
+    registerButton: {
         padding: 10,
         borderRadius: 5,
     },
