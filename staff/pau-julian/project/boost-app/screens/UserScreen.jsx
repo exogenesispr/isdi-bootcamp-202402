@@ -1,5 +1,5 @@
 import React, { useDebugValue, useEffect, useRef, useState } from 'react'
-import { View, Text, StyleSheet, Pressable, Switch, TextInput, ActivityIndicator, Alert, Image } from 'react-native'
+import { View, Text, StyleSheet, Pressable, Switch, TextInput, ActivityIndicator, Alert, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native'
 import { useContext } from '../context'
 import { MaterialIcons } from '@expo/vector-icons'
 import logic from '../logic'
@@ -51,70 +51,73 @@ function UserScreen({ navigation }) {
     }
 
     return (
-        <View style={commonStyles.mainContainer}>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 60}
+            style={commonStyles.mainContainer}
+        >
             <StatusBar />
 
             <Header />
 
-            <View style={styles.container}>
-                <Text style={styles.heading}>Profile</Text>
-            </View>
-
-            <View style={styles.userDataContainer}>
-                <Image
-                    source={require('../assets/icons/useravataricon.png')}
-                    style={styles.bigIcon}
-                />
-
-                <View style={styles.infoContainer}>
-                    <Text style={styles.label}>Username:</Text>
-                    <Text style={styles.value}>{user.username}</Text>
-                    <Text style={styles.label}>Discord Username:</Text>
-                    <Text style={styles.value}>{user.dcName}</Text>
+            <ScrollView>
+                <View style={styles.container}>
+                    <Text style={styles.heading}>Profile</Text>
                 </View>
-            </View>
 
-            <View style={styles.columnContainer}>
-                <Text style={styles.label}>Set your Mythic 10 price:</Text>
+                <View style={styles.userDataContainer}>
+                    <Image
+                        source={require('../assets/icons/useravataricon.png')}
+                        style={styles.bigIcon}
+                    />
 
-                <View style={styles.editContainer}>
-                    <View style={styles.containerRow}>
-                        <View style={styles.containerCenter}>
-                            <Text style={styles.textPriceSet}>Your price:</Text>
-                            <TextInput
-                                style={styles.textInput}
-                                onChangeText={setPriceValue}
-                                value={priceValue.toString()}
-                                inputMode='numeric'
-                            />
-                        </View>
-                        <View style={styles.containerCenter}>
-                            <View style={styles.containerRow}>
-                                <Text style={styles.switchTagText}>Offline</Text>
-                                <Switch
-                                    trackColor={{ false: '#767577', true: '#B7A7AE' }}
-                                    thumbColor={isOnline ? '#58545B' : '#f4f3f4'}
-                                    onValueChange={(value) => (setIsOnline(value))}
-                                    value={isOnline}
+                    <View style={styles.infoContainer}>
+                        <Text style={styles.headingLabel}>Username:</Text>
+                        <Text style={styles.value}>{user.username}</Text>
+                        <Text style={styles.headingLabel}>Discord Username:</Text>
+                        <Text style={styles.value}>{user.dcName}</Text>
+                    </View>
+                </View>
+                <View style={styles.columnContainer}>
+                    <Text style={styles.label}>Set your Mythic 10 price:</Text>
+
+                    <View style={styles.editContainer}>
+                        <View style={styles.containerRow}>
+                            <View style={styles.containerCenter}>
+                                <Text style={styles.textPriceSet}>Your price:</Text>
+                                <TextInput
+                                    style={styles.textInput}
+                                    onChangeText={setPriceValue}
+                                    value={priceValue.toString()}
+                                    keyboardType='numeric'
                                 />
-                                <Text style={styles.switchTagText}>Online</Text>
+                            </View>
+                            <View style={styles.containerCenter}>
+                                <View style={styles.containerRow}>
+                                    <Text style={styles.switchTagText}>Offline</Text>
+                                    <Switch
+                                        trackColor={{ false: '#767577', true: '#B7A7AE' }}
+                                        thumbColor={isOnline ? '#58545B' : '#f4f3f4'}
+                                        onValueChange={(value) => (setIsOnline(value))}
+                                        value={isOnline}
+                                    />
+                                    <Text style={styles.switchTagText}>Online</Text>
+                                </View>
                             </View>
                         </View>
-                    </View>
-                    <View style={{ paddingTop: 20 }}>
-                        <Pressable style={styles.button} onPress={handleEditPress}>
-                            <Text style={styles.buttonText}>Save Changes</Text>
-                        </Pressable>
+                        <View style={{ paddingTop: 20 }}>
+                            <Pressable style={styles.button} onPress={handleEditPress}>
+                                <Text style={styles.buttonText}>Save Changes</Text>
+                            </Pressable>
 
+                        </View>
                     </View>
                 </View>
-            </View>
-
+            </ScrollView>
             <Pressable style={styles.logoutPressable} onPress={handleLogoutPress}>
                 <MaterialIcons name="logout" size={36} color="black" />
             </Pressable>
-
-        </View>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -160,6 +163,10 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         paddingLeft: 20,
+    },
+    headingLabel: {
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     value: {
         fontSize: 16,

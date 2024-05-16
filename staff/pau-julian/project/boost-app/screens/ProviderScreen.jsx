@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react'
-import { Text, View, StyleSheet, Alert, Linking, Image, Pressable, Modal } from 'react-native'
+import { Text, View, StyleSheet, Alert, Linking, Image, Pressable, Modal, Vibration } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
 import * as Clipboard from 'expo-clipboard'
 import logic from '../logic'
@@ -41,6 +41,7 @@ export default function ProviderScreen({ route }) {
     const handleClipboardPress = () => {
         Clipboard.setStringAsync(provider.dcName.toString())
         setCopied(true)
+        Vibration.vibrate(100)
         setTimeout(() => setCopied(false), 2000)
     }
 
@@ -51,7 +52,7 @@ export default function ProviderScreen({ route }) {
     }
 
     const handleDiscordUserLinkPress = () => {
-        Linking.openURL('discordapp://')
+        Linking.openURL('discord://app/channels/@me')
             .catch((error) => {
                 Alert.alert('Discord App not found', error.message)
             })
@@ -71,7 +72,7 @@ export default function ProviderScreen({ route }) {
                         <Pressable style={styles.button} onLongPress={isCommunity ? null : handleClipboardPress} >
                             <View style={styles.row}>
                                 <Text style={styles.heading}>{isCommunity ? provider.name : provider.username}</Text>
-                                {isCommunity ? null : <FontAwesome6 name="file-clipboard" size={24} color="black" />}
+                                {isCommunity ? null : <FontAwesome6 name="file-clipboard" size={24} color="black" style={{ marginLeft: 10 }} />}
                             </View>
                         </Pressable>
                     </View>
@@ -153,7 +154,7 @@ export default function ProviderScreen({ route }) {
                 visible={copied}
                 onRequestClose={() => {
                     setCopied(false)
-                    handleDiscordUserLinkPress
+                    // handleDiscordUserLinkPress
                 }}
             >
                 <View style={styles.modalContainer}>
@@ -233,7 +234,8 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginRight: 10,
+        textAlign: 'center',
+        marginLeft: 10,
     },
     tableHeading: {
         fontSize: 18,

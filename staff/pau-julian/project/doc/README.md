@@ -17,27 +17,25 @@ Fulfill a need in the game community to find cheaper and legal boosts & services
     - Sylvanas
 
 - Allow create accounts to ease contact between customer and seller.
-- Sorting offers depending on user selection of filters(Language, communities, users).
-- Allow created accounts to update their price on 1 basic service (M10)
-
-### UI DESIGN
-
-TO - DO 
+- Offers sorted by price and displaying the cheapest Community.
+- Allow created accounts to update their price on 1 basic service (Mythic 10)
 
 ### Modules
-- api (db + server logic)
-- discord bot (db populate function + modify communities (admin tasks))
-- app (client interface + client logic)
+- Api (db + server logic)
+- App (client interface + client logic) - created with React Native
 - com (common utils and tools)
+- discord bot (db populate function + modify communities (admin tasks)) -> Moved to future version
 
 ### Technologies
 
 - TypeScript
+- JavaScript
 - React
-- React-native
+- React-native + Expo
 - Express
-- Node
+- Node + Cron (as a scheduler)
 - Mongo / mongoose
+- Moment (Date Formatter)
 
 ### Data Model
 

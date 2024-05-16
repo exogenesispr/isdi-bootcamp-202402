@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     serviceValue: {
         fontSize: 18,
         fontWeight: 'bold',
+        textAlign: 'right',
     },
     serviceDate: {
         fontSize: 12,
@@ -70,10 +71,13 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     container: {
-        alignItems: 'center'
+        alignItems: 'center',
+        textAlign: 'right',
+        width: '33%'
     },
     dateContainer: {
         flexDirection: 'column',
-        alignItems: 'end'
+        alignItems: 'end',
+        width: '33%'
     }
 })

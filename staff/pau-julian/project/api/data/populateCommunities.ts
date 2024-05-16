@@ -12,19 +12,19 @@ mongoose.connect(process.env.MONGODB_URL)
         dcReference: 'discord://app/channels/895261686955667466/895261691099639847',
         price: {
             m10: {
-                value: 7000000,
+                value: 400000,
                 lastEdited: Date.now()
             },
             raidVip: {
-                value: 5500000,
-                lastEdited: Date.now()
-            },
-            raidUnsaved: {
                 value: 1500000,
                 lastEdited: Date.now()
             },
+            raidUnsaved: {
+                value: 400000,
+                lastEdited: Date.now()
+            },
             raidSaved: {
-                value: 150000,
+                value: 250000,
                 lastEdited: Date.now()
             }
         }
@@ -34,7 +34,7 @@ mongoose.connect(process.env.MONGODB_URL)
         dcReference: 'discord://app/channels/817565728965525534/817565729192673347',
         price: {
             m10: {
-                value: 1000000,
+                value: 500000,
                 lastEdited: Date.now()
             },
             raidVip: {
@@ -42,11 +42,11 @@ mongoose.connect(process.env.MONGODB_URL)
                 lastEdited: Date.now()
             },
             raidUnsaved: {
-                value: 290000,
+                value: 2000000,
                 lastEdited: Date.now()
             },
             raidSaved: {
-                value: 500000,
+                value: 1500000,
                 lastEdited: Date.now()
             }
         }
@@ -56,19 +56,19 @@ mongoose.connect(process.env.MONGODB_URL)
         dcReference: 'discord://app/channels/1006174254284423299/1006186471402770535',
         price: {
             m10: {
-                value: 700000,
+                value: 425000,
                 lastEdited: Date.now()
             },
             raidVip: {
-                value: 5600000,
+                value: 1450000,
                 lastEdited: Date.now()
             },
             raidUnsaved: {
-                value: 430000,
+                value: 340000,
                 lastEdited: Date.now()
             },
             raidSaved: {
-                value: 430000,
+                value: 230000,
                 lastEdited: Date.now()
             }
         }
@@ -78,19 +78,19 @@ mongoose.connect(process.env.MONGODB_URL)
         dcReference: 'discord://app/channels/1005035543580643381/1005081350371541092',
         price: {
             m10: {
-                value: 700000,
+                value: 375000,
                 lastEdited: Date.now()
             },
             raidVip: {
-                value: 4500000,
+                value: 1400000,
                 lastEdited: Date.now()
             },
             raidUnsaved: {
-                value: 400000,
+                value: 335000,
                 lastEdited: Date.now()
             },
             raidSaved: {
-                value: 400000,
+                value: 225000,
                 lastEdited: Date.now()
             }
         }

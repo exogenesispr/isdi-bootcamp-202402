@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import logic from '../logic'
 
-import { View, Text, KeyboardAvoidingView, TextInput, StyleSheet, Alert, Pressable } from 'react-native'
+import { View, Text, KeyboardAvoidingView, TextInput, StyleSheet, Alert, Pressable, Image } from 'react-native'
 import { useContext } from '../context'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { StatusBar } from 'expo-status-bar'
@@ -27,10 +27,10 @@ function LoginScreen({ navigation }) {
                     // navigation.navigate('Home')
                 })
                 .catch((error) => {
-                    Alert.alert(error.message)
+                    Alert.alert('Error with credentials', error.message)
                 })
         } catch (error) {
-            console.error(error)
+            Alert.alert('Validation error', error.message)
         }
     }
 
@@ -43,7 +43,10 @@ function LoginScreen({ navigation }) {
         <View style={commonStyles.mainContainer}>
             <StatusBar style='auto' />
             <View style={styles.loginContainer}>
-                <Text style={styles.heading}>LOGO</Text>
+                <Image
+                    source={require('../assets/icons/logo-pau.png')}
+                    style={styles.bigIcon}
+                />
                 <View style={styles.container}>
                     <TextInput style={commonStyles.input} placeholder='Username'
                         value={username}
@@ -92,6 +95,13 @@ const styles = StyleSheet.create({
         right: 18,
         top: 90,
         padding: 10,
+    },
+    bigIcon: {
+        position: 'absolute',
+        padding: 10,
+        height: 100,
+        width: 100,
+        resizeMode: 'contain'
     },
     heading: {
         fontSize: 24,
